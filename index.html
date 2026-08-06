@@ -453,13 +453,13 @@ const FIELDS = {
 
 function boshHTML(d){
   return `
-  <h3>«${fv(d.shartnoma_raqami,'шартнома рақами')}»-sonli SHARTNOMA</h3>
+  <h3>${fv(d.shartnoma_raqami,'шартнома рақами')}-sonli SHARTNOMA</h3>
   <p class="center">«BIRZUM NASIYA» loyihasi doirasida axborot-konsultatsiya xizmatlarini ko‘rsatish to‘g‘risida</p>
-  <p class="doc-date">Farg‘ona shahri &nbsp; «${fmtDate(d.shartnoma_sanasi)}»</p>
+  <p class="doc-date">Farg‘ona shahri &nbsp; ${fmtDate(d.shartnoma_sanasi)} yil</p>
   <p>Bir tomondan Ustav asosida faoliyat yurituvchi «FORTUNA BIZNES mikromoliya tashkiloti» MChJ, bundan buyon
   «Kreditor» deb ataluvchi nomidan ijrochi direktor U.R.Maxmudov, va ikkinchi tomondan Ustav/Guvohnoma asosida faoliyat
   yurituvchi ${fv(d.tashkilot_nomi,'Tashkilot nomi')}, bundan buyon «Savdo-xizmat ko‘rsatish korxonasi» kelgusida «SXKK» deb ataluvchi nomidan
-  «${fv(d.rahbar,'Rahbar')}», birgalikda «Tomonlar», alohida-alohida esa «Tomon» deb atalib, quyidagilar to‘g‘risida ushbu shartnomani tuzdilar.</p>
+  ${fv(d.rahbar_fish,'Rahbar F.I.Sh.')}, birgalikda «Tomonlar», alohida-alohida esa «Tomon» deb atalib, quyidagilar to‘g‘risida ushbu shartnomani tuzdilar.</p>
 
   <h4>ATAMALAR VA TA’RIFLAR</h4>
   <p>Mazkur Shartnomada quyidagi atamalar va ularning ta’riflari qo‘llaniladi:</p>
@@ -468,25 +468,25 @@ function boshHTML(d){
   shuningdek Kreditor tomonidan mikromoliyaviy xizmatlar ko‘rsatishda foydalanish uchun mo‘ljallangan va internet tarmog‘idagi
   quyidagi manzil asosida faoliyat yuritadi: https://merchant.birzumnasiya.uz</p>
   <p><b>Mijoz (kredit oluvchi)</b> — O‘zbekiston Respublikasi rezidenti bo‘lgan, Kreditor tomonidan mikromoliyaviy xizmat
-  ko‘rsatiladigan jismoniy shaxs.</p>
+  ko‘rsatiladigan jismoniy shaxs;</p>
   <p><b>Mikromoliyaviy xizmat</b> — O‘zbekiston Respublikasi qonunchiligiga muvofiq Kreditor tomonidan Mijozga ko‘rsatiladigan
-  xizmat bo‘lib, jumladan mikroqarzlar va kreditlar berishni o‘z ichiga oladi.</p>
+  xizmat bo‘lib, jumladan mikroqarzlar va kreditlar berishni o‘z ichiga oladi;</p>
   <p><b>Kredit</b> — SXKK dan tovarlar (ishlar, xizmatlar) sotib olish uchun Kreditor tomonidan Mijozga yoki SXKKga
-  qaytarishlilik, to‘lovlilik shartlari asosida taqdim etiladigan pul mablag‘lari.</p>
-  <p><b>Hisobot oyi (davri)</b> — Shartnomaga muvofiq xizmatlar ko‘rsatilgan kalendar oy.</p>
+  qaytarishlilik, to‘lovlilik shartlari asosida taqdim etiladigan pul mablag‘lari;</p>
+  <p><b>Hisobot oyi (davri)</b> — Shartnomaga muvofiq xizmatlar ko‘rsatilgan kalendar oy;</p>
   <p><b>Kreditor xodimi</b> — Kreditor bilan mehnat munosabatlarida bo‘lgan va ariza beruvchilardan mikromoliyaviy xizmat
   ko‘rsatish masalasini ko‘rib chiqish uchun zarur hujjatlar va ma’lumotlarni qabul qilish, Kreditorning moliyaviy faoliyati bo‘yicha
   tushuntirish berish, SXKK mijozlariga maslahat berish hamda ularga xizmatlardan oqilona foydalanish bo‘yicha amaliy yordam
-  ko‘rsatishga vakolatli shaxs.</p>
+  ko‘rsatishga vakolatli shaxs;</p>
   <p><b>SXKK xodimi</b> — SXKK bilan mehnat munosabatlarida bo‘lgan, bu holat uning shartnomada nazarda tutilgan vazifalarni
   bajarishga ruxsati mavjudligi bilan tasdiqlanadigan va SXKK tomonidan tegishli buyruq yoki boshqa hujjat asosida vakolat
   berilgan shaxs bo‘lib, ariza beruvchilardan hujjatlar va ma’lumotlarni qabul qilish, ularga mikroqarz/kredit berish va undan
   foydalanish shartlari bo‘yicha axborot va maslahatlar berish, shuningdek SXKK hududida barcha zarur hujjatlarni rasmiylashtirish
-  huquqiga ega.</p>
+  huquqiga ega;</p>
   <p><b>Kelishilgan aloqa kanallari</b> — Kreditor va SXKK ning elektron pochta manzillari, shuningdek ushbu shartnomaga
-  muvofiq hujjatlar va bildirishnomalar almashinuvi amalga oshiriladigan boshqa texnik aloqa vositalari.</p>
+  muvofiq hujjatlar va bildirishnomalar almashinuvi amalga oshiriladigan boshqa texnik aloqa vositalari;</p>
   <p><b>Tovar</b> — SXKK savdo obyektlarida Mijoz tomonidan sotib olinadigan tovarlar/xizmatlar bo‘lib, O‘zbekiston Respublikasi
-  qonunchiligi talablariga muvofiq ruxsat etilmagan tovarlar bundan mustasno.</p>
+  qonunchiligi talablariga muvofiq ruxsat etilmagan tovarlar bundan mustasno;</p>
   <p>Mazkur bo‘limda ko‘rsatilmagan atamalar ushbu shartnoma matnida O‘zbekiston Respublikasi qonunchiligiga muvofiq
   ma’nolarda qo‘llaniladi.</p>
 
@@ -514,7 +514,8 @@ function boshHTML(d){
   ham yuboradilar.</p>
   <p>2.3. Tomonlar shartnoma imzolanganidan keyin 5 (besh) ish kuni ichida o‘zaro hamkorlik bo‘yicha ma’lumotlarni bir-biriga
   taqdim etadilar.</p>
-  <p>2.4. Tomonlar quyidagilar bilan kelishadilar: shartnomada ko‘rsatilgan elektron pochta manzillariga yuborilgan barcha
+  <p>2.4. Tomonlar quyidagilar bilan kelishadilar:</p>
+  <p>2.4.1. Shartnomada ko‘rsatilgan elektron pochta manzillariga yuborilgan barcha
   yozishmalar, bildirishnomalar va ogohlantirishlar, shu jumladan Tomonlar rekvizitlarini o‘zgartirishga oid ma’lumotlar, manzil
   egasiga to‘g‘ri yetkazilgan hisoblanadi.</p>
   <p>2.5. Tomonlar o‘z elektron pochta manzillari va/yoki boshqa kelishilgan aloqa kanallariga kelayotgan yozishmalarni o‘z
@@ -523,11 +524,11 @@ function boshHTML(d){
   vakolatlardan chetlashtirilsa, SXKK ushbu Buyruqni bekor qilishi va Kreditorni ushbu holat haqida Buyruq amal qilgan kunidan
   kechiktirmay kelishilgan aloqa kanallari orqali xabardor qilishi lozim, Buyruq raqami va sanasini ko‘rsatgan holda.</p>
   <p>2.7. Kreditor Mijozga mikroqarz/kredit berishni rad etishga haqli bo‘lib, buni Mijoz va SXKK ga izoh berish shart emas.</p>
-  <p>2.8. Mazkur shartnoma doirasida agar SXKK yuzaga kelgan qarzdorliklarni o‘z vaqtida kreditorga o‘tkazib bermagan
-  hollarda kreditor SXKKning oldin amalga oshirilgan lekin kreditor tomonidan xali SXKK hisob raqamiga o‘tkazib berilmagan
-  mablag‘lar hisobidan ushlab qolishga haqli. Bu mablag‘lar: Kreditorning mukofoti va/yoki tovarni qaytarish, rad etish holatida
-  mablag‘lar (Shartnoma 2.10-bandiga muvofiq), shuningdek mazkur shartnoma doirasida SXKK oldidagi boshqa qarzdorliklarni
-  o‘z ichiga oladi.</p>
+  <p>2.8. Mazkur Shartnoma doirasida SXKK barcha kredit tashkilotlari (O‘zbekiston Respublikasi banklari), hisob raqamlari
+  ochilgan yoki keyinchalik ochiladigan banklar bilan, Kreditor foydasiga mablag‘larni avtomatik yechib olish bo‘yicha
+  kelishuvlarni tuzishni ta’minlash majburiyatini oladi. Bu mablag‘lar: Kreditorning mukofoti va/yoki tovarni qaytarish, rad etish
+  holatida mablag‘lar (Shartnoma 2.10-bandiga muvofiq), shuningdek mazkur shartnoma doirasida SXKK oldidagi boshqa
+  qarzdorliklarni o‘z ichiga oladi.</p>
   <p>2.9. Tovar qaytarilganda yoki mijoz undan voz kechganda, SXKK Kreditordan haqiqatda kelib tushgan mablag‘ni Mijozning
   mikroqarzini yopish uchun Kreditorning hisob raqamiga qaytaradi. Tovarni qaytarish O‘zbekiston Respublikasi qonunchiligiga
   muvofiq amalga oshiriladi.</p>
@@ -573,11 +574,13 @@ function boshHTML(d){
   <h4>4. MA’LUMOTNI MAXFIYLIGI</h4>
   <p>4.1. Tomonlar shartnoma ijrosi davomida olingan ma’lumotlarni qat’iy maxfiy saqlashga va ushbu ma’lumotlarning oshkor
   etilmasligi uchun barcha mumkin bo‘lgan choralarni ko‘rishga majburdirlar.</p>
-  <p>4.2. SXKK quyidagilarni bajarishga majbur: Shartnoma ijrosi davomida Kreditor va Mijozlardan olingan, Tomonlar
-  tomonidan tijorat siri deb tan olingan barcha ma’lumotlarni, shuningdek, Shartnoma muddati tugagandan yoki erta bekor
-  qilinganidan keyin 5 (besh) yil davomida maxfiy saqlash; shaxsga doir ma’lumotlarni O‘zbekiston Respublikasi qonunchiligiga
-  muvofiq saqlash; tijorat siri va shaxsga doir ma’lumotlarni O‘zbekiston Respublikasi qonunchiligida belgilangan hollarda va
-  tartibda taqdim etish.</p>
+  <p>4.2. SXKK quyidagilarni bajarishga majbur:</p>
+  <p>— Shartnoma ijrosi davomida Kreditor va Mijozlardan olingan, Tomonlar tomonidan tijorat siri deb tan olingan barcha
+  ma’lumotlarni, shuningdek, Shartnoma muddati tugagandan yoki erta bekor qilinganidan keyin 5 (besh) yil davomida
+  maxfiy saqlash;</p>
+  <p>— Shaxsga doir ma’lumotlarni O‘zbekiston Respublikasi qonunchiligiga muvofiq saqlash;</p>
+  <p>— Tijorat siri va shaxsga doir ma’lumotlarni O‘zbekiston Respublikasi qonunchiligida belgilangan hollarda va tartibda
+  taqdim etish.</p>
   <p>4.3. Shartnoma va uning ijrosi bilan bog‘liq barcha ma’lumotlar, jumladan, hujjatlarni rasmiylashtirish jarayonida olingan
   Mijozlar haqidagi ma’lumotlar; Kreditor tomonidan Mijozlarga ko‘rsatilgan mikroqarz/mikrokreditlar summasi va miqdori,
   «BIRZUM NASIYA muddatli to‘lov tizimi» mahsuloti doirasida berilgan xizmatlar, hujjat aylanmasi tartibi, shuningdek
@@ -647,33 +650,53 @@ function boshHTML(d){
   <h4>6. FORS-MAJOR HOLATLARI</h4>
   <p>6.1. Tomonlar, agar o‘z majburiyatlarini bajarmaslik yoki noto‘g‘ri bajarish holati kutilmagan va mazkur sharoitlarda oldini
   olish imkonsiz bo‘lgan kuchli majburiyatdan tashqari holatlar (fors-major) natijasida sodir bo‘lgan bo‘lsa, javobgarlikdan ozod
-  qilinadi (tabiiy ofatlar, harbiy harakatlar, terroristik harakatlar, blokada va boshqa oldini ololmaydigan holatlar). Fors-major
+  qilinadi. Bunday holatlar quyidagilarni o‘z ichiga oladi: tabiiy ofatlar, harbiy harakatlar, terroristik harakatlar, blokada, boshqa
+  oldini ololmaydigan holatlar, shuningdek davlat organlarining normativ hujjatlar qabul qilishi va/yoki shartnomani bajarishni
+  imkonsiz qiladigan harakatlari (faqat bir Tomonga nisbatan qabul qilingan hujjatlar yoki harakatlar bundan mustasno). Fors-major
   holati yuz bergan taqdirda, zarar ko‘rgan Tomon boshqa Tomonni kelishilgan aloqa kanallari orqali yozma ravishda 5 (besh)
   kalendar kun ichida xabardor qilishi shart. Bunday holatda, Shartnoma bo‘yicha majburiyatlarni bajarish muddati fors-major
   davomiyligi bilan uzaytiriladi.</p>
 
   <h4>7. SHARTNOMA MUDDATI, O‘ZGARTIRISH VA BEKOR QILISH TARTIBI, BOSHQA SHARTLAR</h4>
   <p>7.1. Mazkur shartnoma cheklangan bo‘lmagan muddatga amal qiladi va shartnomada belgilangan tartib bo‘yicha bekor
-  qilinmaguncha kuchda bo‘ladi. Shartnoma har bir Tomon tashabbusi bilan, bir tomonlama tarzda erta bekor qilinishi mumkin,
-  buning uchun kamida 14 (o‘n to‘rt) kalendar kun oldin kelishilgan aloqa kanallari orqali yozma xabar yuborilishi shart.</p>
-  <p>7.2. Kreditor, kelishilgan aloqa kanallari orqali xabar yuborish orqali, shartnoma shartlarini bir tomonlama o‘zgartirishga
-  haqli; o‘zgartirishlar xabar yuborilgan kundan boshlab 5 (besh) kalendar kundan keyin kuchga kiradi. Tomonlar bank
-  rekvizitlari, manzil, telefon raqamlari, elektron pochta manzillari va vakolatli xodimlar haqidagi ma’lumotlarni 2 (ikki) ish kuni
+  qilinmaguncha kuchda bo‘ladi. Shartnoma har bir Tomon tashabbusi bilan, bir tomonlama (shartnomani bajarishdan voz kechish)
+  tarzda erta bekor qilinishi mumkin. Buning uchun kamida 14 (o‘n to‘rt) kalendar kun oldin kelishilgan aloqa kanallari orqali yozma
+  xabar yuborilishi shart. Shartnoma xabar berilgan kundagi sanadan boshlab bekor qilingan hisoblanadi. Shu bilan birga, Tomonlar
+  qaror qabul qilinganidan boshlab shartnoma bo‘yicha majburiyatlarni vaqtincha to‘xtatishga haqli. Shartnomadan bir Tomonning
+  voz kechishi, voz kechish paytida yuzaga kelgan majburiyatlarni bajarishga ta’sir qilmaydi. Agar SXKK shartnoma shartlarini
+  bajarmasa yoki noto‘g‘ri bajarsa, Shartnoma Kreditor tashabbusi bilan qaror qabul qilingan kundan boshlab bekor qilinadi.</p>
+  <p>7.2. Shartnomaga o‘zgartirish va qo‘shimchalar kiritish tartibi:</p>
+  <p>— Kreditor, kelishilgan aloqa kanallari orqali xabar yuborish orqali, shartnoma shartlarini bir tomonlama o‘zgartirishga
+  haqli. Agar xabarda boshqa sana ko‘rsatilmagan bo‘lsa, o‘zgartirishlar xabar yuborilgan kundan boshlab 5 (besh) kalendar
+  kundan keyin kuchga kiradi.</p>
+  <p>— Agar SXKK kiritilgan o‘zgartirishlarga rozi bo‘lmasa (bu haqda SXKK xabarni olgan kundan boshlab 3 (uch) kalendar
+  kun ichida yozma ravishda Kreditorni xabardor qiladi), Kreditor xabar yuborilgan kundan boshlab 5 (besh) kalendar
+  kundan keyin shartnomani bir tomonlama ravishda bekor qilishga haqli bo‘ladi, shu jumladan SXKK tomonidan rozi
+  bo‘lmagan o‘zgartirishlar qismini ham bekor qilish mumkin.</p>
+  <p>— Tomonlar, shuningdek, bank rekvizitlari, joylashuv (manzil), telefon raqamlari, elektron pochta manzillari, shartnoma
+  shartlarini bajarish huquqiga ega xodimlar haqidagi ma’lumotlarni kelishilgan aloqa kanallari orqali 2 (ikki) ish kuni
   ichida bir-biriga xabar berishga majburdirlar.</p>
   <p>7.3. Mazkur shartnoma imzolanganidan keyin Tomonlar o‘rtasida oldin tuzilgan, shunga o‘xshash predmetga ega
   shartnomalar bekor hisoblanadi.</p>
   <p>7.4. Nizolarni hal qilish tartibi: Tomonlar shartnoma ijrosi davomida yuzaga kelishi mumkin bo‘lgan nizolarni muzokaralar
-  va sudgacha (da’vo) tartibida hal qilishga intiladilar. Yuqoridagi tartibda hal qilinmagan nizolar O‘zbekiston Respublikasi
-  amaldagi qonunchiligiga muvofiq, Farg‘ona interrayon iqtisodiy sudida ko‘rib chiqiladi.</p>
+  va sudgacha (da’vo) tartibida hal qilishga intiladilar. Da’vo qabul qiluvchi Tomon, da’vo xabari olgan kundan boshlab 10 (o‘n)
+  kalendar kun ichida boshqa Tomonni da’vo natijalari haqida yozma xabarda xabardor qilishi shart, agar shartnomada boshqa
+  muddat belgilangan bo‘lmasa. Yuqoridagi tartibda hal qilinmagan nizolar O‘zbekiston Respublikasi amaldagi qonunchiligiga
+  muvofiq, Farg‘ona interrayon iqtisodiy sudida ko‘rib chiqiladi. Mazkur shartnomada ko‘rsatilmagan barcha holatlarda Tomonlar
+  O‘zbekiston Respublikasi qonunchiligiga amal qiladilar.</p>
 
   <h4>8. KORRUPSIYAGA QARSHI SHARTLAR</h4>
   <p>8.1. Tomonlar va Shartnoma majburiyatlarini bajarish uchun jalb qilingan har qanday jismoniy yoki yuridik shaxslar,
   jumladan ularning xodimlari, agentlari va konsultantlari, O‘zbekiston Respublikasi «Korrupsiyaga qarshi kurashish
-  to‘g‘risida»gi Qonuni (№ O‘zRQ-419, 03.01.2017) talablariga muvofiq: har qanday davlat mansabdor shaxsga pora yoki boshqa
-  korrupsion to‘lovlarni taklif qilmaslik, va’da qilmaslik, bermaslik, talab qilmaslik yoki qabul qilmaslik; ataylab yoki beparvolik
-  bilan Tomonlar yoki ularning ta’sischilari, direktorlar, mansabdor shaxslar yoki xodimlari huquqlarini buzishga olib kelishi
-  mumkin bo‘lgan harakatlarni amalga oshirmaslik; korrupsiyaga qarshi qonunchilik talablarining buzilishi (yoki ehtimoliy
-  buzilishi) bo‘yicha asosli shubhalar yuzaga kelganda boshqa Tomon bilan vijdonan hamkorlik qilishga majburdirlar.</p>
+  to‘g‘risida»gi Qonuni (№ O‘zRQ-419, 03.01.2017) talablariga muvofiq:</p>
+  <p>— har qanday davlat mansabdor shaxsga, uning lavozim majburiyatlarini bajarish jarayonida harakat qilishiga yoki
+  harakatsizligiga sabab bo‘lish maqsadida, pora yoki boshqa korrupsion to‘lovlarni taklif qilmaslik, va’da qilmaslik,
+  bermaslik, talab qilmaslik yoki qabul qilmaslik;</p>
+  <p>— ataylab yoki beparvolik bilan Kreditor yoki SXKK, yoki ularning bevosita yoki bilvosita ta’sischilari, direktorlar,
+  mansabdor shaxslar yoki xodimlari huquqlarini buzishga olib kelishi mumkin bo‘lgan harakatlarni amalga oshirmaslik;</p>
+  <p>— agar Tomonlardan birida korrupsiyaga qarshi qonunchilik talablarining buzilishi (yoki ehtimoliy buzilishi) bo‘yicha
+  asosli shubhalar paydo bo‘lsa, bu holatni aniqlash maqsadida boshqa Tomon va uning vakillari bilan vijdonan hamkorlik
+  qilish.</p>
 
   <h4>TOMONLARNING MANZILLARI VA TO‘LOV REKVIZITLARI</h4>
   <table>
@@ -682,23 +705,25 @@ function boshHTML(d){
       <td>
         "FORTUNA BIZNES MIKROMOLIYA TASHKILOTI" MCHJ<br>
         Yuridik manzil: Farg‘ona viloyati, Farg‘ona shahri, B. Marg‘iloni ko‘chasi, 12-uy<br>
+        Bank rekvizitlari:<br>
         Hisob raqami: 20216000600602139002<br>
         MFO: 00401, AKB «Aloqabank» Farg‘ona filiali<br>
         STIR: 303863499<br>
         Telefon: +99873-244-04-02<br>
-        E-pochta: info@fortunabiznes.uz<br><br>
+        Elektron pochta: info@fortunabiznes.uz<br><br>
         Ijrochi direktor: ____________ U. Maxmudov<br>
         Bosh hisobchi: _____________ A. Jalilov<br>
-        Huquqshunos: ___________ U. Abduraximov
+        Huquqshunos: ___________ A. Muminov
       </td>
       <td>
         ${fv(d.tashkilot_nomi,'Tashkilot nomi')}<br>
         Yuridik manzil: ${fv(d.manzil,'Manzil')}<br>
+        Bank rekvizitlari:<br>
         Hisob raqami: ${fv(d.hisob_raqami,'Hisob raqami')}<br>
         MFO: ${fv(d.mfo,'MFO')}, ${fv(d.bank_nomi,'Bank nomi')}<br>
         STIR: ${fv(d.stir,'STIR')}<br>
         Telefon: ${fv(d.telefon_raqami,'Telefon raqami')}<br>
-        E-pochta / Telegram: ${fv(d.telegram_user,'Telegram user')}<br><br>
+        Elektron pochta / Telegram: ${fv(d.telegram_user,'Telegram user')}<br><br>
         Direktor: ___________ ${fv(d.rahbar_fish,'Rahbar F.I.Sh.')}
       </td>
     </tr>

@@ -949,11 +949,27 @@ let cloudStatusMsg = '';
 let cloudUnsubscribers = [];
 let cloudPulledOnce = false;
 
+// Ilovaga o'rnatib qo'yilgan (kod ichiga singdirilgan) Firebase konfiguratsiyasi.
+// Shu tufayli har bir yangi qurilma/brauzerda Profil bo'limiga qo'lda
+// firebaseConfig kiritish shart emas — sayt ochilishi bilan avtomatik
+// shu loyihaga ulanadi. Agar kimdir Profil bo'limidan boshqa (masalan test)
+// konfiguratsiyani qo'lda joylashtirsa, o'sha ustunlik qiladi.
+const DEFAULT_CLOUD_CONFIG = {
+  apiKey: "AIzaSyDel7Qc1DG2sxKNlL1iEYtzq_3vJ_BUn3A",
+  authDomain: "shartnoma-web.firebaseapp.com",
+  projectId: "shartnoma-web",
+  storageBucket: "shartnoma-web.firebasestorage.app",
+  messagingSenderId: "535357750557",
+  appId: "1:535357750557:web:f73dd50cb80180c281f5f4",
+  measurementId: "G-0VFQL9QWYD"
+};
+
 function getCloudConfig(){
   try{
     const raw = localStorage.getItem(CLOUD_CONFIG_KEY);
-    return raw ? JSON.parse(raw) : null;
-  }catch(e){ return null; }
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return DEFAULT_CLOUD_CONFIG;
 }
 function setCloudConfig(cfg){
   try{ localStorage.setItem(CLOUD_CONFIG_KEY, JSON.stringify(cfg)); return true; }
@@ -1925,36 +1941,8 @@ function bonusMarkup(){
 
 function profilMarkup(){
   const creds = getCreds();
-  const cloudCfg = getCloudConfig();
-  const cloudConfigured = !!cloudCfg;
   return `
   <div class="grid">
-    <div class="card" style="grid-column:1 / -1;">
-      <h2>☁️ Bulutda saqlash (barcha qurilmalarda ko‘rish)</h2>
-      <p class="sub">Ulangandan so‘ng Hamkorlar, Bosh kelishuv, Qo‘shimcha kelishuv va Bonus ma’lumotlari shu qurilmadagi xotira (localStorage) bilan bir qatorda bulutga (Firestore) ham yoziladi. Boshqa qurilmada (masalan, telefon yoki boshqa kompyuterda) shu saytni ochganingizda — bir xil bulut sozlamasi ulangan bo‘lsa — eng so‘nggi qo‘shilgan hamkorlar avtomatik ko‘rinadi.</p>
-      <div class="hint" style="margin-bottom:10px;">
-        <b>Bir martalik sozlash (bepul):</b><br>
-        1) <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console.firebase.google.com</a> saytida yangi loyiha (project) yarating.<br>
-        2) Chap menyudan <b>Build → Firestore Database → Create database</b> (istalgan region, "Production mode").<br>
-        3) <b>Project settings → General → Your apps → Web (&lt;/&gt;)</b> tugmasi orqali veb-ilova qo‘shing va ochilgan <code>firebaseConfig</code> obyektini to‘liq nusxalab, pastga joylashtiring.<br>
-        4) Firestore → <b>Rules</b> bo‘limiga o‘tib, quyidagini joylashtirib «Publish» bosing (faqat shu 4 ta bo‘lim hujjatiga ruxsat beradi):<br>
-        <code style="display:block;white-space:pre;background:#f3f4f7;padding:8px;border-radius:6px;margin-top:4px;">rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /${CLOUD_COLLECTION}/{doc} {
-      allow read, write: if doc in ['hamkor','bosh','qoshimcha','bonus'];
-    }
-  }
-}</code>
-      </div>
-      <label>Firebase konfiguratsiyasi (firebaseConfig) <span class="opt">JSON ko‘rinishida joylashtiring</span></label>
-      <textarea id="cloudConfigInput" rows="6" style="width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:6px;font-size:12.5px;font-family:var(--mono);box-sizing:border-box;" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}'>${cloudCfg ? esc(JSON.stringify(cloudCfg, null, 2)) : ''}</textarea>
-      <div class="actions" style="margin-top:10px;">
-        <button type="button" class="primary" id="cloudConnectBtn">${cloudConfigured ? 'Qayta ulash' : 'Ulash'}</button>
-        <button type="button" class="secondary" id="cloudDisconnectBtn" ${cloudConfigured ? '' : 'disabled'}>Uzish</button>
-      </div>
-      <div class="status" id="cloudStatus"></div>
-    </div>
     <div class="card">
       <h2>Profil sozlamalari</h2>
       <p class="sub">Tizimga kirish uchun login va parolni shu yerdan o‘zgartirishingiz mumkin.</p>
@@ -2032,53 +2020,6 @@ function parseFirebaseConfigInput(raw){
 }
 
 function bindProfilEvents(){
-  updateCloudStatusUI();
-  const cloudConnectBtn = document.getElementById('cloudConnectBtn');
-  if(cloudConnectBtn) cloudConnectBtn.onclick = async ()=>{
-    const input = document.getElementById('cloudConfigInput');
-    const raw = input ? input.value.trim() : '';
-    if(!raw){
-      cloudStatus = 'error'; cloudStatusMsg = 'Avval firebaseConfig obyektini joylashtiring.';
-      updateCloudStatusUI();
-      return;
-    }
-    let cfg;
-    try{ cfg = parseFirebaseConfigInput(raw); }
-    catch(e){
-      cloudStatus = 'error'; cloudStatusMsg = 'JSON formatida xatolik bor — Firebase konsolidan nusxalangan matnni to‘liq joylashtirganingizga ishonch hosil qiling.';
-      updateCloudStatusUI();
-      return;
-    }
-    if(!cfg || !cfg.apiKey || !cfg.projectId){
-      cloudStatus = 'error'; cloudStatusMsg = 'Konfiguratsiyada "apiKey" va "projectId" maydonlari bo‘lishi shart.';
-      updateCloudStatusUI();
-      return;
-    }
-    setCloudConfig(cfg);
-    cloudConnectBtn.disabled = true;
-    const originalLabel = cloudConnectBtn.textContent;
-    cloudConnectBtn.textContent = 'Ulanmoqda…';
-    await initCloud();
-    cloudConnectBtn.disabled = false;
-    cloudConnectBtn.textContent = originalLabel;
-    const disconnectBtn = document.getElementById('cloudDisconnectBtn');
-    if(disconnectBtn) disconnectBtn.disabled = (cloudStatus !== 'online' && cloudStatus !== 'connecting' && !getCloudConfig());
-    renderTabs();
-    if(activeTab==='hamkor') renderHamkorTable();
-    else if(activeTab!=='profil') renderHistory(activeTab);
-  };
-  const cloudDisconnectBtn = document.getElementById('cloudDisconnectBtn');
-  if(cloudDisconnectBtn) cloudDisconnectBtn.onclick = async ()=>{
-    stopCloudRealtime();
-    clearCloudConfig();
-    cloudApp = null; cloudDb = null; cloudReady = false;
-    cloudStatus = 'off'; cloudStatusMsg = '';
-    updateCloudStatusUI();
-    const input = document.getElementById('cloudConfigInput');
-    if(input) input.value = '';
-    cloudDisconnectBtn.disabled = true;
-  };
-
   const chooseFolderBtn = document.getElementById('chooseFolderBtn');
   if(chooseFolderBtn) chooseFolderBtn.onclick = chooseSaveFolder;
   const clearFolderBtn = document.getElementById('clearFolderBtn');

@@ -694,6 +694,31 @@
   .loc-row{display:flex;gap:6px;}
   .loc-row input{flex:1;min-width:0;}
   @media (max-width:560px){ .loc-row{flex-direction:column;} .loc-row #arGeo{width:100%;min-height:44px;font-size:14px !important;} }
+  /* ============ buxgalter ============ */
+  .bx-pdf{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--paper);cursor:pointer;text-align:left;font-family:var(--sans);color:var(--text);}
+  .bx-pdf:hover{border-color:var(--accent);}
+  .bx-pdf .ext{font-size:12px;font-weight:800;color:#fff;background:#d04545;border-radius:7px;padding:10px 9px;flex:none;}
+  .bx-pdf b{display:block;font-size:13px;word-break:break-all;}
+  .bx-pdf > span:nth-child(2){flex:1;min-width:0;}
+  .bx-pdf-go{font-size:26px;color:var(--muted);}
+  .bx-dl{text-align:right;margin-top:6px;}
+  .bx-chips{padding:10px 0;border-bottom:none;}
+  .bx-pages{justify-content:center;margin-top:12px;gap:10px;font-size:12.5px;}
+  #buxApp textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:7px;font-family:var(--sans);background:var(--input-bg);color:var(--text);resize:vertical;}
+  @media (max-width:760px){
+    #buxApp{padding-bottom:calc(68px + env(safe-area-inset-bottom));}
+    #buxApp .card{padding:16px 14px;border-radius:14px;}
+    #buxApp .card h2{font-size:16px;}
+    #buxApp input,#buxApp select,#buxApp textarea{font-size:16px;}
+    #buxApp .hk-form{grid-template-columns:1fr;}
+    #buxApp .ar-decide{flex-direction:column;}
+    #buxApp .ar-decide button,#buxApp .hk-actions button{width:100%;min-height:48px;font-size:15px;}
+    #buxApp .hk-actions{flex-direction:column;}
+    .bx-chips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    .bx-chips .ar-chip{flex:none;}
+    #buxApp .hk-files{grid-template-columns:repeat(3,1fr);}
+  }
+  @media (max-width:760px){ #buxApp .ar-decide button, #userApp .ar-decide button{flex:none;} }
 </style>
 </head>
 <body>
@@ -754,6 +779,28 @@
   <nav class="ua-bottom"><button type="button" class="ua-tab" data-utab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span>Arizalar</span><span class="ua-badge" data-ubadge="home" style="display:none;"></span></button>
       <button type="button" class="ua-tab" data-utab="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg><span>Xabarlar</span><span class="ua-badge" data-ubadge="chat" style="display:none;"></span></button>
       <button type="button" class="ua-tab" data-utab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6 8-6s7.2 2 8 6"/></svg><span>Profil</span></button></nav>
+</div>
+
+<!-- ============================= BUXGALTER SAHIFASI ============================= -->
+<div id="buxApp" style="display:none;">
+  <div class="ua-top">
+    <img class="logo-auto" alt="BirZum">
+    <span class="ua-title">Buxgalteriya</span>
+    <nav class="ua-tabs"><button type="button" class="ua-tab" data-btab="docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span>Shartnomalar</span><span class="ua-badge" data-bbadge="docs" style="display:none;"></span></button>
+      <button type="button" class="ua-tab" data-btab="hamkor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg><span>Hamkorlar</span></button>
+      <button type="button" class="ua-tab" data-btab="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg><span>Xabarlar</span><span class="ua-badge" data-bbadge="chat" style="display:none;"></span></button>
+      <button type="button" class="ua-tab" data-btab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg><span>Sozlamalar</span></button></nav>
+    <div class="ua-right">
+      <span class="ua-user" id="bxName" data-noi18n></span>
+      <button type="button" class="icon-btn" id="bxTheme" title="Kunduzgi / tungi rejim"></button>
+      <button type="button" class="icon-btn" id="bxLogout" title="Chiqish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg></button>
+    </div>
+  </div>
+  <div class="ua-wrap" id="bxContent"></div>
+  <nav class="ua-bottom"><button type="button" class="ua-tab" data-btab="docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span>Shartnomalar</span><span class="ua-badge" data-bbadge="docs" style="display:none;"></span></button>
+      <button type="button" class="ua-tab" data-btab="hamkor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg><span>Hamkorlar</span></button>
+      <button type="button" class="ua-tab" data-btab="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg><span>Xabarlar</span><span class="ua-badge" data-bbadge="chat" style="display:none;"></span></button>
+      <button type="button" class="ua-tab" data-btab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg><span>Sozlamalar</span></button></nav>
 </div>
 
 <!-- ============================= MAIN APP ============================= -->
@@ -839,6 +886,7 @@ function clearAuthed(){
 function showApp(){
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('mainApp').style.display = 'block';
+  ['userApp','buxApp'].forEach(id=>{ const el = document.getElementById(id); if(el) el.style.display = 'none'; });
   loadAll();
   if(NAV_ORDER.includes(UI.lastTab)) activeTab = UI.lastTab;
   initShell();
@@ -862,6 +910,7 @@ function showLogin(){
   document.getElementById('mainApp').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   const uaEl = document.getElementById('userApp'); if(uaEl) uaEl.style.display = 'none';
+  const bxEl = document.getElementById('buxApp'); if(bxEl) bxEl.style.display = 'none';
   try{ showAuthCard('login'); }catch(e){}
   const f = document.getElementById('loginForm');
   if(f) f.reset();
@@ -874,28 +923,15 @@ document.getElementById('loginForm').onsubmit = async function(e){
   const u = document.getElementById('loginUser').value.trim();
   const p = document.getElementById('loginPass').value;
   const err = document.getElementById('loginError');
-  const creds = getCreds();
-  if(u === creds.login && p === creds.password){
-    err.textContent = '';
-    clearUserSession();
-    setAuthed();
-    showApp();
-    return;
-  }
-  // Ro'yxatdan o'tgan hamkor (foydalanuvchi)
   const btn = this.querySelector('button[type=submit]');
   btn.disabled = true; err.className = 'status'; err.textContent = 'Tekshirilmoqda…';
-  let user = null;
-  try{ user = await arTryUserLogin(u, p); }catch(ex){ console.error(ex); }
+  let res = null;
+  try{ res = await doLogin(u, p); }catch(ex){ console.error(ex); res = {err:'Kirishda xatolik: '+(ex.message||ex)}; }
   btn.disabled = false; err.className = 'status err';
-  if(user && user.blocked){ showBlockedNotice(); return; }
-  if(user){
-    err.textContent = '';
-    setUserSession({id:user.id, ism:user.ism, telefon:user.telefon, login:user.login});
-    showUserApp();
-  }else{
-    err.textContent = 'Login yoki parol noto‘g‘ri.';
-  }
+  if(res.blocked){ showBlockedNotice(); return; }
+  if(res.err){ err.textContent = res.err; return; }
+  err.textContent = '';
+  enterAs(res, p);
 };
 document.getElementById('logoutBtn').onclick = function(){
   try{ clearInterval(adminMsgTimer); clearInterval(arAdminTimer); adminSeenMsg = null; arSeenPending = null; setTitleBadge(0); }catch(e){}
@@ -2301,6 +2337,7 @@ function applyUiPrefs(){
   document.querySelectorAll('img.logo-auto').forEach(im=>{ const want = dark ? LOGO_DARK : LOGO_LIGHT; if(im.getAttribute('src')!==want) im.setAttribute('src', want); });
   document.querySelectorAll('img.logo-light').forEach(im=>{ if(im.getAttribute('src')!==LOGO_LIGHT) im.setAttribute('src', LOGO_LIGHT); });
   const uat = document.getElementById('uaTheme'); if(uat) uat.innerHTML = dark ? ICONS.sun : ICONS.moon;
+  const bxt = document.getElementById('bxTheme'); if(bxt) bxt.innerHTML = dark ? ICONS.sun : ICONS.moon;
   const tbtn = document.getElementById('themeQuick');
   if(tbtn) tbtn.innerHTML = effectiveTheme()==='dark' ? ICONS.sun : ICONS.moon;
   i18nApply(document.body);
@@ -3118,6 +3155,7 @@ function renderApp(){
   if(activeTab==='arizalar') app.innerHTML = arizalarMarkup();
   if(activeTab==='users') app.innerHTML = usersMarkup();
   bindSectionEvents(activeTab);
+  if(activeTab==='bosh') bindBoshBux();
   i18nApply(document.getElementById('mainApp'));
 }
 
@@ -3136,6 +3174,7 @@ function sectionMarkup(key,title,sub){
         </div>
         <button type="button" class="secondary" id="dl_${key}" style="margin-top:8px;width:100%;">📄 PDF yuklab olish</button>
         <button type="button" class="secondary" id="dlword_${key}" style="margin-top:8px;width:100%;">📝 Word (${key==='bosh'?'.docx':'.doc'}) yuklab olish</button>
+        ${key==='bosh' ? '<button type="button" class="secondary bx-send" id="toBux_bosh" style="margin-top:8px;width:100%;">📤 Buxgalterga yuborish</button>' : ''}
         <button type="button" class="secondary" id="clear_${key}" style="margin-top:8px;width:100%;">Formani tozalash</button>
         <div class="status" id="status_${key}"></div>
       </form>
@@ -3974,7 +4013,7 @@ function showAuthCard(which){
     try{
       if(login.toLowerCase() === String(getCreds().login).toLowerCase() || await arFindUser(login)) { btn.disabled = false; return err('Bu login band. Boshqa login tanlang.'); }
       const salt = uid() + uid();
-      const u = {id: 'u' + uid(), ism, telefon: phone, login, loginLower: login.toLowerCase(), salt, hash: arHashPass(p1, salt),
+      const u = {id: 'u' + uid(), role: 'user', ism, telefon: phone, login, loginLower: login.toLowerCase(), salt, hash: arHashPass(p1, salt),
                  createdAt: new Date().toISOString(), blocked: false};
       await ST.set(AR_USERS, u.id, u);
       setUserSession({id:u.id, ism:u.ism, telefon:u.telefon, login:u.login});
@@ -4459,6 +4498,7 @@ function renderArDetail(){
       ${miss.length ? `<div class="ar-note warn"><b>Yetishmayotganlar:</b> <span data-noi18n>${miss.map(esc).join('; ')}</span></div>` : `<div class="ar-note good">✓ Barcha majburiy ma’lumot va hujjatlar yuborilgan.</div>`}
       ${soft.length ? `<div class="ar-note">ℹ️ Ixtiyoriy hujjatlardan yuborilmagan: <span data-noi18n>${soft.map(esc).join('; ')}</span>.</div>` : ''}
       ${a.hamkorId ? `<div class="ar-note good">Hamkorlar ro‘yxatiga qo‘shilgan. <button type="button" class="link-btn" id="arGoHamkor" style="margin:0 0 0 6px;">Hamkorni ochish →</button></div>` : ''}
+      ${a.status==='qabul' ? `<button type="button" class="primary" id="arMakeContract" style="width:100%;margin-top:12px;">📝 Shartnoma yaratish</button>` : ''}
       <div class="hk-section" style="margin-top:12px;"><h3>Tashkilot ma’lumotlari</h3>${arDataTable(a)}</div>
       <div class="hk-section"><h3>Hujjatlar va rasmlar</h3>${arFilesMarkup(a)}</div>
       <div class="hk-section">
@@ -4477,6 +4517,7 @@ function renderArDetail(){
   arHydrateFiles(host, a);
   const g = document.getElementById('arGoHamkor');
   if(g) g.onclick = ()=>{ hamkorEditingId = a.hamkorId; activeTab = 'hamkor'; UI.lastTab = 'hamkor'; saveUiPrefs(); renderApp(); };
+  const mk = document.getElementById('arMakeContract'); if(mk) mk.onclick = ()=> openBoshFromAriza(a);
   document.getElementById('arAccept').onclick = ()=> arDecide(a, 'qabul');
   document.getElementById('arReturn').onclick = ()=> arDecide(a, 'qaytarildi');
   document.getElementById('arReject').onclick = ()=> arDecide(a, 'rad');
@@ -4798,11 +4839,11 @@ async function usersLoad(){
   if(activeTab==='users'){ renderUsersList(); renderUserDetail(); }
 }
 function usersMarkup(){
-  const chips = [['all','Hammasi'],['active','Faol'],['blocked','Nofaol'],['unread','Yangi xabar']];
+  const chips = [['all','Hammasi'],['user','Hamkorlar'],['buxgalter','Buxgalterlar'],['admin','Adminlar'],['active','Faol'],['blocked','Nofaol'],['unread','Yangi xabar']];
   return `<div class="hk-grid">
     <div class="hk-card">
       <div class="hk-card-head">
-        <h2>Foydalanuvchilar</h2><span class="nav-cnt" id="usersCnt" data-noi18n>${USERS_CACHE.length}</span>
+        <h2>Foydalanuvchilar</h2><button type="button" class="hk-plus" id="usersNew" title="Yangi foydalanuvchi qo‘shish">+</button><span class="nav-cnt" id="usersCnt" data-noi18n>${USERS_CACHE.length}</span>
         <div class="hk-tools">
           <button type="button" class="hk-tool" id="usersReload">↻ Yangilash</button>
           <div class="hk-search">${ICONS.search}<input type="search" id="usersSearch" placeholder="Qidirish uchun matn kiriting" value="${esc(usersQuery)}"></div>
@@ -4821,25 +4862,27 @@ function usersFiltered(){
   if(usersFilter==='active') l = l.filter(u=>!u.blocked);
   if(usersFilter==='blocked') l = l.filter(u=>u.blocked);
   if(usersFilter==='unread') l = l.filter(u=>adminUnread[u.id]);
+  if(['user','buxgalter','admin'].includes(usersFilter)) l = l.filter(u=>userRole(u)===usersFilter);
   if(q) l = l.filter(u=>[u.ism,u.telefon,u.login].some(v=>String(v||'').toLowerCase().includes(q)));
   return l.sort((a,b)=> (adminUnread[b.id]||0) - (adminUnread[a.id]||0));
 }
 function renderUsersList(){
   const wrap = document.getElementById('usersListWrap'); if(!wrap) return;
   const c = document.getElementById('usersCnt'); if(c) c.textContent = USERS_CACHE.length;
-  const counts = {all:USERS_CACHE.length, active:USERS_CACHE.filter(u=>!u.blocked).length, blocked:USERS_CACHE.filter(u=>u.blocked).length, unread:USERS_CACHE.filter(u=>adminUnread[u.id]).length};
+  const counts = {user:USERS_CACHE.filter(u=>userRole(u)==='user').length, buxgalter:USERS_CACHE.filter(u=>userRole(u)==='buxgalter').length, admin:USERS_CACHE.filter(u=>userRole(u)==='admin').length, all:USERS_CACHE.length, active:USERS_CACHE.filter(u=>!u.blocked).length, blocked:USERS_CACHE.filter(u=>u.blocked).length, unread:USERS_CACHE.filter(u=>adminUnread[u.id]).length};
   document.querySelectorAll('[data-uflt]').forEach(b=>{ b.querySelector('.ar-chip-n').textContent = counts[b.dataset.uflt]; });
   if(!usersLoaded){ wrap.innerHTML = '<div class="hk-empty">Yuklanmoqda…</div>'; return; }
   const l = usersFiltered();
   if(!l.length){ wrap.innerHTML = `<div class="hk-empty">${ICONS.user}Foydalanuvchi topilmadi.</div>`; i18nApply(wrap); return; }
-  wrap.innerHTML = `<table class="hk-table"><thead><tr><th>Ism</th><th>Telefon</th><th>Arizalar</th><th>Holati</th><th></th></tr></thead><tbody>
+  wrap.innerHTML = `<table class="hk-table"><thead><tr><th>Ism</th><th>Rol</th><th>Telefon</th><th>Arizalar</th><th>Holati</th><th></th></tr></thead><tbody>
     ${l.map(u=>{
       const n = adminUnread[u.id]||0;
       const ac = AR_CACHE.filter(a=>a.userId===u.id).length;
       return `<tr data-id="${u.id}" class="${u.id===usersSelId?'sel':''}">
         <td data-noi18n><div class="hk-name">${esc(u.ism||'—')}</div><div class="hk-sub">@${esc(u.login)}</div></td>
+        <td>${roleBadge(userRole(u))}</td>
         <td data-noi18n style="white-space:nowrap;">${esc(u.telefon||'—')}</td>
-        <td data-noi18n>${ac}</td>
+        <td data-noi18n>${userRole(u)==='user'?ac:'—'}</td>
         <td><span class="st-badge ${u.blocked?'st-rej':'st-ok'}">${u.blocked?'Nofaol':'Faol'}</span></td>
         <td data-noi18n>${n?`<span class="nav-cnt hot" title="O‘qilmagan xabarlar">💬 ${n}</span>`:''}</td></tr>`;
     }).join('')}</tbody></table>`;
@@ -4866,7 +4909,7 @@ async function renderUserDetail(keepScroll){
   const ar = AR_CACHE.filter(a=>a.userId===u.id);
   const cnt = s=> ar.filter(a=>a.status===s).length;
   host.innerHTML = `
-    <div class="hk-card-head"><h2>Foydalanuvchi</h2><span class="st-badge ${u.blocked?'st-rej':'st-ok'}">${u.blocked?'Nofaol':'Faol'}</span>
+    <div class="hk-card-head"><h2>Foydalanuvchi</h2>${roleBadge(userRole(u))}<span class="st-badge ${u.blocked?'st-rej':'st-ok'}">${u.blocked?'Nofaol':'Faol'}</span>
       <div class="hk-tools"><button type="button" class="hk-tool" id="uEditBtn">✏️ Tahrirlash</button></div></div>
     <div class="hk-detail-body">
       <div class="ar-applicant" data-noi18n>
@@ -4920,6 +4963,7 @@ function openUserEditModal(u){
   m.innerHTML = `<div class="modal" style="max-width:520px;">
     <div class="modal-head"><h3>Foydalanuvchini tahrirlash</h3><button type="button" class="modal-x" id="umX">✕</button></div>
     <form id="umForm" autocomplete="off"><div class="modal-body">
+      <label>Rol</label><select id="umRole">${['user','buxgalter','admin'].map(r=>`<option value="${r}" ${userRole(u)===r?'selected':''}>${ROLE_LABEL[r]}</option>`).join('')}</select>
       <label>Ism va familiya</label><input type="text" id="umIsm" value="${esc(u.ism||'')}">
       <label>Telefon raqami</label><input type="tel" id="umTel" value="${esc(u.telefon||'')}">
       <label>Login</label><input type="text" id="umLogin" value="${esc(u.login||'')}">
@@ -4948,7 +4992,7 @@ function openUserEditModal(u){
       if(login.toLowerCase()===String(getCreds().login).toLowerCase()) return err('Bu login band.');
       const ex = await arFindUser(login); if(ex && ex.id!==u.id) return err('Bu login band.');
     }
-    u.ism = ism; u.telefon = telefon; u.login = login; u.loginLower = login.toLowerCase();
+    u.ism = ism; u.telefon = telefon; u.login = login; u.loginLower = login.toLowerCase(); u.role = document.getElementById('umRole').value;
     if(pass){ u.salt = uid()+uid(); u.hash = arHashPass(pass, u.salt); u.passChangedAt = new Date().toISOString(); }
     try{ await ST.set(AR_USERS, u.id, u); }catch(ex){ return err('Saqlanmadi: '+(ex.message||ex)); }
     close(); renderUsersList(); renderUserDetail();
@@ -4963,10 +5007,540 @@ function bindUsersEvents(){
   const s = document.getElementById('usersSearch'); if(s) s.oninput = ()=>{ usersQuery = s.value; renderUsersList(); };
   document.querySelectorAll('[data-uflt]').forEach(c=> c.onclick = ()=>{ usersFilter = c.dataset.uflt; document.querySelectorAll('[data-uflt]').forEach(x=>x.classList.toggle('on', x===c)); renderUsersList(); });
   const r = document.getElementById('usersReload'); if(r) r.onclick = ()=>{ usersLoad(); adminPollMessages(); };
+  const nb = document.getElementById('usersNew'); if(nb) nb.onclick = openUserCreateModal;
   renderUsersList(); renderUserDetail();
   usersLoad();
   if(!arLoaded) arAdminLoad(true);
   askNotifyPermission();
+}
+
+
+/* ======================================================================================
+   ROLLAR: admin · buxgalter · user (hamkor)
+   --------------------------------------------------------------------------------------
+   • Barcha akkauntlar (admin ham) bulutdagi «birzum_users» to'plamida saqlanadi —
+     shuning uchun parol bir qurilmada o'zgartirilsa, boshqasida ham darhol amal qiladi.
+   • Bulutda hali admin akkaunti bo'lmasa (birinchi marta), eski (shu brauzerdagi)
+     admin login/paroli bilan kirilganda u avtomatik bulutga ko'chiriladi.
+   ====================================================================================== */
+const ROLE_LABEL = {admin:'Admin', buxgalter:'Buxgalter', user:'Hamkor'};
+const ADMIN_ID_KEY = STORAGE_PREFIX + 'admin_id';
+function userRole(u){ return (u && u.role) || 'user'; }
+function roleBadge(r){ const cls = {admin:'st-re', buxgalter:'st-new', user:'st-ok'}[r] || ''; return `<span class="st-badge ${cls}">${esc(ROLE_LABEL[r]||r)}</span>`; }
+
+async function cloudAdminsExist(){
+  try{ return (await ST.where(AR_USERS, 'role', 'admin')).filter(u=>!u.blocked).length > 0; }catch(e){ return null; }
+}
+// Kirish: avval bulutdagi akkauntlar, keyin (faqat bulutda admin bo'lmasa) eski mahalliy admin
+async function doLogin(login, pass){
+  let u = null, cloudOk = true;
+  try{ u = await arFindUser(login); }catch(e){ cloudOk = false; console.error(e); }
+  if(u){
+    if(arHashPass(pass, u.salt) !== u.hash) return {err:'Login yoki parol noto‘g‘ri.'};
+    if(u.blocked) return {blocked:true};
+    try{ u.lastLoginAt = new Date().toISOString(); await ST.set(AR_USERS, u.id, u); }catch(e){}
+    return {user:u, role:userRole(u)};
+  }
+  const creds = getCreds();
+  if(login === creds.login && pass === creds.password){
+    const exists = cloudOk ? await cloudAdminsExist() : null;
+    if(exists === true) return {err:'Bu parol eskirgan. Admin paroli boshqa qurilmada o‘zgartirilgan — yangi parol bilan kiring.'};
+    if(exists === false){
+      // Birinchi marta: admin akkauntini bulutga ko'chiramiz
+      const salt = uid()+uid();
+      const a = {id:'admin_'+uid(), role:'admin', ism:'Admin', telefon:'', login, loginLower:login.toLowerCase(), salt, hash:arHashPass(pass, salt),
+                 createdAt:new Date().toISOString(), blocked:false};
+      try{ await ST.set(AR_USERS, a.id, a); return {user:a, role:'admin'}; }catch(e){ console.error(e); }
+    }
+    return {user:{id:'', role:'admin', login}, role:'admin', localOnly:true};
+  }
+  return {err:'Login yoki parol noto‘g‘ri.'};
+}
+function enterAs(res, pass){
+  const u = res.user;
+  if(res.role==='admin'){
+    clearUserSession();
+    try{ sessionStorage.setItem(ADMIN_ID_KEY, u.id||''); }catch(e){}
+    setCreds(u.login, pass);           // shu qurilmadagi zaxira nusxani ham yangilaymiz
+    setAuthed();
+    showApp();
+  }else{
+    setUserSession({id:u.id, ism:u.ism, telefon:u.telefon, login:u.login, role:res.role});
+    if(res.role==='buxgalter') showBuxApp(); else showUserApp();
+  }
+}
+// Admin o'z login/parolini o'zgartirganda — bulutdagi akkaunt ham yangilanadi
+async function adminCloudUpdate(newLogin, newPass){
+  let id = ''; try{ id = sessionStorage.getItem(ADMIN_ID_KEY)||''; }catch(e){}
+  try{
+    let a = id ? await ST.get(AR_USERS, id) : null;
+    if(!a){
+      const salt = uid()+uid();
+      a = {id:'admin_'+uid(), role:'admin', ism:'Admin', telefon:'', createdAt:new Date().toISOString(), blocked:false, salt};
+    }
+    if(newLogin.toLowerCase() !== String(a.loginLower||'')){
+      const ex = await arFindUser(newLogin); if(ex && ex.id !== a.id) return 'Bu login boshqa foydalanuvchida band.';
+    }
+    a.login = newLogin; a.loginLower = newLogin.toLowerCase();
+    a.salt = uid()+uid(); a.hash = arHashPass(newPass, a.salt); a.passChangedAt = new Date().toISOString();
+    await ST.set(AR_USERS, a.id, a);
+    try{ sessionStorage.setItem(ADMIN_ID_KEY, a.id); }catch(e){}
+    return '';
+  }catch(e){ return 'Bulutga yozilmadi: '+(e.message||e); }
+}
+
+/* ---------- Admin: yangi foydalanuvchi qo'shish (rol bilan) ---------- */
+function openUserCreateModal(){
+  closeHamkorModal();
+  const m = document.createElement('div');
+  m.className = 'modal-back'; m.id = 'hkModal';
+  m.innerHTML = `<div class="modal" style="max-width:520px;">
+    <div class="modal-head"><h3>Yangi foydalanuvchi qo‘shish</h3><button type="button" class="modal-x" id="ucX">✕</button></div>
+    <form id="ucForm" autocomplete="off"><div class="modal-body">
+      <label>Rol</label>
+      <select id="ucRole"><option value="buxgalter">Buxgalter</option><option value="user">Hamkor (ariza yuboruvchi)</option><option value="admin">Admin</option></select>
+      <div class="hint" id="ucRoleHint"></div>
+      <label>Ism va familiya</label><input type="text" id="ucIsm" placeholder="Masalan: Aliyeva Dilnoza">
+      <label>Telefon raqami</label><input type="tel" id="ucTel" value="+998 ">
+      <label>Login</label><input type="text" id="ucLogin" placeholder="lotin harflari va raqamlar">
+      <label>Parol</label><input type="text" id="ucPass" placeholder="kamida 6 ta belgi">
+      <div class="status" id="ucStatus"></div>
+    </div>
+    <div class="modal-foot"><button type="submit" class="primary">Qo‘shish</button><button type="button" class="secondary" id="ucCancel">Bekor qilish</button></div></form></div>`;
+  document.body.appendChild(m);
+  const hints = {buxgalter:'Hamkorlarni faqat ko‘radi (tahrirlay olmaydi, login/parollarni ko‘rmaydi), admin yuborgan shartnomalar statusini yuritadi, admin bilan yozishadi.',
+                 user:'Hamkor kabineti: hujjatlar ro‘yxati, ariza yuborish, arizalar holati va admin bilan yozishma.',
+                 admin:'To‘liq huquq: barcha bo‘limlar, import/eksport, foydalanuvchilarni boshqarish.'};
+  const rs = document.getElementById('ucRole');
+  const sh = ()=>{ document.getElementById('ucRoleHint').textContent = hints[rs.value]; };
+  rs.onchange = sh; sh();
+  const close = ()=> m.remove();
+  document.getElementById('ucX').onclick = close; document.getElementById('ucCancel').onclick = close;
+  const tel = document.getElementById('ucTel'); tel.addEventListener('input', ()=>{ tel.value = formatUzPhone(tel.value); });
+  document.getElementById('ucForm').onsubmit = async (e)=>{
+    e.preventDefault();
+    const st = document.getElementById('ucStatus'); const err = t=>{ st.className='status err'; st.textContent=t; };
+    const role = rs.value, ism = document.getElementById('ucIsm').value.trim(), telefon = tel.value.trim();
+    const login = document.getElementById('ucLogin').value.trim(), pass = document.getElementById('ucPass').value;
+    if(ism.length<3) return err('Ism va familiyani to‘liq kiriting.');
+    if(!/^[a-zA-Z0-9_.]{3,32}$/.test(login)) return err('Login 3–32 ta lotin harfi, raqam, «_» yoki «.» dan iborat bo‘lsin.');
+    if(pass.length<6) return err('Parol kamida 6 ta belgidan iborat bo‘lsin.');
+    st.className='status'; st.textContent='Saqlanmoqda…';
+    try{
+      if(login.toLowerCase()===String(getCreds().login).toLowerCase() || await arFindUser(login)) return err('Bu login band.');
+      const salt = uid()+uid();
+      const u = {id:(role==='admin'?'admin_':'u')+uid(), role, ism, telefon, login, loginLower:login.toLowerCase(), salt, hash:arHashPass(pass, salt),
+                 createdAt:new Date().toISOString(), createdBy:'admin', blocked:false};
+      await ST.set(AR_USERS, u.id, u);
+      close();
+      USERS_CACHE.unshift(u); usersSelId = u.id;
+      renderUsersList(); renderUserDetail();
+      if(confirm(`«${ism}» (${ROLE_LABEL[role]}) qo‘shildi.\n\nLogin: ${login}\nParol: ${pass}\n\nBu ma’lumotlarni unga xabar qilib ham yuborib qo‘yilsinmi? (U tizimga kirganda «Xabarlar» bo‘limida ko‘radi.)`)){
+        await msgSend(u.id, 'admin', `Assalomu alaykum! Siz uchun BirZum Nasiya Shartnomalar tizimida akkaunt ochildi (${ROLE_LABEL[role]}).\nLogin: ${login}\nParol: ${pass}\nParolni Sozlamalar/Profil bo‘limida o‘zgartirishingiz mumkin.`, {userIsm:ism, system:true});
+        renderUserDetail();
+      }
+    }catch(ex){ err('Saqlanmadi: '+(ex.message||ex)); }
+  };
+  i18nApply(m);
+}
+
+/* ======================================================================================
+   ADMIN → BUXGALTER: SHARTNOMALAR
+   Statuslar: yuborildi (admin yubordi) → didox (Didoxdan yuborildi) → tasdiq | bekor
+   ====================================================================================== */
+const BUX_COL = 'birzum_bux_shartnomalar';
+const BUX_STATUS = {
+  yuborildi:{l:'Yangi — buxgalterga yuborildi', s:'Yangi', cls:'st-new'},
+  didox:    {l:'Didoxdan yuborildi', s:'Didoxdan yuborildi', cls:'st-re'},
+  tasdiq:   {l:'Shartnoma tasdiqlandi', s:'Tasdiqlandi', cls:'st-ok'},
+  bekor:    {l:'Shartnoma bekor qilindi', s:'Bekor qilindi', cls:'st-rej'},
+};
+function buxBadge(st){ const s = BUX_STATUS[st]||BUX_STATUS.yuborildi; return `<span class="st-badge ${s.cls}">${esc(s.l)}</span>`; }
+
+async function buildBoshPdfBlob(d){
+  const page = BOSH_TPL.page;
+  const pages = await wlRenderPages(BOSH_TPL, boshValues(d));
+  const holder = document.createElement('div');
+  holder.className = 'pdf-offscreen';
+  pages.forEach(p=>holder.appendChild(p));
+  document.body.appendChild(holder);
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const { jsPDF } = window.jspdf;
+    const wPt = page.w/20, hPt = page.h/20;
+    const pdf = new jsPDF({orientation:'p', unit:'pt', format:[wPt, hPt], compress:true});
+    for(let i=0;i<pages.length;i++){
+      const canvas = await html2canvas(pages[i], {scale:2, backgroundColor:'#ffffff', useCORS:true, logging:false});
+      if(i>0) pdf.addPage([wPt, hPt], 'p');
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.8), 'JPEG', 0, 0, wPt, hPt);
+    }
+    return pdf.output('blob');
+  }finally{ document.body.removeChild(holder); }
+}
+async function sendBoshToBux(){
+  const st = document.getElementById('status_bosh');
+  const say = (c,t)=>{ if(st){ st.className='status '+c; st.textContent=t; } };
+  const d = readForm('bosh');
+  const miss = validate('bosh', d);
+  if(miss.length){ say('err','Avval majburiy maydonlarni to‘ldiring: '+miss.join(', ')); return; }
+  const dup = (await ST.all(BUX_COL).catch(()=>[])).find(x=> x.raqam===d.shartnoma_raqami && String(x.stir||'')===String(d.stir||'') && x.status!=='bekor');
+  if(dup && !confirm(`Diqqat: ${d.shartnoma_raqami} raqamli shartnoma ${arFmtDT(dup.sentAt)} da allaqachon yuborilgan (holati: ${BUX_STATUS[dup.status].s}). Yana yuborilsinmi?`)) return;
+  if(!dup && !confirm(`«${d.tashkilot_nomi}» bilan ${d.shartnoma_raqami} raqamli bosh shartnoma PDF ko‘rinishida buxgalterga yuborilsinmi?`)) return;
+  const btn = document.getElementById('toBux_bosh'); if(btn) btn.disabled = true;
+  try{
+    say('','PDF tayyorlanmoqda…');
+    const blob = await buildBoshPdfBlob(d);
+    say('','Buxgalterga yuborilmoqda…');
+    const fid = 'f'+uid();
+    const name = fileNameFor('bosh', d);
+    const chunks = await arSaveFile(fid, blob);
+    const now = new Date().toISOString();
+    const safe = Object.assign({}, d); delete safe.login; delete safe.parol;
+    const id = 'bx'+uid();
+    await ST.set(BUX_COL, id, {
+      tur:'bosh', tashkilot_nomi:d.tashkilot_nomi, stir:d.stir||'', raqam:d.shartnoma_raqami, sana:d.shartnoma_sanasi,
+      file:{id:fid, name, type:'application/pdf', size:blob.size, chunks}, data:safe,
+      sentAt:now, sentBy:'Admin', status:'yuborildi', history:[{status:'yuborildi', at:now, by:'Admin'}],
+    });
+    say('ok', `«${d.tashkilot_nomi}» shartnomasi buxgalterga yuborildi (${arFmtDT(now)}). Holatini pastdagi «Buxgalteriyaga yuborilganlar» ro‘yxatida kuzatishingiz mumkin.`);
+    renderBuxSentCard();
+  }catch(e){ console.error(e); say('err','Yuborishda xatolik: '+(e.message||e)); }
+  finally{ if(btn) btn.disabled = false; }
+}
+function buxHistoryMarkup(x){
+  const h = (x.history||[]).slice().reverse();
+  return `<ul class="ar-hist">${h.map(e=>`<li><span class="dot ${(BUX_STATUS[e.status]||{}).cls||''}"></span><div><b>${esc((BUX_STATUS[e.status]||{l:e.status}).l)}</b> · <span class="muted" data-noi18n>${arFmtDT(e.at)} · ${esc(e.by||'')}</span>${e.izoh?`<div class="ar-hist-note" data-noi18n>${esc(e.izoh)}</div>`:''}</div></li>`).join('')}</ul>`;
+}
+async function openBuxPdf(x){
+  try{ const blob = await arFileBlob(x.file); openViewer({name:x.file.name, type:'application/pdf', size:x.file.size, blob}); }
+  catch(e){ alert('PDF ochilmadi: '+(e.message||e)); }
+}
+// Admin: Bosh shartnoma bo'limi ostida yuborilganlar ro'yxati
+async function renderBuxSentCard(){
+  const host = document.getElementById('buxSentCard'); if(!host) return;
+  let list = [];
+  try{ list = (await ST.all(BUX_COL)).sort((a,b)=>String(b.sentAt).localeCompare(String(a.sentAt))); }
+  catch(e){ host.innerHTML = `<h2>Buxgalteriyaga yuborilganlar</h2><p class="sub">Ro‘yxatni yuklab bo‘lmadi: ${esc(e.message||e)}</p>`; return; }
+  host.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h2 style="margin:0;">Buxgalteriyaga yuborilganlar <span class="nav-cnt" data-noi18n>${list.length}</span></h2><button type="button" class="hk-tool" id="buxSentReload">↻ Yangilash</button></div>
+    ${list.length ? `<div class="hk-table-wrap" style="max-height:420px;min-height:0;margin-top:10px;"><table class="hk-table"><thead><tr><th>Tashkilot</th><th>Raqam</th><th>Yuborilgan</th><th>Holati</th><th>Oxirgi o‘zgarish</th><th></th></tr></thead><tbody>
+      ${list.map((x,i)=>{ const last = (x.history||[]).slice(-1)[0]||{}; return `<tr data-noi18n><td><div class="hk-name">${esc(x.tashkilot_nomi||'')}</div><div class="hk-sub">STIR: ${esc(x.stir||'—')}</div></td><td>${esc(x.raqam||'')}</td><td style="white-space:nowrap;">${arFmtDT(x.sentAt)}</td><td>${buxBadge(x.status)}</td><td style="white-space:nowrap;">${arFmtDT(last.at)}${last.by?'<div class="hk-sub">'+esc(last.by)+'</div>':''}</td><td><button type="button" class="link-btn" data-bxpdf="${i}" style="margin:0;">PDF</button></td></tr>`; }).join('')}
+    </tbody></table></div>` : `<p class="sub" style="margin:8px 0 0;">Hozircha buxgalterga shartnoma yuborilmagan. Shartnomani yaratib, «📤 Buxgalterga yuborish» tugmasini bosing.</p>`}`;
+  const rb = document.getElementById('buxSentReload'); if(rb) rb.onclick = renderBuxSentCard;
+  host.querySelectorAll('[data-bxpdf]').forEach(b=> b.onclick = ()=> openBuxPdf(list[Number(b.dataset.bxpdf)]));
+  i18nApply(host);
+}
+function bindBoshBux(){
+  const b = document.getElementById('toBux_bosh'); if(b) b.onclick = sendBoshToBux;
+  const app = document.getElementById('app');
+  if(app && !document.getElementById('buxSentCard')){
+    const c = document.createElement('div'); c.className = 'card'; c.id = 'buxSentCard'; c.style.marginTop = '16px';
+    c.innerHTML = '<h2>Buxgalteriyaga yuborilganlar</h2><p class="sub">Yuklanmoqda…</p>';
+    app.appendChild(c);
+  }
+  renderBuxSentCard();
+}
+// Arizadan bosh shartnoma ochish
+function openBoshFromAriza(a){
+  const d = a.data || {};
+  const today = new Date(); const iso = `${today.getFullYear()}-${pad2(today.getMonth()+1)}-${pad2(today.getDate())}`;
+  const h = a.hamkorId ? DB.hamkor.find(r=>r.id===a.hamkorId) : null;
+  const hd = h ? h.data : {};
+  const data = {
+    shartnoma_raqami:'', shartnoma_sanasi:iso,
+    tashkilot_nomi:d.tashkilot_nomi||hd.tashkilot_nomi||'', stir:d.stir||hd.stir||'', rahbar_fish:d.rahbar_fish||hd.rahbar_fish||'',
+    manzil:d.manzil||hd.manzil||'', hisob_raqami:d.hisob_raqami||hd.hisob_raqami||'', bank_nomi:d.bank_nomi||hd.bank_nomi||'', mfo:d.mfo||hd.mfo||'',
+    telefon_raqami:d.telefon_raqami||hd.telefon_raqami||'', telegram_user:hd.telegram_user||'', brend:d.brend||hd.brend||'',
+    filial:hd.filial||'', pinfl:hd.pinfl||'', rahbar:hd.rahbar||'', login:hd.login||'', parol:hd.parol||'',
+  };
+  activeTab = 'bosh'; UI.lastTab = 'bosh'; saveUiPrefs();
+  renderApp();
+  writeForm('bosh', data);
+  const st = document.getElementById('status_bosh');
+  if(st){ st.className='status ok'; st.textContent = `Ariza ma’lumotlari formaga ko‘chirildi («${data.tashkilot_nomi}»). Shartnoma raqamini kiriting, kerak bo‘lsa maydonlarni tuzating va «Shartnoma yaratish» tugmasini bosing.`; }
+  const el = document.getElementById('f_shartnoma_raqami'); if(el){ el.focus(); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+}
+
+/* ======================================================================================
+   BUXGALTER SAHIFASI
+   ====================================================================================== */
+let bTab = 'docs';
+let bDocs = [], bDocsLoaded = false, bDocSel = null, bDocFilter = 'faol';
+let bHamkor = [], bHamkorLoaded = false, bHkSel = null, bHkQuery = '', bHkPage = 1;
+let bMsgs = [], bSeenMsg = null, bSeenDocs = null, bTimer = null;
+function bMobile(){ return window.innerWidth <= 760; }
+function showBuxApp(){
+  const u = getUserSession(); if(!u){ showLogin(); return; }
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('userApp').style.display = 'none';
+  const ba = document.getElementById('buxApp'); ba.style.display = 'block';
+  document.getElementById('bxName').textContent = u.ism || u.login;
+  document.getElementById('bxLogout').onclick = ()=>{
+    clearUserSession(); clearInterval(bTimer); bSeenMsg = null; bSeenDocs = null; bMsgs = []; bDocs = []; bHamkor = []; bDocsLoaded = bHamkorLoaded = false;
+    setTitleBadge(0); ba.style.display = 'none'; document.getElementById('bxContent').innerHTML = ''; showLogin();
+  };
+  document.getElementById('bxTheme').onclick = ()=>{ UI.theme = effectiveTheme()==='dark' ? 'light' : 'dark'; saveUiPrefs(); applyUiPrefs(); if(bTab==='settings') renderBux(); };
+  document.querySelectorAll('[data-btab]').forEach(b=> b.onclick = ()=> bGo(b.dataset.btab));
+  bTab = 'docs'; bDocSel = null; bHkSel = null;
+  applyUiPrefs();
+  renderBux();
+  bPoll();
+  clearInterval(bTimer); bTimer = setInterval(bPoll, 20000);
+}
+function bGo(tab){
+  if(tab===bTab){ if(tab==='docs') bDocSel = null; if(tab==='hamkor') bHkSel = null; }
+  bTab = tab; renderBux(); window.scrollTo(0,0);
+  if(tab==='chat'){ askNotifyPermission(); document.querySelectorAll('#toastBox .toast').forEach(t=>t.remove()); }
+}
+function bUnread(){ return bMsgs.filter(m=>m.from==='admin' && !m.readByUser).length; }
+function bNewDocs(){ return bDocs.filter(x=>x.status==='yuborildi').length; }
+function bBadges(){
+  const n = bUnread(), d = bNewDocs();
+  document.querySelectorAll('[data-bbadge=chat]').forEach(el=>{ el.textContent = n; el.style.display = n && bTab!=='chat' ? '' : 'none'; });
+  document.querySelectorAll('[data-bbadge=docs]').forEach(el=>{ el.textContent = d; el.style.display = d ? '' : 'none'; });
+  document.querySelectorAll('[data-btab]').forEach(b=> b.classList.toggle('on', b.dataset.btab===bTab));
+  setTitleBadge((bTab==='chat'?0:n) + d);
+}
+async function bLoadDocs(){
+  try{ bDocs = (await ST.all(BUX_COL)).sort((a,b)=>String(b.sentAt).localeCompare(String(a.sentAt))); bDocsLoaded = true; }catch(e){ console.error(e); }
+}
+async function bPoll(){
+  const u = getUserSession(); if(!u) return;
+  try{
+    const me = await ST.get(AR_USERS, u.id);
+    if(me && me.blocked){ document.getElementById('bxLogout').click(); showBlockedNotice(); return; }
+  }catch(e){}
+  await bLoadDocs();
+  const firstD = bSeenDocs === null; if(firstD) bSeenDocs = new Set();
+  const freshD = bDocs.filter(x=>!bSeenDocs.has(x.id)); freshD.forEach(x=>bSeenDocs.add(x.id));
+  if(firstD){ const n = bNewDocs(); if(n) showToast({icon:'📄', title:`${n} ta yangi shartnoma`, body:'Shartnomalar bo‘limida ko‘ring', onClick:()=>bGo('docs')}); }
+  else freshD.forEach(x=> showToast({icon:'📄', title:'Yangi shartnoma: '+(x.tashkilot_nomi||''), time:msgTime(x.sentAt), body:(x.raqam||'')+' · Admin yubordi', onClick:()=>{ bDocSel = x.id; bGo('docs'); }}));
+  try{ bMsgs = await msgThread(u.id); }catch(e){}
+  const firstM = bSeenMsg === null; if(firstM) bSeenMsg = new Set();
+  const freshM = bMsgs.filter(m=>m.from==='admin' && !m.readByUser && !bSeenMsg.has(m.id)); freshM.forEach(m=>bSeenMsg.add(m.id));
+  if(bTab==='chat' && freshM.length){ await msgMarkRead(bMsgs, 'user'); }
+  else if(firstM && freshM.length) showToast({icon:'💬', title:`Admindan ${freshM.length} ta yangi xabar`, time:msgTime(freshM[freshM.length-1].at), body:freshM[freshM.length-1].text, onClick:()=>bGo('chat')});
+  else freshM.forEach(m=> showToast({icon:'💬', title:'Admin', time:msgTime(m.at), body:m.text, onClick:()=>bGo('chat')}));
+  bBadges();
+  if((bTab==='docs' && freshD.length) || (bTab==='chat' && freshM.length)) renderBux();
+}
+function renderBux(){
+  const host = document.getElementById('bxContent'); if(!host) return;
+  bBadges();
+  if(bTab==='docs') return renderBuxDocs(host);
+  if(bTab==='hamkor') return renderBuxHamkor(host);
+  if(bTab==='chat') return renderBuxChat(host);
+  if(bTab==='settings') return renderBuxSettings(host);
+}
+/* ---- Shartnomalar ---- */
+function bDocsFiltered(){
+  if(bDocFilter==='faol') return bDocs.filter(x=>x.status==='yuborildi'||x.status==='didox');
+  if(bDocFilter==='hammasi') return bDocs;
+  return bDocs.filter(x=>x.status===bDocFilter);
+}
+function renderBuxDocs(host){
+  const cnt = k=> k==='faol' ? bDocs.filter(x=>x.status==='yuborildi'||x.status==='didox').length : (k==='hammasi' ? bDocs.length : bDocs.filter(x=>x.status===k).length);
+  const chips = [['faol','Jarayonda'],['yuborildi','Yangi'],['didox','Didoxdan yuborildi'],['tasdiq','Tasdiqlangan'],['bekor','Bekor qilingan'],['hammasi','Hammasi']];
+  const list = bDocsFiltered();
+  const listHtml = `<div class="card bx-listcard">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><h2 style="margin:0;">Shartnomalar <span class="nav-cnt" data-noi18n>${bDocs.length}</span></h2><button type="button" class="hk-tool" id="bxReload">↻ Yangilash</button></div>
+      <div class="ar-chips bx-chips">${chips.map(([k,l])=>`<button type="button" class="ar-chip ${bDocFilter===k?'on':''}" data-bflt="${k}">${esc(l)}<span class="ar-chip-n" data-noi18n>${cnt(k)}</span></button>`).join('')}</div>
+      ${!bDocsLoaded ? '<p class="sub">Yuklanmoqda…</p>' : (list.length ? `<div class="ua-list">${list.map(x=>`
+        <button type="button" class="ua-item ${x.id===bDocSel?'sel':''}" data-bdoc="${x.id}">
+          <div class="ua-item-top"><b data-noi18n>${esc(x.tashkilot_nomi||'')}</b>${buxBadge(x.status)}</div>
+          <div class="ua-item-sub" data-noi18n>№ ${esc(x.raqam||'—')} · STIR ${esc(x.stir||'—')}</div>
+          <div class="ua-item-sub" data-noi18n>📤 Admin yubordi: ${arFmtDT(x.sentAt)}</div>
+        </button>`).join('')}</div>` : '<p class="sub" style="margin:10px 0 0;">Bu bo‘limda shartnoma yo‘q.</p>')}
+    </div>`;
+  const x = bDocs.find(d=>d.id===bDocSel);
+  const detail = x ? buxDocDetailMarkup(x) : `<div class="card ua-welcome"><h2>Shartnomani tanlang</h2><p class="sub">Admin yuborgan har bir shartnoma shu yerda PDF ko‘rinishida ochiladi. Ish jarayoniga qarab statusni o‘zgartiring:</p>
+      <ol class="ua-steps"><li><b>Didoxdan yuborildi</b> — shartnoma Didox orqali hamkorga yuborilganda.</li><li><b>Shartnoma tasdiqlandi</b> — hamkor imzolaganda.</li><li><b>Shartnoma bekor qilindi</b> — rad etilganda yoki bekor bo‘lganda.</li></ol></div>`;
+  host.innerHTML = bMobile() && x
+    ? `<div class="ua-grid"><div class="ua-main"><button type="button" class="ua-back" id="bxBack">‹ Shartnomalar</button>${detail}</div></div>`
+    : `<div class="ua-grid"><div class="ua-side">${listHtml}</div><div class="ua-main">${bMobile() ? '' : detail}</div></div>`;
+  const back = document.getElementById('bxBack'); if(back) back.onclick = ()=>{ bDocSel = null; renderBux(); window.scrollTo(0,0); };
+  const rl = document.getElementById('bxReload'); if(rl) rl.onclick = async ()=>{ await bLoadDocs(); renderBux(); };
+  host.querySelectorAll('[data-bflt]').forEach(b=> b.onclick = ()=>{ bDocFilter = b.dataset.bflt; renderBux(); });
+  host.querySelectorAll('[data-bdoc]').forEach(b=> b.onclick = ()=>{ bDocSel = b.dataset.bdoc; renderBux(); if(bMobile()) window.scrollTo(0,0); });
+  if(x) bindBuxDocDetail(x);
+  i18nApply(host);
+}
+function buxDocDetailMarkup(x){
+  const d = x.data || {};
+  const acts = x.status==='yuborildi'
+    ? `<button type="button" class="primary" data-bset="didox">📨 Didoxdan yuborildi</button>`
+    : (x.status==='didox' ? `<button type="button" class="primary" data-bset="tasdiq">✓ Shartnoma tasdiqlandi</button><button type="button" class="danger-btn" data-bset="bekor">✕ Shartnoma bekor qilindi</button>` : '');
+  const info = [['Tashkilot', x.tashkilot_nomi],['STIR', x.stir],['Shartnoma raqami', x.raqam],['Shartnoma sanasi', x.sana ? fmtPlainDate(x.sana) : ''],
+                ['Rahbar', d.rahbar_fish],['Telefon', d.telefon_raqami],['Bank', d.bank_nomi],['Hisob raqami', d.hisob_raqami],['MFO', d.mfo],['Filial', d.filial]];
+  return `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+      <div><h2 style="margin:0 0 4px;" data-noi18n>${esc(x.tashkilot_nomi||'')}</h2><div class="sub" style="margin:0;" data-noi18n>№ ${esc(x.raqam||'—')} · Admin yubordi: ${arFmtDT(x.sentAt)}</div></div>
+      ${buxBadge(x.status)}
+    </div>
+    <button type="button" class="bx-pdf" id="bxOpenPdf">
+      <span class="ext pdf">PDF</span><span><b data-noi18n>${esc(x.file && x.file.name || 'Shartnoma.pdf')}</b><span class="hk-sub" data-noi18n>${hfSize(x.file && x.file.size)} · ochish uchun bosing</span></span><span class="bx-pdf-go">›</span>
+    </button>
+    <div class="bx-dl"><button type="button" class="link-btn" id="bxDlPdf" style="margin:0;">⬇ PDF faylni yuklab olish</button></div>
+    ${acts ? `<div class="hk-section"><h3>Statusni o‘zgartirish</h3>
+      <textarea id="bxIzoh" rows="2" placeholder="Izoh (ixtiyoriy): masalan, Didox raqami yoki bekor qilinish sababi"></textarea>
+      <div class="ar-decide">${acts}</div><div class="status" id="bxStatus"></div></div>`
+      : `<div class="ar-note ${x.status==='tasdiq'?'good':'bad'}">Yakuniy holat: <b>${esc(BUX_STATUS[x.status].l)}</b> · <span data-noi18n>${arFmtDT(((x.history||[]).slice(-1)[0]||{}).at)}</span></div>`}
+    <div class="hk-section"><h3>Status tarixi</h3>${buxHistoryMarkup(x)}</div>
+    <div class="hk-section"><h3>Shartnoma ma’lumotlari</h3>
+      <div class="hk-form hk-ro">${info.map(([l,v])=>`<div><label>${esc(l)}</label><input type="text" readonly tabindex="-1" value="${esc(v||'')}" placeholder="—"></div>`).join('')}</div></div>
+  </div>`;
+}
+function bindBuxDocDetail(x){
+  const op = document.getElementById('bxOpenPdf'); if(op) op.onclick = ()=> openBuxPdf(x);
+  const dl = document.getElementById('bxDlPdf'); if(dl) dl.onclick = async ()=>{
+    try{ const blob = await arFileBlob(x.file); const u = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = u; a.download = x.file.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u), 4000); }
+    catch(e){ alert('Yuklab bo‘lmadi: '+(e.message||e)); }
+  };
+  document.querySelectorAll('[data-bset]').forEach(b=> b.onclick = async ()=>{
+    const ns = b.dataset.bset; const u = getUserSession();
+    const izoh = (document.getElementById('bxIzoh')||{}).value || '';
+    if(!confirm(`Status «${BUX_STATUS[ns].l}» ga o‘zgartirilsinmi?`)) return;
+    document.querySelectorAll('[data-bset]').forEach(z=>z.disabled = true);
+    try{
+      const cur = await ST.get(BUX_COL, x.id) || x;
+      const now = new Date().toISOString();
+      cur.status = ns; cur.updatedAt = now;
+      cur.history = (cur.history||[]).concat([{status:ns, at:now, by:'Buxgalter: '+(u.ism||u.login), izoh:izoh.trim()}]);
+      await ST.set(BUX_COL, x.id, cur);
+      Object.assign(x, cur);
+      try{ await msgSend(u.id, 'user', `📄 «${x.tashkilot_nomi}» (№ ${x.raqam}) — ${BUX_STATUS[ns].l}${izoh.trim()?'\nIzoh: '+izoh.trim():''}`, {userIsm:u.ism, userLogin:u.login, system:true, buxDocId:x.id}); }catch(e){}
+      renderBux();
+    }catch(e){ alert('Saqlanmadi: '+(e.message||e)); document.querySelectorAll('[data-bset]').forEach(z=>z.disabled = false); }
+  });
+}
+/* ---- Hamkorlar (faqat ko'rish) ---- */
+const BUX_HAMKOR_FIELDS = ['tashkilot_nomi','stir','brend','rahbar_fish','rahbar','pinfl','telefon_raqami','telegram_user','manzil','lokatsiya','hisob_raqami','mfo','bank_nomi','filial'];
+async function bLoadHamkor(){
+  try{
+    const r = await ST.get(CLOUD_COLLECTION, 'hamkor');
+    bHamkor = (r && Array.isArray(r.records) ? r.records : []).slice().reverse();
+    bHamkorLoaded = true;
+  }catch(e){ console.error(e); bHamkorLoaded = 'err'; }
+}
+async function renderBuxHamkor(host){
+  if(!bHamkorLoaded){ host.innerHTML = '<div class="card"><p class="sub">Hamkorlar yuklanmoqda…</p></div>'; await bLoadHamkor(); if(bTab!=='hamkor') return; }
+  const q = bHkQuery.trim().toLowerCase();
+  const all = bHamkor.filter(r=>{ const d = r.data||{}; return !q || [d.tashkilot_nomi,d.stir,d.brend,d.rahbar_fish,d.filial,d.telefon_raqami].some(v=>String(v||'').toLowerCase().includes(q)); });
+  const per = 25, pages = Math.max(1, Math.ceil(all.length/per)); if(bHkPage>pages) bHkPage = pages;
+  const rows = all.slice((bHkPage-1)*per, bHkPage*per);
+  const listHtml = `<div class="card bx-listcard">
+      <div style="display:flex;align-items:center;gap:8px;"><h2 style="margin:0;">Hamkorlar <span class="nav-cnt" data-noi18n>${bHamkor.length}</span></h2></div>
+      <div class="hk-search" style="width:100%;margin:10px 0;">${ICONS.search}<input type="search" id="bxHkSearch" placeholder="Nomi, STIR, brend, rahbar…" value="${esc(bHkQuery)}"></div>
+      ${bHamkorLoaded==='err' ? '<p class="sub">Hamkorlarni yuklab bo‘lmadi.</p>' : (rows.length ? `<div class="ua-list">${rows.map(r=>{ const d=r.data||{}; return `
+        <button type="button" class="ua-item ${r.id===bHkSel?'sel':''}" data-bhk="${r.id}">
+          <div class="ua-item-top"><b data-noi18n>${esc(d.tashkilot_nomi||'—')}</b>${r.fileCount?`<span class="hk-clip">${ICONS.clip}${r.fileCount}</span>`:''}</div>
+          <div class="ua-item-sub" data-noi18n>STIR ${esc(d.stir||'—')}${d.brend?' · '+esc(d.brend):''}${d.filial?' · '+esc(d.filial):''}</div>
+        </button>`; }).join('')}</div>` : '<p class="sub">Hamkor topilmadi.</p>')}
+      ${pages>1 ? `<div class="hk-pages bx-pages" data-noi18n><button type="button" class="hk-pg" data-bpg="${bHkPage-1}" ${bHkPage===1?'disabled':''}>‹</button><span>${bHkPage} / ${pages}</span><button type="button" class="hk-pg" data-bpg="${bHkPage+1}" ${bHkPage===pages?'disabled':''}>›</button></div>` : ''}
+    </div>`;
+  const rec = bHamkor.find(r=>r.id===bHkSel);
+  let detail = `<div class="card ua-welcome"><h2>Hamkorni tanlang</h2><p class="sub">Ro‘yxatdan hamkorni bosing — uning rekvizitlari, rasmlari va hujjatlarini ko‘rib tekshirishingiz mumkin. Bu bo‘limda ma’lumotlar faqat ko‘rish uchun.</p></div>`;
+  if(rec){
+    const d = rec.data||{};
+    detail = `<div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><h2 style="margin:0;" data-noi18n>${esc(d.tashkilot_nomi||'')}</h2><span class="st-badge st-new">Faqat ko‘rish</span></div>
+      <div class="hk-form hk-ro" style="margin-top:8px;">${BUX_HAMKOR_FIELDS.map(k=>{
+        const f = FIELDS.hamkor.find(x=>x[0]===k); if(!f) return ''; const v = d[k];
+        const full = ['tashkilot_nomi','rahbar_fish','manzil','lokatsiya','bank_nomi'].includes(k) ? 'full' : '';
+        const inner = k==='lokatsiya' && /^https?:\/\//i.test(String(v||'')) ? `<a class="hk-ro-link" href="${esc(v)}" target="_blank" rel="noopener" data-noi18n>📍 ${esc(v)}</a>` : `<input type="text" readonly tabindex="-1" value="${esc(v||'')}" placeholder="—">`;
+        return `<div class="${full}"><label>${esc(f[1])}</label>${inner}</div>`; }).join('')}</div>
+      <div class="hk-section"><h3>Rasmlar va hujjatlar <span class="nav-cnt" id="bxFileCnt" data-noi18n>…</span></h3><div class="hk-files" id="bxFiles"><div class="hint">Yuklanmoqda…</div></div></div>
+    </div>`;
+  }
+  host.innerHTML = bMobile() && rec
+    ? `<div class="ua-grid"><div class="ua-main"><button type="button" class="ua-back" id="bxHkBack">‹ Hamkorlar</button>${detail}</div></div>`
+    : `<div class="ua-grid"><div class="ua-side">${listHtml}</div><div class="ua-main">${bMobile() ? '' : detail}</div></div>`;
+  const back = document.getElementById('bxHkBack'); if(back) back.onclick = ()=>{ bHkSel = null; renderBux(); window.scrollTo(0,0); };
+  const se = document.getElementById('bxHkSearch');
+  if(se){ se.oninput = ()=>{ bHkQuery = se.value; bHkPage = 1; const pos = se.selectionStart; renderBux(); const s2 = document.getElementById('bxHkSearch'); if(s2){ s2.focus(); try{ s2.setSelectionRange(pos,pos); }catch(e){} } }; }
+  host.querySelectorAll('[data-bpg]').forEach(b=> b.onclick = ()=>{ bHkPage = Number(b.dataset.bpg); renderBux(); });
+  host.querySelectorAll('[data-bhk]').forEach(b=> b.onclick = ()=>{ bHkSel = b.dataset.bhk; renderBux(); if(bMobile()) window.scrollTo(0,0); });
+  if(rec) bLoadHamkorFiles(rec);
+  i18nApply(host);
+}
+async function bLoadHamkorFiles(rec){
+  const box = document.getElementById('bxFiles'); if(!box) return;
+  let files = []; try{ files = await hfList(rec.id); }catch(e){}
+  if(bHkSel !== rec.id) return;
+  const c = document.getElementById('bxFileCnt'); if(c) c.textContent = files.length;
+  if(!files.length){ box.innerHTML = '<div class="hint" style="grid-column:1/-1;">Hujjat yuklanmagan.</div>'; return; }
+  box.innerHTML = files.map((f,i)=>{
+    let thumb;
+    if(hfIsImage(f) && f.blob){ thumb = `<img src="${URL.createObjectURL(f.blob)}" alt="" loading="lazy">`; }
+    else { const ext = hfExt(f); thumb = `<span class="ext ${hfIsPdf(f)?'pdf':''}">${esc(ext)}</span>`; }
+    return `<div class="hk-file"><div class="hk-thumb" data-bview="${i}">${thumb}</div><div class="hk-fmeta" data-noi18n><div class="hk-fname">${esc(f.name)}</div><div class="hk-fsub"><span>${hfSize(f.size)}</span></div></div></div>`;
+  }).join('');
+  box.querySelectorAll('[data-bview]').forEach(b=> b.onclick = ()=> openViewer(files[Number(b.dataset.bview)]));
+}
+/* ---- Xabarlar ---- */
+async function renderBuxChat(host){
+  host.innerHTML = `<div class="ua-chat-wrap">${chatMarkup(bMsgs, 'user', 'BirZum Nasiya admini', 'Shartnomalar bo‘yicha savollarni shu yerda yozing')}</div>`;
+  bindChat(async (txt)=>{ const u = getUserSession(); const m = await msgSend(u.id, 'user', txt, {userIsm:u.ism, userLogin:u.login}); bMsgs.push(m); renderBuxChat(host); });
+  if(bMsgs.some(m=>m.from==='admin' && !m.readByUser)){ await msgMarkRead(bMsgs, 'user'); }
+  bBadges(); i18nApply(host);
+}
+/* ---- Sozlamalar: ko'rinish (faqat shu qurilma) + profil ---- */
+function renderBuxSettings(host){
+  const u = getUserSession();
+  const seg = (val,label)=>`<button type="button" data-bth="${val}" class="${UI.theme===val?'on':''}">${esc(label)}</button>`;
+  host.innerHTML = `<div class="ua-profile">
+    <div class="card">
+      <h2>Sayt sozlamalari</h2>
+      <p class="sub">Bu sozlamalar faqat sizning qurilmangizdagi ko‘rinishga ta’sir qiladi.</p>
+      <div class="set-row"><div><div class="sl">Mavzu</div><div class="sd">Kunduzgi yoki tungi rejim</div></div><div class="seg">${seg('light','Kunduzgi')}${seg('dark','Tungi')}${seg('auto','Tizim')}</div></div>
+      <div class="set-row" style="align-items:flex-start;"><div><div class="sl">Asosiy rang</div><div class="sd">Tugmalar va belgilar rangi</div></div>
+        <div class="swatches">${ACCENT_PRESETS.map(([c,n])=>`<button type="button" class="sw ${UI.accent.toLowerCase()===c?'on':''}" data-bacc="${c}" title="${esc(n)}" style="background:${c}"></button>`).join('')}</div></div>
+      <div class="set-row"><div><div class="sl">Til</div><div class="sd">Interfeys tili</div></div><select id="bxLang" class="set-select" data-noi18n>${LANGS.map(([v,n])=>`<option value="${v}" ${UI.lang===v?'selected':''}>${esc(n)}</option>`).join('')}</select></div>
+      <div class="set-row"><div><div class="sl">Sahifa o‘lchami</div><div class="sd">Matn va elementlar kattaligi</div></div><div class="seg">${[90,100,110,120].map(z=>`<button type="button" data-bzoom="${z}" class="${Number(UI.zoom)===z?'on':''}">${z}%</button>`).join('')}</div></div>
+    </div>
+    <div class="card">
+      <h2>Profilni tahrirlash</h2>
+      <p class="sub">O‘zgarishlarni saqlash uchun joriy parolni kiriting.</p>
+      <form id="bpForm" autocomplete="off"><div class="hk-form">
+        <div class="full"><label>Ism va familiya</label><input type="text" id="bpIsm" value="${esc(u.ism||'')}"></div>
+        <div><label>Telefon raqami</label><input type="tel" id="bpTel" value="${esc(u.telefon||'')}"></div>
+        <div><label>Login</label><input type="text" id="bpLogin" value="${esc(u.login||'')}"></div>
+        <div><label>Yangi parol <span class="opt">(ixtiyoriy)</span></label><input type="password" id="bpPass" placeholder="kamida 6 ta belgi" autocomplete="new-password"></div>
+        <div><label>Yangi parolni takrorlang</label><input type="password" id="bpPass2" autocomplete="new-password"></div>
+        <div class="full"><label>Joriy parol <span style="color:var(--danger)">*</span></label><input type="password" id="bpCur" autocomplete="current-password" required></div>
+      </div><div class="status" id="bpStatus"></div><div class="hk-actions"><button type="submit" class="primary">Saqlash</button></div></form>
+    </div>
+  </div>`;
+  const save = ()=>{ saveUiPrefs(); applyUiPrefs(); renderBux(); };
+  host.querySelectorAll('[data-bth]').forEach(b=> b.onclick = ()=>{ UI.theme = b.dataset.bth; save(); });
+  host.querySelectorAll('[data-bacc]').forEach(b=> b.onclick = ()=>{ UI.accent = b.dataset.bacc; save(); });
+  host.querySelectorAll('[data-bzoom]').forEach(b=> b.onclick = ()=>{ UI.zoom = Number(b.dataset.bzoom); save(); });
+  document.getElementById('bxLang').onchange = (e)=>{ UI.lang = e.target.value; saveUiPrefs(); location.reload(); };
+  const tel = document.getElementById('bpTel'); tel.addEventListener('input', ()=>{ tel.value = formatUzPhone(tel.value); });
+  document.getElementById('bpForm').onsubmit = async (e)=>{
+    e.preventDefault();
+    const st = document.getElementById('bpStatus'); const err = t=>{ st.className='status err'; st.textContent=t; };
+    const ism = document.getElementById('bpIsm').value.trim(), telefon = tel.value.trim(), login = document.getElementById('bpLogin').value.trim();
+    const p1 = document.getElementById('bpPass').value, p2 = document.getElementById('bpPass2').value, cur = document.getElementById('bpCur').value;
+    if(ism.length<3) return err('Ism va familiyani to‘liq kiriting.');
+    if(!/^[a-zA-Z0-9_.]{3,32}$/.test(login)) return err('Login 3–32 ta lotin harfi, raqam, «_» yoki «.» dan iborat bo‘lsin.');
+    if(p1 && p1.length<6) return err('Yangi parol kamida 6 ta belgidan iborat bo‘lsin.');
+    if(p1 !== p2) return err('Yangi parollar bir-biriga mos emas.');
+    st.className='status'; st.textContent='Saqlanmoqda…';
+    try{
+      const me = await ST.get(AR_USERS, u.id); if(!me) return err('Akkaunt topilmadi.');
+      if(arHashPass(cur, me.salt) !== me.hash) return err('Joriy parol noto‘g‘ri.');
+      if(login.toLowerCase()!==me.loginLower){ const ex = await arFindUser(login); if((ex && ex.id!==me.id) || login.toLowerCase()===String(getCreds().login).toLowerCase()) return err('Bu login band.'); }
+      me.ism = ism; me.telefon = telefon; me.login = login; me.loginLower = login.toLowerCase();
+      if(p1){ me.salt = uid()+uid(); me.hash = arHashPass(p1, me.salt); me.passChangedAt = new Date().toISOString(); }
+      await ST.set(AR_USERS, me.id, me);
+      setUserSession({id:me.id, ism, telefon, login, role:'buxgalter'});
+      document.getElementById('bxName').textContent = ism;
+      renderBux();
+      const s2 = document.getElementById('bpStatus'); s2.className='status ok'; s2.textContent='Profil saqlandi.' + (p1?' Parol o‘zgartirildi.':'');
+    }catch(ex){ err('Saqlashda xatolik: '+(ex.message||ex)); }
+  };
+  i18nApply(host);
 }
 
 async function exportHamkorExcel(){
@@ -5179,6 +5753,7 @@ function bindProfilEvents(){
     const newLogin = newLoginRaw || creds.login;
     const newPass = newPass1 ? newPass1 : creds.password;
     setCreds(newLogin, newPass);
+    adminCloudUpdate(newLogin, newPass).then(m=>{ if(m){ statusEl.className = 'status err'; statusEl.textContent = m; } });
     const un = document.getElementById('sbUserName'); if(un) un.textContent = newLogin.toUpperCase();
     statusEl.className = 'status ok';
     statusEl.textContent = 'Login va parol muvaffaqiyatli yangilandi. Keyingi safar tizimga shu ma’lumotlar bilan kiring.';
@@ -5811,7 +6386,7 @@ function bindSectionEvents(key){
 // mavjud bo'lsa darhol) ishga tushadi.
 loadUiPrefs();
 applyUiPrefs();
-if(isAuthed()){ showApp(); } else if(getUserSession()){ showUserApp(); } else { showLogin(); }
+if(isAuthed()){ showApp(); } else if(getUserSession()){ (getUserSession().role==='buxgalter') ? showBuxApp() : showUserApp(); } else { showLogin(); }
 </script>
 </body>
 </html>

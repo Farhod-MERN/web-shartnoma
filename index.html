@@ -719,6 +719,59 @@
     #buxApp .hk-files{grid-template-columns:repeat(3,1fr);}
   }
   @media (max-width:760px){ #buxApp .ar-decide button, #userApp .ar-decide button{flex:none;} }
+  /* ============ v6 ============ */
+  /* telefonda sahifa ekrandan kengaymasin (pastki menyu doim ko'rinsin) */
+  #userApp,#buxApp{overflow-x:hidden;max-width:100vw;}
+  .ua-grid > *, .ua-side > *, .ua-main > *{min-width:0;max-width:100%;}
+  .ua-grid{min-width:0;}
+  .bx-chips{max-width:100%;}
+  .hist-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;align-items:flex-end;}
+  .hist-filters label{display:flex;flex-direction:column;gap:3px;font-size:11px;font-weight:600;color:var(--muted);margin:0;}
+  .hist-filters input,.hist-filters select{width:auto;min-width:140px;padding:7px 9px;font-size:12.5px;}
+  .hist-count{font-size:11.5px;color:var(--muted);margin-bottom:8px;}
+  .ua-filter{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+  .ua-filter select{width:100%;}
+  .ua-dates{display:flex;align-items:center;gap:6px;}
+  .ua-dates input{flex:1;min-width:0;}
+  .ua-dates span{color:var(--muted);}
+  .dg-hint{min-height:14px;}
+  .dg-hint.ok{color:#15803d;}
+  .dg-hint.bad{color:#d97706;}
+  input.inp-bad{border-color:#d97706 !important;}
+  .ar-next{margin-top:12px;padding:12px;border:1px dashed var(--line);border-radius:10px;}
+  .ar-next .sl{font-size:13px;font-weight:700;color:var(--ink);}
+  .ar-next .sd{font-size:11.5px;color:var(--muted);margin-top:2px;}
+  /* chat: fayl, javob, o'chirish */
+  .chat-img{display:block;border:none;padding:0;background:none;cursor:zoom-in;margin:2px 0 4px;}
+  .chat-img img{display:block;max-width:220px;max-height:200px;border-radius:10px;object-fit:cover;min-width:80px;min-height:60px;background:rgba(0,0,0,.06);}
+  .chat-file{display:flex;align-items:center;gap:8px;border:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.55);border-radius:10px;padding:7px 10px;cursor:pointer;margin:2px 0 4px;text-align:left;font-family:var(--sans);color:inherit;max-width:240px;}
+  .msg.me .chat-file{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.3);}
+  .chat-file .ext{font-size:10px;font-weight:800;color:#fff;background:#8a93a6;border-radius:5px;padding:6px 6px;flex:none;}
+  .chat-file .ext.pdf{background:#d04545;}
+  .chat-file b{display:block;font-size:12px;word-break:break-all;}
+  .chat-file .hk-sub{color:inherit;opacity:.75;}
+  .chat-quote{border-left:3px solid currentColor;opacity:.85;padding:3px 8px;margin-bottom:5px;border-radius:4px;background:rgba(0,0,0,.06);font-size:12px;cursor:pointer;}
+  .msg.me .chat-quote{background:rgba(255,255,255,.18);}
+  .chat-quote b{display:block;font-size:11px;}
+  .chat-quote span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .msg-acts{display:inline-flex;gap:2px;margin-left:6px;opacity:0;transition:opacity .15s;}
+  .msg:hover .msg-acts,.msg.open .msg-acts{opacity:1;}
+  .msg-acts button{border:none;background:none;color:var(--muted);font-size:11px;cursor:pointer;padding:1px 5px;border-radius:5px;font-family:var(--sans);}
+  .msg-acts button:hover{background:var(--hover);color:var(--text);}
+  .msg-acts button.del:hover{color:var(--danger);}
+  .msg.flash .bubble{box-shadow:0 0 0 3px var(--accent-soft);}
+  .chat-reply,.chat-pending{display:flex;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line-2);background:var(--paper);font-size:12px;}
+  .chat-reply > div,.chat-pending > div{flex:1;min-width:0;}
+  .chat-reply b{display:block;color:var(--accent-2);}
+  .chat-reply span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);}
+  .chat-reply button,.chat-pending button{border:none;background:none;color:var(--muted);cursor:pointer;font-size:13px;}
+  .chat-pending img{width:44px;height:44px;object-fit:cover;border-radius:7px;}
+  .chat-pending .ext{font-size:10px;font-weight:800;color:#fff;background:#8a93a6;border-radius:5px;padding:8px 7px;}
+  .chat-pending .ext.pdf{background:#d04545;}
+  .chat-pending b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .chat-attach{width:40px;height:40px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;margin:0;border:1px solid var(--line);background:var(--paper-2);}
+  .chat-attach:hover{border-color:var(--accent);}
+  @media (max-width:760px){ .chat-img img{max-width:180px;} .msg-acts{opacity:.55;} }
 </style>
 </head>
 <body>
@@ -3184,7 +3237,14 @@ function sectionMarkup(key,title,sub){
       <div class="card">
         <h2>Saqlangan hujjatlar</h2>
         <p class="sub">Bazaga yozilgan barcha ${esc(title.toLowerCase())}lar</p>
-        <input type="text" id="histSearch_${key}" placeholder="🔍 STIR yoki tashkilot nomi bo‘yicha qidirish…" style="width:100%;padding:9px 11px;margin-bottom:12px;border:1px solid var(--line);border-radius:7px;font-family:var(--sans);font-size:13px;box-sizing:border-box;">
+        <input type="text" id="histSearch_${key}" placeholder="🔍 STIR yoki tashkilot nomi bo‘yicha qidirish…" style="width:100%;padding:9px 11px;margin-bottom:8px;border:1px solid var(--line);border-radius:7px;font-family:var(--sans);font-size:13px;box-sizing:border-box;">
+        <div class="hist-filters">
+          <label>Sanadan<input type="date" id="histFrom_${key}"></label>
+          <label>Sanagacha<input type="date" id="histTo_${key}"></label>
+          ${key==='bosh' ? `<label>Buxgalteriya holati<select id="histSt_${key}"><option value="">Hammasi</option><option value="none">Yuborilmagan</option><option value="yuborildi">Yangi — yuborildi</option><option value="didox">Didoxdan yuborildi</option><option value="tasdiq">Tasdiqlandi</option><option value="bekor">Bekor qilindi</option></select></label>` : ''}
+          <button type="button" class="link-btn" id="histClear_${key}" style="margin:0;align-self:flex-end;">✕ Tozalash</button>
+        </div>
+        <div class="hist-count" id="histCount_${key}"></div>
         <div id="hist_${key}"></div>
       </div>
     </div>
@@ -3797,14 +3857,14 @@ const AR_DOCS = [
 const AR_FIELDS = [
   ['tashkilot_turi','Tashkilot turi','select',true,['YaTT','MCHJ','X/K (xususiy korxona)','O/K (oilaviy korxona)']],
   ['tashkilot_nomi','Tashkilot nomi','text',true,'masalan: "BOSTON TELEFON BAZAR" MCHJ'],
-  ['stir','STIR (JShShIR)','text',true,'9 yoki 14 xonali raqam'],
+  ['stir','STIR (JShShIR)','text',true,'9 yoki 14 xonali raqam', 14],
   ['brend','Do‘kon brend nomi','text',true,'masalan: Boston'],
   ['rahbar_fish','Rahbar F.I.Sh. (to‘liq)','text',true,'Familiya Ism Otasining ismi'],
   ['telefon_raqami','Telefon raqami','tel',true,'+998 __ ___ __ __'],
   ['manzil','Faoliyat manzili','text',true,'Viloyat, tuman, ko‘cha, uy'],
   ['lokatsiya','Faoliyat joyi lokatsiyasi','text',true,'Xarita havolasi yoki «Joylashuvimni aniqlash»'],
-  ['hisob_raqami','Bank hisob raqami','text',true,'20 xonali hisob raqam'],
-  ['mfo','Bank MFO','text',true,'5 xonali'],
+  ['hisob_raqami','Bank hisob raqami','text',true,'20 xonali hisob raqam', 20],
+  ['mfo','Bank MFO','text',true,'5 xonali', 5],
   ['bank_nomi','Bank nomi','text',false,'masalan: Hamkorbank'],
   ['izoh','Qo‘shimcha izoh','textarea',false,''],
 ];
@@ -3824,6 +3884,8 @@ const AR_STATUS = {
   qayta:      {admin:'Qayta yuborildi',  user:'Qayta yuborildi — ko‘rib chiqilmoqda', cls:'st-re'},
   qaytarildi: {admin:'Tuzatishga qaytarilgan', user:'Tuzatish uchun qaytarildi', cls:'st-ret'},
   qabul:      {admin:'Qabul qilindi',    user:'Qabul qilindi', cls:'st-ok'},
+  didox:      {admin:'Shartnoma Didoxdan yuborildi', user:'Shartnoma Didoxdan yuborildi', cls:'st-re'},
+  login:      {admin:'Login va parollar hamkorga yuborildi', user:'Login va parollar sizga yuborildi', cls:'st-ok'},
   rad:        {admin:'Rad etildi',       user:'Rad etildi', cls:'st-rej'},
 };
 function arStatusBadge(st, role){
@@ -4043,6 +4105,17 @@ let uDraft = null;         // {data:{}, files:[{id?,docType,name,type,size,chunk
 let uTimer = null;
 
 let uTab = 'home';
+let uFlt = {st:'', from:'', to:''};
+function dayKey(iso){ const d = new Date(iso); return isNaN(d) ? '' : `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+function uFiltered(){
+  return uArizalar.filter(a=>{
+    if(uFlt.st && a.status!==uFlt.st) return false;
+    const k = dayKey(a.createdAt);
+    if(uFlt.from && k < uFlt.from) return false;
+    if(uFlt.to && k > uFlt.to) return false;
+    return true;
+  });
+}
 let uMsgs = [];
 let uSeenMsg = null;
 let uMsgTimer = null;
@@ -4086,8 +4159,8 @@ async function uPollMessages(){
   const fresh = uMsgs.filter(m=>m.from==='admin' && !m.readByUser && !uSeenMsg.has(m.id));
   fresh.forEach(m=> uSeenMsg.add(m.id));
   if(uTab==='chat' && fresh.length){ await msgMarkRead(uMsgs, 'user'); }
-  else if(first && fresh.length){ showToast({icon:'💬', title:`Admindan ${fresh.length} ta yangi xabar`, time:msgTime(fresh[fresh.length-1].at), body:fresh[fresh.length-1].text, onClick:()=>uGo('chat')}); }
-  else fresh.forEach(m=> showToast({icon:'💬', title:'Admin', time:msgTime(m.at), body:m.text, onClick:()=>uGo('chat')}));
+  else if(first && fresh.length){ showToast({icon:'💬', title:`Admindan ${fresh.length} ta yangi xabar`, time:msgTime(fresh[fresh.length-1].at), body:msgPreview(fresh[fresh.length-1]), onClick:()=>uGo('chat')}); }
+  else fresh.forEach(m=> showToast({icon:'💬', title:'Admin', time:msgTime(m.at), body:msgPreview(m), onClick:()=>uGo('chat')}));
   if(fresh.some(m=>m.arizaId)) uRefresh();
   setTitleBadge(uTab==='chat' ? 0 : uUnread());
   uUpdateBadges();
@@ -4128,13 +4201,18 @@ function renderUserApp(){
         <h2 style="margin:0;">Mening arizalarim</h2>
         <button type="button" class="hk-tool" id="uRefreshBtn">↻ Yangilash</button>
       </div>
-      ${uArizalar.length ? `<div class="ua-list">${uArizalar.map(a=>`
+      ${uArizalar.length ? `<div class="ua-filter">
+          <select id="uFltSt"><option value="">Barcha holatlar</option>${Object.keys(AR_STATUS).map(k=>`<option value="${k}" ${uFlt.st===k?'selected':''}>${esc(AR_STATUS[k].user)}</option>`).join('')}</select>
+          <div class="ua-dates"><input type="date" id="uFltFrom" value="${esc(uFlt.from)}" title="Sanadan"><span>—</span><input type="date" id="uFltTo" value="${esc(uFlt.to)}" title="Sanagacha"></div>
+          ${uFlt.st||uFlt.from||uFlt.to ? '<button type="button" class="link-btn" id="uFltClear" style="margin:0;">✕ Filtrni tozalash</button>' : ''}
+        </div>` : ''}
+      ${uFiltered().length ? `<div class="ua-list">${uFiltered().map(a=>`
         <button type="button" class="ua-item ${a.id===uCurrentId?'sel':''}" data-open="${a.id}">
           <div class="ua-item-top"><b data-noi18n>${esc(a.data && a.data.tashkilot_nomi || 'Ariza')}</b>${arStatusBadge(a.status,'user')}</div>
           <div class="ua-item-sub" data-noi18n>STIR: ${esc(a.data && a.data.stir || '—')} · ${arFmtDT(a.createdAt)}</div>
           ${a.status==='qaytarildi' && a.adminIzoh ? `<div class="ua-item-note">⚠ ${esc(a.adminIzoh)}</div>` : ''}
         </button>`).join('')}</div>`
-        : `<p class="sub" style="margin:0;">Hozircha ariza yubormagansiz. «Yangi ariza» tugmasini bosing.</p>`}
+        : (uArizalar.length ? `<p class="sub" style="margin:0;">Filtr bo‘yicha ariza topilmadi.</p>` : `<p class="sub" style="margin:0;">Hozircha ariza yubormagansiz. «Yangi ariza» tugmasini bosing.</p>`)}
       <button type="button" class="primary" id="uNewBtn" style="width:100%;margin-top:14px;">＋ Yangi ariza yuborish</button>
     </div>`;
   let main = '';
@@ -4154,6 +4232,10 @@ function renderUserApp(){
   const nb = ()=>{ uDraft = {data:{}, files:[], removed:[]}; uCurrentId = null; uView = 'form'; renderUserApp(); window.scrollTo(0,0); };
   ['uNewBtn','uNewBtn2'].forEach(id=>{ const b = document.getElementById(id); if(b) b.onclick = nb; });
   const rb = document.getElementById('uRefreshBtn'); if(rb) rb.onclick = uRefresh;
+  const fs1 = document.getElementById('uFltSt'); if(fs1) fs1.onchange = ()=>{ uFlt.st = fs1.value; renderUserApp(); };
+  const fs2 = document.getElementById('uFltFrom'); if(fs2) fs2.onchange = ()=>{ uFlt.from = fs2.value; renderUserApp(); };
+  const fs3 = document.getElementById('uFltTo'); if(fs3) fs3.onchange = ()=>{ uFlt.to = fs3.value; renderUserApp(); };
+  const fsc = document.getElementById('uFltClear'); if(fsc) fsc.onclick = ()=>{ uFlt = {st:'',from:'',to:''}; renderUserApp(); };
   if(uView==='form') bindUForm();
   if(uView==='view') bindUView();
   i18nApply(host);
@@ -4165,7 +4247,9 @@ function arFieldMarkup(f, val){
   if(type==='select') return `<div>${lab}<select id="ar_${k}"><option value="">— tanlang —</option>${ph.map(o=>`<option ${val===o?'selected':''}>${esc(o)}</option>`).join('')}</select></div>`;
   if(type==='textarea') return `<div class="full">${lab}<textarea id="ar_${k}" rows="3">${esc(val||'')}</textarea></div>`;
   if(k==='lokatsiya') return `<div class="full">${lab}<div class="loc-row"><input type="text" id="ar_${k}" value="${esc(val||'')}" placeholder="${esc(ph)}" style="flex:1;"><button type="button" class="secondary" id="arGeo" style="white-space:nowrap;padding:8px 10px;">📍 Joylashuvimni aniqlash</button></div><div class="hint">Do‘kon ichida turib bosing — xarita havolasi avtomatik yoziladi.</div></div>`;
-  const full = (k==='tashkilot_nomi'||k==='manzil'||k==='rahbar_fish') ? 'full' : '';
+  const full = (k==='tashkilot_nomi'||k==='manzil'||k==='rahbar_fish'||k==='hisob_raqami') ? 'full' : '';
+  const digits = f[5];
+  if(digits) return `<div class="${full}">${lab}<input type="text" inputmode="numeric" id="ar_${k}" data-digits="${digits}" maxlength="${digits}" value="${esc(val||'')}" placeholder="${esc(ph||'')}"><div class="hint dg-hint" id="dg_${k}"></div></div>`;
   return `<div class="${full}">${lab}<input type="${type}" id="ar_${k}" value="${esc(val||'')}" placeholder="${esc(ph||'')}"></div>`;
 }
 function uFormMarkup(){
@@ -4213,6 +4297,18 @@ function bindUForm(){
       else if(f.id){ arFileBlob(f).then(bl=>{ f.thumbUrl = URL.createObjectURL(bl); if(uView==='form'){ uCollectData(); renderUserApp(); } }).catch(()=>{}); }
     }
   });
+  document.querySelectorAll('#arForm input[data-digits]').forEach(inp=>{
+    const n = Number(inp.dataset.digits); const hint = document.getElementById('dg_'+inp.id.slice(3));
+    const upd = ()=>{
+      const v = inp.value.replace(/\D/g,'').slice(0,n); if(inp.value !== v) inp.value = v;
+      const okLens = inp.id==='ar_stir' ? [9,14] : [n];
+      const ok = okLens.includes(v.length);
+      hint.textContent = v.length ? (ok ? '✓ to‘g‘ri' : `${v.length} / ${inp.id==='ar_stir' ? '9 yoki 14' : n} ta raqam`) : (inp.id==='ar_stir' ? '9 yoki 14 ta raqam' : `aniq ${n} ta raqam`);
+      hint.className = 'hint dg-hint ' + (v.length ? (ok?'ok':'bad') : '');
+      inp.classList.toggle('inp-bad', !!v.length && !ok);
+    };
+    inp.addEventListener('input', upd); upd();
+  });
   const tel = document.getElementById('ar_telefon_raqami');
   if(tel){ if(!tel.value) tel.value = '+998 '; tel.addEventListener('input', ()=>{ tel.value = formatUzPhone(tel.value); }); }
   const geo = document.getElementById('arGeo');
@@ -4256,6 +4352,11 @@ function bindUForm(){
 function arValidate(data, files){
   const miss = [];
   AR_FIELDS.forEach(([k,l,t,req])=>{ if(req && !String(data[k]||'').trim()) miss.push(l); });
+  const dg = v=> String(v||'').replace(/\D/g,'');
+  if(data.hisob_raqami && !/^\d{20}$/.test(String(data.hisob_raqami).replace(/\s/g,''))) miss.push(`Bank hisob raqami aniq 20 ta raqamdan iborat bo‘lishi kerak (hozir ${dg(data.hisob_raqami).length} ta)`);
+  if(data.mfo && !/^\d{5}$/.test(String(data.mfo).trim())) miss.push('Bank MFO aniq 5 ta raqamdan iborat bo‘lishi kerak');
+  if(data.stir && !/^(\d{9}|\d{14})$/.test(String(data.stir).trim())) miss.push('STIR 9 ta (tashkilot) yoki 14 ta (JShShIR) raqamdan iborat bo‘lishi kerak');
+  if(data.telefon_raqami && dg(data.telefon_raqami).length !== 12) miss.push('Telefon raqami to‘liq emas (+998 __ ___ __ __)');
   const cnt = k=> files.filter(f=>f.docType===k).length;
   AR_DOCS.forEach(d=>{ if(d.min && cnt(d.k) < d.min) miss.push(d.t + (d.min>1 ? ` (kamida ${d.min} ta, hozir ${cnt(d.k)} ta)` : '')); });
   return miss;
@@ -4337,7 +4438,8 @@ async function arHydrateFiles(root, a){
 function arHistoryMarkup(a){
   const h = (a.history||[]).slice().reverse();
   if(!h.length) return '';
-  return `<div class="hk-section"><h3>Tarix</h3><ul class="ar-hist">${h.map(x=>`<li><span class="dot ${(AR_STATUS[x.status]||{}).cls||''}"></span><div><b>${esc((AR_STATUS[x.status]||{admin:x.status}).admin)}</b> · <span class="muted" data-noi18n>${arFmtDT(x.at)} · ${esc(x.by==='admin'?'Admin':(x.name||'Foydalanuvchi'))}</span>${x.izoh?`<div class="ar-hist-note" data-noi18n>${esc(x.izoh)}</div>`:''}</div></li>`).join('')}</ul></div>`;
+  const role = arguments[1] || 'admin';
+  return `<div class="hk-section"><h3>${role==='user'?'Statuslar tarixi':'Tarix'}</h3><ul class="ar-hist">${h.map(x=>`<li><span class="dot ${(AR_STATUS[x.status]||{}).cls||''}"></span><div><b>${esc((AR_STATUS[x.status]||{admin:x.status,user:x.status})[role==='user'?'user':'admin'])}</b> · <span class="muted" data-noi18n>${arFmtDT(x.at)} · ${esc(x.by==='admin'?'Admin':(x.name||'Foydalanuvchi'))}</span>${x.izoh?`<div class="ar-hist-note" data-noi18n>${esc(x.izoh)}</div>`:''}</div></li>`).join('')}</ul></div>`;
 }
 function uViewMarkup(a){
   if(!a) return '<div class="card"><p class="sub">Ariza topilmadi.</p></div>';
@@ -4348,6 +4450,8 @@ function uViewMarkup(a){
     qayta:'Tuzatilgan ariza ko‘rib chiqilmoqda.',
     qaytarildi:'Arizada kamchiliklar bor. Izohni o‘qib, «Tuzatish va qayta yuborish» tugmasini bosing.',
     qabul:'Tabriklaymiz! Arizangiz qabul qilindi. Tez orada shartnoma bo‘yicha siz bilan bog‘lanamiz.',
+    didox:'Shartnoma Didox orqali sizga yuborildi. Didox tizimida tekshirib, imzolang.',
+    login:'Hammasi tayyor! BirZum Nasiya tizimiga kirish login va parollari sizga yuborildi.',
     rad:'Afsuski, arizangiz rad etildi.',
   }[a.status] || '';
   return `<div class="card">
@@ -4360,8 +4464,8 @@ function uViewMarkup(a){
     ${note}
     ${a.status==='qaytarildi' ? `<button type="button" class="primary" id="uFixBtn" style="width:100%;margin-bottom:6px;">✏️ Tuzatish va qayta yuborish</button>` : ''}
     <div class="hk-section"><h3>Tashkilot ma’lumotlari</h3>${arDataTable(a)}</div>
+    ${arHistoryMarkup(a,'user')}
     <div class="hk-section"><h3>Yuborilgan hujjatlar</h3>${arFilesMarkup(a)}</div>
-    ${arHistoryMarkup(a)}
   </div>`;
 }
 function bindUView(){
@@ -4429,6 +4533,7 @@ function arFiltered(){
   const q = arQuery.trim().toLowerCase();
   let l = AR_CACHE.slice();
   if(arFilter==='faol') l = l.filter(a=>a.status==='yangi'||a.status==='qayta');
+  else if(arFilter==='qabul') l = l.filter(a=>['qabul','didox','login'].includes(a.status));
   else if(arFilter!=='hammasi') l = l.filter(a=>a.status===arFilter);
   if(q) l = l.filter(a=>[a.data&&a.data.tashkilot_nomi, a.data&&a.data.stir, a.userIsm, a.userLogin, a.userTelefon, a.data&&a.data.brend].some(v=>String(v||'').toLowerCase().includes(q)));
   return l;
@@ -4437,7 +4542,7 @@ function renderArList(){
   const wrap = document.getElementById('arListWrap'); if(!wrap) return;
   const cnt = document.getElementById('arCnt'); if(cnt) cnt.textContent = AR_CACHE.length;
   const counts = {faol:arPendingCount(), hammasi:AR_CACHE.length, qaytarildi:0, qabul:0, rad:0, users:arUsers.length||''};
-  AR_CACHE.forEach(a=>{ if(counts[a.status]!==undefined && a.status!=='faol') counts[a.status]++; });
+  AR_CACHE.forEach(a=>{ const k = ['didox','login'].includes(a.status) ? 'qabul' : a.status; if(counts[k]!==undefined && k!=='faol') counts[k]++; });
   document.querySelectorAll('.ar-chip').forEach(c=>{ const n = counts[c.dataset.flt]; c.querySelector('.ar-chip-n').textContent = n===''||n===undefined ? '' : n; });
   if(arFilter==='users'){ renderArUsers(wrap); return; }
   if(!arLoaded){ wrap.innerHTML = '<div class="hk-empty">Yuklanmoqda…</div>'; return; }
@@ -4486,7 +4591,8 @@ function renderArDetail(){
   const soft = [];
   if(!cntF('ijara') && !cntF('aylanma')) soft.push('ijara shartnomasi / kadastr yoki 6 oylik X/R aylanmasi');
   if(!cntF('selfi')) soft.push('xodimning do‘kondagi selfi rasmi');
-  const final = a.status==='qabul' || a.status==='rad';
+  const final = ['qabul','rad','didox','login'].includes(a.status);
+  const afterOk = ['qabul','didox','login'].includes(a.status);
   host.innerHTML = `
     <div class="hk-card-head"><h2>Ariza</h2>${arStatusBadge(a.status,'admin')}</div>
     <div class="hk-detail-body">
@@ -4506,10 +4612,15 @@ function renderArDetail(){
         <p class="sub">Qaytarish yoki rad etishda sababini yozing — foydalanuvchi uni o‘z sahifasida ko‘radi.</p>
         <textarea id="arIzoh" rows="3" placeholder="Izoh / kamchiliklar (masalan: pasportning 2-sahifasi aniq emas, do‘kon tashqi rasmi yetishmaydi)">${esc(a.status==='qaytarildi'||a.status==='rad' ? (a.adminIzoh||'') : '')}</textarea>
         <div class="ar-decide">
-          <button type="button" class="primary" id="arAccept" ${a.status==='qabul'?'disabled':''}>✓ Qabul qilish</button>
+          <button type="button" class="primary" id="arAccept" ${afterOk?'disabled':''}>✓ Qabul qilish</button>
           <button type="button" class="warn-btn" id="arReturn" ${final?'disabled':''}>↩ Tuzatishga qaytarish</button>
           <button type="button" class="danger-btn" id="arReject" ${final?'disabled':''}>✕ Rad etish</button>
         </div>
+        ${afterOk ? `<div class="ar-next"><div class="sl">Qabul qilingandan keyingi bosqich</div><div class="sd">Tanlangan holat foydalanuvchi sahifasida ko‘rinadi va unga xabar boradi.</div>
+          <div class="ar-decide">
+            <button type="button" class="secondary" id="arDidox" ${a.status==='didox'||a.status==='login'?'disabled':''}>📨 Shartnoma Didoxdan yuborildi</button>
+            <button type="button" class="secondary" id="arLogin" ${a.status==='login'?'disabled':''}>🔑 Login va parollar hamkorga yuborildi</button>
+          </div></div>` : ''}
         <div class="status" id="arDecideStatus"></div>
       </div>
       ${arHistoryMarkup(a)}
@@ -4519,6 +4630,8 @@ function renderArDetail(){
   if(g) g.onclick = ()=>{ hamkorEditingId = a.hamkorId; activeTab = 'hamkor'; UI.lastTab = 'hamkor'; saveUiPrefs(); renderApp(); };
   const mk = document.getElementById('arMakeContract'); if(mk) mk.onclick = ()=> openBoshFromAriza(a);
   document.getElementById('arAccept').onclick = ()=> arDecide(a, 'qabul');
+  const dx = document.getElementById('arDidox'); if(dx) dx.onclick = ()=> arDecide(a, 'didox');
+  const lg = document.getElementById('arLogin'); if(lg) lg.onclick = ()=> arDecide(a, 'login');
   document.getElementById('arReturn').onclick = ()=> arDecide(a, 'qaytarildi');
   document.getElementById('arReject').onclick = ()=> arDecide(a, 'rad');
   i18nApply(host);
@@ -4527,13 +4640,14 @@ async function arDecide(a, status){
   const st = document.getElementById('arDecideStatus');
   const izoh = document.getElementById('arIzoh').value.trim();
   if((status==='qaytarildi' || status==='rad') && !izoh){ st.className='status err'; st.textContent = status==='qaytarildi' ? 'Qaytarish uchun kamchiliklarni izohga yozing.' : 'Rad etish sababini izohga yozing.'; return; }
-  const q = {qabul:'Ariza qabul qilinsin va hamkor «Hamkorlar» ro‘yxatiga (fayllari bilan) qo‘shilsinmi?', qaytarildi:'Ariza tuzatish uchun foydalanuvchiga qaytarilsinmi?', rad:'Ariza rad etilsinmi?'}[status];
+  const q = {didox:'Holat «Shartnoma Didoxdan yuborildi» deb belgilansinmi? Foydalanuvchiga xabar boradi.', login:'Holat «Login va parollar hamkorga yuborildi» deb belgilansinmi? Foydalanuvchiga xabar boradi.',
+    qabul:'Ariza qabul qilinsin va hamkor «Hamkorlar» ro‘yxatiga (fayllari bilan) qo‘shilsinmi?', qaytarildi:'Ariza tuzatish uchun foydalanuvchiga qaytarilsinmi?', rad:'Ariza rad etilsinmi?'}[status];
   if(!confirm(q)) return;
   document.querySelectorAll('.ar-decide button').forEach(b=>b.disabled = true);
   try{
     const now = new Date().toISOString();
     const upd = Object.assign({}, a);
-    upd.status = status; upd.adminIzoh = izoh; upd.updatedAt = now;
+    upd.status = status; if(status!=='didox' && status!=='login') upd.adminIzoh = izoh; upd.updatedAt = now;
     upd.history = (a.history||[]).concat([{at:now, by:'admin', status, izoh}]);
     if(status==='qabul'){
       st.className='status'; st.textContent='Hamkorlar ro‘yxatiga qo‘shilmoqda…';
@@ -4545,11 +4659,13 @@ async function arDecide(a, status){
       const nm = a.data && a.data.tashkilot_nomi || 'arizangiz';
       const txt = {qabul:`✅ «${nm}» bo‘yicha arizangiz qabul qilindi. Tez orada shartnoma bo‘yicha siz bilan bog‘lanamiz.`,
                    qaytarildi:`↩ «${nm}» bo‘yicha arizangiz tuzatish uchun qaytarildi.`,
-                   rad:`✕ «${nm}» bo‘yicha arizangiz rad etildi.`}[status] + (izoh ? `\nIzoh: ${izoh}` : '');
+                   rad:`✕ «${nm}» bo‘yicha arizangiz rad etildi.`,
+                   didox:`📨 «${nm}» bo‘yicha shartnoma Didox orqali sizga yuborildi. Iltimos, Didox tizimida tekshirib imzolang.`,
+                   login:`🔑 «${nm}» uchun BirZum Nasiya tizimiga kirish login va parollari sizga yuborildi.`}[status] + (izoh ? `\nIzoh: ${izoh}` : '');
       await msgSend(a.userId, 'admin', txt, {userIsm:a.userIsm, system:true, arizaId:a.id});
     }catch(e){ console.error('Xabar yuborilmadi', e); }
     st.className='status ok';
-    st.textContent = {qabul:'Ariza qabul qilindi. Hamkor ro‘yxatga qo‘shildi — endi Bosh shartnoma bo‘limida STIR orqali shartnoma tuzishingiz mumkin.', qaytarildi:'Ariza foydalanuvchiga tuzatish uchun qaytarildi.', rad:'Ariza rad etildi.'}[status];
+    st.textContent = {didox:'Holat yangilandi: Shartnoma Didoxdan yuborildi.', login:'Holat yangilandi: Login va parollar hamkorga yuborildi.', qabul:'Ariza qabul qilindi. Hamkor ro‘yxatga qo‘shildi — endi Bosh shartnoma bo‘limida STIR orqali shartnoma tuzishingiz mumkin.', qaytarildi:'Ariza foydalanuvchiga tuzatish uchun qaytarildi.', rad:'Ariza rad etildi.'}[status];
     const keep = st.textContent;
     renderTabs(); renderArList(); renderArDetail();
     const st2 = document.getElementById('arDecideStatus'); if(st2){ st2.className='status ok'; st2.textContent = keep; }
@@ -4603,11 +4719,11 @@ function startArAdminPolling(){
 /* ---------- Foydalanuvchi: Xabarlar ---------- */
 async function renderUserChat(host){
   host.innerHTML = `<div class="ua-chat-wrap">${chatMarkup(uMsgs, 'user', 'BirZum Nasiya admini', 'Savollaringizni shu yerda yozing — javob shu yerga keladi')}</div>`;
-  bindChat(async (txt)=>{
+  bindChat(async (txt, ex)=>{
     const u = getUserSession();
-    const m = await msgSend(u.id, 'user', txt, {userIsm:u.ism, userLogin:u.login});
+    const m = await msgSend(u.id, 'user', txt, Object.assign({userIsm:u.ism, userLogin:u.login}, ex));
     uMsgs.push(m); renderUserChat(host);
-  });
+  }, {list:uMsgs, side:'user', rerender:()=>renderUserChat(host)});
   if(uMsgs.some(m=>m.from==='admin' && !m.readByUser)){ await msgMarkRead(uMsgs, 'user'); uMsgs.forEach(m=>{ if(m.from==='admin') m.readByUser = true; }); }
   setTitleBadge(0); uUpdateBadges();
   i18nApply(host);
@@ -4619,7 +4735,7 @@ async function renderUserProfile(host){
   const total = uArizalar.length;
   const stats = [
     ['Jami yuborilgan', total, ''], ['Ko‘rib chiqilmoqda', cnt('yangi')+cnt('qayta'), 'st-new'],
-    ['Tuzatishga qaytarilgan', cnt('qaytarildi'), 'st-ret'], ['Qabul qilingan', cnt('qabul'), 'st-ok'], ['Rad etilgan', cnt('rad'), 'st-rej'],
+    ['Tuzatishga qaytarilgan', cnt('qaytarildi'), 'st-ret'], ['Qabul qilingan', cnt('qabul')+cnt('didox')+cnt('login'), 'st-ok'], ['Rad etilgan', cnt('rad'), 'st-rej'],
   ];
   host.innerHTML = `<div class="ua-profile">
     <div class="card">
@@ -4731,38 +4847,138 @@ function msgTime(iso){
 function linkify(t){
   return esc(t).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\n/g,'<br>');
 }
+function msgPreview(m){
+  if(!m) return '';
+  const t = String(m.text||'').trim();
+  if(t) return t;
+  if(m.att) return (/^image\//.test(m.att.type) ? '🖼 Rasm: ' : '📎 Fayl: ') + m.att.name;
+  return '';
+}
+let chatReply = null;      // javob berilayotgan xabar
+let chatPending = null;    // yuborilishi kutilayotgan fayl {file, url}
+function chatAttMarkup(m){
+  const a = m.att; if(!a) return '';
+  if(/^image\//.test(a.type)) return `<button type="button" class="chat-img" data-att="${m.id}" title="${esc(a.name)}"><img alt="" data-attimg="${m.id}"></button>`;
+  const ext = hfExt(a);
+  return `<button type="button" class="chat-file" data-att="${m.id}"><span class="ext ${/pdf/i.test(a.type)?'pdf':''}">${esc(ext)}</span><span><b>${esc(a.name)}</b><span class="hk-sub">${hfSize(a.size)}</span></span></button>`;
+}
 function chatMarkup(list, side, title, sub){
   const mine = side;
+  const byId = new Map(list.map(m=>[m.id,m]));
   return `<div class="chat">
     <div class="chat-head"><div class="ar-av sm">${side==='user'?'A':esc(String(title||'?').charAt(0).toUpperCase())}</div>
       <div><b data-noi18n>${esc(title)}</b>${sub?`<div class="hk-sub" data-noi18n>${sub}</div>`:''}</div></div>
     <div class="chat-body" id="chatBody">
-      ${list.length ? list.map(m=>`
-        <div class="msg ${m.from===mine?'me':'them'} ${m.system?'sys':''}" data-noi18n>
-          <div class="bubble">${linkify(m.text)}</div>
-          <div class="meta">${m.from==='admin' ? 'Admin' : esc(m.userIsm||'Foydalanuvchi')} · ${msgTime(m.at)}${m.from===mine ? (((side==='admin'?m.readByUser:m.readByAdmin)) ? ' · ✓✓' : ' · ✓') : ''}</div>
-        </div>`).join('') : `<div class="chat-empty">Hozircha xabar yo‘q. Birinchi xabarni yozing.</div>`}
+      ${list.length ? list.map(m=>{
+        const canDel = m.from===mine || side==='admin';
+        const rp = m.replyTo ? (byId.get(m.replyTo.id) || m.replyTo) : null;
+        return `
+        <div class="msg ${m.from===mine?'me':'them'} ${m.system?'sys':''}" data-mid="${m.id}" data-noi18n>
+          <div class="bubble">
+            ${rp ? `<div class="chat-quote" data-jump="${esc(m.replyTo.id)}"><b>${rp.from==='admin'?'Admin':esc(rp.userIsm||'Foydalanuvchi')}</b><span>${esc(msgPreview(rp)).slice(0,120)}</span></div>` : ''}
+            ${chatAttMarkup(m)}
+            ${m.text ? `<div class="chat-text">${linkify(m.text)}</div>` : ''}
+          </div>
+          <div class="meta">${m.from==='admin' ? 'Admin' : esc(m.userIsm||'Foydalanuvchi')} · ${msgTime(m.at)}${m.from===mine ? (((side==='admin'?m.readByUser:m.readByAdmin)) ? ' · ✓✓' : ' · ✓') : ''}
+            <span class="msg-acts"><button type="button" data-reply="${m.id}" title="Javob berish">↩ Javob</button>${canDel?`<button type="button" class="del" data-mdel="${m.id}" title="O‘chirish">🗑</button>`:''}</span></div>
+        </div>`; }).join('') : `<div class="chat-empty">Hozircha xabar yo‘q. Birinchi xabarni yozing.</div>`}
     </div>
+    <div class="chat-reply" id="chatReplyBar" style="display:none;"></div>
+    <div class="chat-pending" id="chatPendingBar" style="display:none;"></div>
     <form class="chat-input" id="chatForm" autocomplete="off">
+      <label class="chat-attach" title="Rasm yoki fayl biriktirish">📎<input type="file" id="chatFile" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar" style="display:none;"></label>
       <textarea id="chatText" rows="1" placeholder="Xabar yozing…"></textarea>
       <button type="submit" class="primary" id="chatSend" title="Yuborish">➤</button>
     </form>
   </div>`;
 }
-function bindChat(onSend){
+function bindChat(onSend, ctx){
+  ctx = ctx || {list:[], side:'user', rerender:null};
   const body = document.getElementById('chatBody'); if(body) body.scrollTop = body.scrollHeight;
   const ta = document.getElementById('chatText'); const f = document.getElementById('chatForm');
   if(!ta || !f) return;
+  const byId = new Map((ctx.list||[]).map(m=>[m.id,m]));
+  // rasm va fayllar: kichik ko'rinish, bosilganda katta oyna
+  document.querySelectorAll('#chatBody img[data-attimg]').forEach(async img=>{
+    const m = byId.get(img.dataset.attimg); if(!m || !m.att) return;
+    try{ const b = await arFileBlob(m.att); img.src = URL.createObjectURL(b); img.onload = ()=>{ if(body && body.scrollHeight - body.scrollTop - body.clientHeight < 400) body.scrollTop = body.scrollHeight; }; }catch(e){ img.alt = '⚠'; }
+  });
+  document.querySelectorAll('#chatBody [data-att]').forEach(el=> el.onclick = async ()=>{
+    const m = byId.get(el.dataset.att); if(!m || !m.att) return;
+    try{ const blob = await arFileBlob(m.att); openViewer({name:m.att.name, type:m.att.type, size:m.att.size, blob}); }
+    catch(e){ alert('Faylni ochib bo‘lmadi: '+(e.message||e)); }
+  });
+  document.querySelectorAll('#chatBody [data-jump]').forEach(el=> el.onclick = ()=>{
+    const t = document.querySelector(`#chatBody [data-mid="${el.dataset.jump}"]`);
+    if(t){ t.scrollIntoView({behavior:'smooth', block:'center'}); t.classList.add('flash'); setTimeout(()=>t.classList.remove('flash'), 1400); }
+  });
+  // telefonda xabarni bosganda amallar ko'rinadi
+  document.querySelectorAll('#chatBody .msg').forEach(el=> el.addEventListener('click', e=>{
+    if(e.target.closest('button,a')) return;
+    document.querySelectorAll('#chatBody .msg.open').forEach(x=>{ if(x!==el) x.classList.remove('open'); });
+    el.classList.toggle('open');
+  }));
+  const replyBar = document.getElementById('chatReplyBar');
+  const showReply = ()=>{
+    if(!chatReply){ replyBar.style.display = 'none'; replyBar.innerHTML = ''; return; }
+    replyBar.style.display = '';
+    replyBar.innerHTML = `<div><b>↩ ${chatReply.from==='admin'?'Admin':esc(chatReply.userIsm||'Foydalanuvchi')}</b><span data-noi18n>${esc(msgPreview(chatReply)).slice(0,140)}</span></div><button type="button" id="chatReplyX">✕</button>`;
+    document.getElementById('chatReplyX').onclick = ()=>{ chatReply = null; showReply(); };
+  };
+  document.querySelectorAll('#chatBody [data-reply]').forEach(b=> b.onclick = ()=>{ chatReply = byId.get(b.dataset.reply) || null; showReply(); ta.focus(); });
+  document.querySelectorAll('#chatBody [data-mdel]').forEach(b=> b.onclick = async ()=>{
+    const m = byId.get(b.dataset.mdel); if(!m) return;
+    if(!confirm('Xabar o‘chirilsinmi? U ikkala tomonda ham o‘chadi.')) return;
+    try{ await ST.del(MSG_COL, m.id); if(m.att) await arDeleteFile(m.att); }catch(e){ alert('O‘chirilmadi: '+(e.message||e)); return; }
+    if(ctx.list){ const i = ctx.list.indexOf(m); if(i>=0) ctx.list.splice(i,1); }
+    if(ctx.rerender) ctx.rerender();
+  });
+  const pendBar = document.getElementById('chatPendingBar');
+  const showPending = ()=>{
+    if(!chatPending){ pendBar.style.display = 'none'; pendBar.innerHTML = ''; return; }
+    const isImg = /^image\//.test(chatPending.file.type);
+    pendBar.style.display = '';
+    pendBar.innerHTML = `${isImg ? `<img src="${chatPending.url}" alt="">` : `<span class="ext ${/pdf/i.test(chatPending.file.type)?'pdf':''}">${esc(hfExt(chatPending.file))}</span>`}<div data-noi18n><b>${esc(chatPending.file.name)}</b><span class="hk-sub">${hfSize(chatPending.file.size)}</span></div><button type="button" id="chatPendX">✕</button>`;
+    document.getElementById('chatPendX').onclick = ()=>{ if(chatPending && chatPending.url) URL.revokeObjectURL(chatPending.url); chatPending = null; showPending(); };
+  };
+  const fi = document.getElementById('chatFile');
+  fi.onchange = async ()=>{
+    const file = fi.files && fi.files[0]; fi.value = '';
+    if(!file) return;
+    let f = await hfCompressImage(file);
+    if(f.size > AR_MAX_FILE){ alert('Fayl juda katta — 10 MB dan oshmasin.'); return; }
+    chatPending = {file:f, url: /^image\//.test(f.type) ? URL.createObjectURL(f) : ''};
+    showPending(); ta.focus();
+  };
+  showReply(); showPending();
   const grow = ()=>{ ta.style.height='auto'; ta.style.height = Math.min(140, ta.scrollHeight)+'px'; };
-  ta.addEventListener('input', grow);
+  if(window.__chatDraft){ ta.value = window.__chatDraft; setTimeout(grow,0); }
+  ta.addEventListener('input', ()=>{ window.__chatDraft = ta.value; grow(); });
   ta.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey && window.innerWidth > 760){ e.preventDefault(); f.requestSubmit(); } });
   f.onsubmit = async (e)=>{
     e.preventDefault();
-    const txt = ta.value.trim(); if(!txt) return;
+    const txt = ta.value.trim();
+    if(!txt && !chatPending) return;
     const btn = document.getElementById('chatSend'); btn.disabled = true;
-    try{ await onSend(txt); ta.value = ''; grow(); }
+    try{
+      const extra = {};
+      if(chatReply) extra.replyTo = {id:chatReply.id, from:chatReply.from, userIsm:chatReply.userIsm||'', text:msgPreview(chatReply).slice(0,200)};
+      if(chatPending){
+        btn.textContent = '…';
+        const fid = 'f'+uid();
+        const chunks = await arSaveFile(fid, chatPending.file);
+        extra.att = {id:fid, name:chatPending.file.name, type:chatPending.file.type||'application/octet-stream', size:chatPending.file.size, chunks};
+      }
+      window.__chatDraft = '';
+      const keepReply = chatReply, keepPending = chatPending;
+      chatReply = null; chatPending = null;
+      try{ await onSend(txt, extra); }
+      catch(er){ window.__chatDraft = txt; chatReply = keepReply; chatPending = keepPending; throw er; }
+      if(keepPending && keepPending.url) URL.revokeObjectURL(keepPending.url);
+      if(document.body.contains(ta)){ ta.value = ''; grow(); showReply(); showPending(); }
+    }
     catch(err){ alert('Xabar yuborilmadi: ' + (err && err.message ? err.message : err)); }
-    finally{ btn.disabled = false; }
+    finally{ btn.disabled = false; btn.textContent = '➤'; }
   };
 }
 
@@ -4814,7 +5030,7 @@ async function adminPollMessages(){
   if(first && fresh.length){
     showToast({icon:'💬', title:`${fresh.length} ta o‘qilmagan xabar`, body:'Foydalanuvchilar bo‘limida ko‘ring', onClick:()=>openUsersPage(fresh[fresh.length-1].userId)});
   }else{
-    fresh.slice(-3).forEach(m=> showToast({icon:'💬', title:m.userIsm||'Foydalanuvchi', time:msgTime(m.at), body:m.text, onClick:()=>openUsersPage(m.userId)}));
+    fresh.slice(-3).forEach(m=> showToast({icon:'💬', title:m.userIsm||'Foydalanuvchi', time:msgTime(m.at), body:msgPreview(m), onClick:()=>openUsersPage(m.userId)}));
   }
   setTitleBadge(adminUnreadTotal() + arPendingCount());
   renderTabs();
@@ -4935,10 +5151,10 @@ async function renderUserDetail(keepScroll){
       ${ar.length ? `<div class="hk-section" style="margin-top:12px;"><h3>Arizalari</h3><table class="hk-docs" data-noi18n>${ar.map(a=>`<tr><td>${esc(a.data&&a.data.tashkilot_nomi||'—')}</td><td>${arFmtDT(a.createdAt)}</td><td>${arStatusBadge(a.status,'admin')}</td><td style="text-align:right;"><button type="button" class="link-btn" data-goar="${a.id}" style="margin:0;">Ochish →</button></td></tr>`).join('')}</table></div>` : ''}
       <div class="hk-section"><h3>Yozishma</h3>${chatMarkup(thread, 'admin', u.ism||u.login, esc(u.telefon||'') + ' · @' + esc(u.login))}</div>
     </div>`;
-  bindChat(async (txt)=>{
-    await msgSend(u.id, 'admin', txt, {userIsm:u.ism});
+  bindChat(async (txt, ex)=>{
+    await msgSend(u.id, 'admin', txt, Object.assign({userIsm:u.ism}, ex));
     renderUserDetail(true);
-  });
+  }, {list:thread, side:'admin', rerender:()=>renderUserDetail(true)});
   if(thread.some(m=>m.from==='user' && !m.readByAdmin)){
     await msgMarkRead(thread, 'admin');
     delete adminUnread[u.id];
@@ -5149,6 +5365,14 @@ function openUserCreateModal(){
    Statuslar: yuborildi (admin yubordi) → didox (Didoxdan yuborildi) → tasdiq | bekor
    ====================================================================================== */
 const BUX_COL = 'birzum_bux_shartnomalar';
+let BUX_CACHE = [], BUX_LOADED = false;
+// Bosh shartnoma yozuvi uchun buxgalteriyadagi oxirgi holat (raqam + STIR bo'yicha)
+function buxStatusFor(d){
+  if(!d) return null;
+  const r = String(d.shartnoma_raqami||'').trim().toLowerCase(), st = String(d.stir||'').trim();
+  const l = BUX_CACHE.filter(x=> String(x.raqam||'').trim().toLowerCase()===r && String(x.stir||'').trim()===st);
+  return l.length ? l[0] : null;   // BUX_CACHE yangisi birinchi turadi
+}
 const BUX_STATUS = {
   yuborildi:{l:'Yangi — buxgalterga yuborildi', s:'Yangi', cls:'st-new'},
   didox:    {l:'Didoxdan yuborildi', s:'Didoxdan yuborildi', cls:'st-re'},
@@ -5219,7 +5443,7 @@ async function openBuxPdf(x){
 async function renderBuxSentCard(){
   const host = document.getElementById('buxSentCard'); if(!host) return;
   let list = [];
-  try{ list = (await ST.all(BUX_COL)).sort((a,b)=>String(b.sentAt).localeCompare(String(a.sentAt))); }
+  try{ list = (await ST.all(BUX_COL)).sort((a,b)=>String(b.sentAt).localeCompare(String(a.sentAt))); BUX_CACHE = list; BUX_LOADED = true; renderHistory('bosh'); }
   catch(e){ host.innerHTML = `<h2>Buxgalteriyaga yuborilganlar</h2><p class="sub">Ro‘yxatni yuklab bo‘lmadi: ${esc(e.message||e)}</p>`; return; }
   host.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h2 style="margin:0;">Buxgalteriyaga yuborilganlar <span class="nav-cnt" data-noi18n>${list.length}</span></h2><button type="button" class="hk-tool" id="buxSentReload">↻ Yangilash</button></div>
     ${list.length ? `<div class="hk-table-wrap" style="max-height:420px;min-height:0;margin-top:10px;"><table class="hk-table"><thead><tr><th>Tashkilot</th><th>Raqam</th><th>Yuborilgan</th><th>Holati</th><th>Oxirgi o‘zgarish</th><th></th></tr></thead><tbody>
@@ -5319,8 +5543,8 @@ async function bPoll(){
   const firstM = bSeenMsg === null; if(firstM) bSeenMsg = new Set();
   const freshM = bMsgs.filter(m=>m.from==='admin' && !m.readByUser && !bSeenMsg.has(m.id)); freshM.forEach(m=>bSeenMsg.add(m.id));
   if(bTab==='chat' && freshM.length){ await msgMarkRead(bMsgs, 'user'); }
-  else if(firstM && freshM.length) showToast({icon:'💬', title:`Admindan ${freshM.length} ta yangi xabar`, time:msgTime(freshM[freshM.length-1].at), body:freshM[freshM.length-1].text, onClick:()=>bGo('chat')});
-  else freshM.forEach(m=> showToast({icon:'💬', title:'Admin', time:msgTime(m.at), body:m.text, onClick:()=>bGo('chat')}));
+  else if(firstM && freshM.length) showToast({icon:'💬', title:`Admindan ${freshM.length} ta yangi xabar`, time:msgTime(freshM[freshM.length-1].at), body:msgPreview(freshM[freshM.length-1]), onClick:()=>bGo('chat')});
+  else freshM.forEach(m=> showToast({icon:'💬', title:'Admin', time:msgTime(m.at), body:msgPreview(m), onClick:()=>bGo('chat')}));
   bBadges();
   if((bTab==='docs' && freshD.length) || (bTab==='chat' && freshM.length)) renderBux();
 }
@@ -5480,7 +5704,7 @@ async function bLoadHamkorFiles(rec){
 /* ---- Xabarlar ---- */
 async function renderBuxChat(host){
   host.innerHTML = `<div class="ua-chat-wrap">${chatMarkup(bMsgs, 'user', 'BirZum Nasiya admini', 'Shartnomalar bo‘yicha savollarni shu yerda yozing')}</div>`;
-  bindChat(async (txt)=>{ const u = getUserSession(); const m = await msgSend(u.id, 'user', txt, {userIsm:u.ism, userLogin:u.login}); bMsgs.push(m); renderBuxChat(host); });
+  bindChat(async (txt, ex)=>{ const u = getUserSession(); const m = await msgSend(u.id, 'user', txt, Object.assign({userIsm:u.ism, userLogin:u.login}, ex)); bMsgs.push(m); renderBuxChat(host); }, {list:bMsgs, side:'user', rerender:()=>renderBuxChat(host)});
   if(bMsgs.some(m=>m.from==='admin' && !m.readByUser)){ await msgMarkRead(bMsgs, 'user'); }
   bBadges(); i18nApply(host);
 }
@@ -6242,21 +6466,37 @@ function renderHistory(key){
       return stirVal.includes(q) || nameVal.includes(q);
     });
   }
+  const fFrom = (document.getElementById('histFrom_'+key)||{}).value || '';
+  const fTo = (document.getElementById('histTo_'+key)||{}).value || '';
+  const fSt = (document.getElementById('histSt_'+key)||{}).value || '';
+  if(fFrom || fTo){
+    list = list.filter(r=>{
+      const raw = (r.data && (r.data.shartnoma_sanasi || r.data.qoshimcha_sanasi)) || r.createdAt;
+      const k = /^\d{4}-\d{2}-\d{2}/.test(String(normalizeDateString(raw)||'')) ? String(normalizeDateString(raw)).slice(0,10) : dayKey(r.createdAt);
+      return (!fFrom || k >= fFrom) && (!fTo || k <= fTo);
+    });
+  }
+  if(key==='bosh' && fSt){
+    list = list.filter(r=>{ const b = buxStatusFor(r.data); return fSt==='none' ? !b : (b && b.status===fSt); });
+  }
+  const hc = document.getElementById('histCount_'+key);
+  if(hc) hc.textContent = (q||fFrom||fTo||fSt) ? `Topildi: ${list.length} ta (jami ${DB[key].length} ta)` : `Jami: ${DB[key].length} ta`;
   if(!list.length){
-    host.innerHTML = q
-      ? '<div class="empty-hist">«'+esc(searchEl.value)+'» bo‘yicha hech qanday hujjat topilmadi.</div>'
+    host.innerHTML = (q||fFrom||fTo||fSt)
+      ? '<div class="empty-hist">Tanlangan filtr bo‘yicha hech qanday hujjat topilmadi.</div>'
       : '<div class="empty-hist">Hozircha saqlangan hujjatlar yo‘q.</div>';
     return;
   }
   host.innerHTML = `
     <table class="history">
-      <tr><th>Tashkilot</th><th>STIR</th><th>Sana</th>${key==='bonus'?'<th>Turi</th>':''}<th></th></tr>
+      <tr><th>Tashkilot</th><th>STIR</th><th>Sana</th>${key==='bonus'?'<th>Turi</th>':''}${key==='bosh'?'<th>Buxgalteriya</th>':''}<th></th></tr>
       ${list.map(r=>`
         <tr>
           <td>${esc(labelFor(key,r.data,r.kind))}</td>
           <td>${esc((r.data && r.data.stir) ? r.data.stir : '—')}</td>
           <td>${esc(new Date(r.createdAt).toLocaleString('uz-UZ'))}</td>
           ${key==='bonus'?`<td><span class="badge ${r.kind==='cancel'?'cancel':'bonus'}">${r.kind==='cancel'?'Bekor qilish':'Bonus'}</span></td>`:''}
+          ${key==='bosh'?`<td>${(()=>{ const b = buxStatusFor(r.data); if(!b) return BUX_LOADED ? '<span class="muted" style="font-size:11px;">Yuborilmagan</span>' : ''; const last = (b.history||[]).slice(-1)[0]||{}; return buxBadge(b.status) + `<div class="hk-sub" style="margin-top:3px;">${arFmtDT(last.at)}</div>`; })()}</td>`:''}
           <td>
             <button class="link-btn" data-act="dl" data-id="${r.id}">PDF yuklab olish</button>
             <button class="link-btn" data-act="dlword" data-id="${r.id}">Word yuklab olish</button>
@@ -6374,6 +6614,9 @@ function bindSectionEvents(key){
   }
   // Saqlangan hujjatlar ro'yxatini STIR yoki tashkilot nomi bo'yicha qidirish —
   // teriladigan har bir harfda ro'yxat jonli (live) filtrlanadi.
+  ['histFrom_','histTo_','histSt_'].forEach(pf=>{ const el = document.getElementById(pf+key); if(el) el.onchange = ()=> renderHistory(key); });
+  const hcl = document.getElementById('histClear_'+key);
+  if(hcl) hcl.onclick = ()=>{ ['histSearch_','histFrom_','histTo_','histSt_'].forEach(pf=>{ const el = document.getElementById(pf+key); if(el) el.value = ''; }); renderHistory(key); };
   const histSearchEl = document.getElementById('histSearch_'+key);
   if(histSearchEl){
     histSearchEl.oninput = ()=> renderHistory(key);

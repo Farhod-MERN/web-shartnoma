@@ -66,7 +66,7 @@ window.BIRZUM_SERVER = {
         body: JSON.stringify(body || {})
       });
     }catch(e){
-      banner(true, '⚠️ Server bilan aloqa yo‘q — Admin bilan bog`laning. Telegram:@birzumadmin');
+      banner(true, '⚠️ Server bilan aloqa yo‘q — ishxonadagi kompyuter o‘chiq yoki internetga ulanmagan bo‘lishi mumkin. Hozir kiritilgan ma’lumotlar saqlanmasligi mumkin.');
       var er = new Error('Serverga ulanib bo‘lmadi. Ishxonadagi kompyuter yoqilgani va server oynasi ochiq turganini tekshiring.');
       er.code = 'unavailable'; throw er;
     }
@@ -925,6 +925,56 @@ window.BIRZUM_SERVER = {
 .srv-table th{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted,#6b7280);font-weight:600;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);}
 .srv-table td{padding:6px 8px;border-bottom:1px solid var(--line);}
 .srv-table tr:last-child td{border-bottom:0;}
+/* v8: Hamkor yo'li paneli */
+.flow-wrap{display:flex;flex-direction:column;gap:14px;min-width:0;}
+.flow-top{padding:16px 18px;}
+.flow-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+.flow-late-word{color:var(--danger);}
+.flow-sum{display:flex;gap:8px;overflow-x:auto;padding:14px 0 2px;scrollbar-width:thin;}
+.flow-chip{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:112px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper-2);color:var(--text);cursor:pointer;text-align:left;font:inherit;}
+.flow-chip b{font-size:20px;line-height:1.1;color:var(--ink);}
+.flow-chip span{font-size:12px;color:var(--muted);white-space:nowrap;}
+.flow-chip i{font-style:normal;font-size:11px;font-weight:700;color:var(--danger);}
+.flow-chip.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
+.flow-chip.warn{border-top:3px solid #e8a317;} .flow-chip.bad{border-top:3px solid var(--danger);} .flow-chip.ok{border-top:3px solid var(--accent);}
+.flow-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;padding-bottom:8px;align-items:start;}
+.flow-board.single{grid-auto-flow:row;grid-template-columns:1fr;}
+.flow-board.single .flow-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;}
+.flow-col{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px;min-width:0;}
+.flow-col.warn{border-top:3px solid #e8a317;} .flow-col.bad{border-top:3px solid var(--danger);} .flow-col.ok{border-top:3px solid var(--accent);}
+.flow-col-head{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:13.5px;color:var(--ink);}
+.flow-col-sub{font-size:11.5px;color:var(--muted);margin:2px 0 10px;}
+.flow-cards{display:flex;flex-direction:column;gap:8px;}
+.flow-card{display:flex;flex-direction:column;align-items:flex-start;gap:3px;width:100%;text-align:left;padding:10px 11px;border:1px solid var(--line);border-radius:9px;background:var(--paper-2);color:var(--text);cursor:pointer;font:inherit;}
+.flow-card:hover{border-color:var(--accent);}
+.flow-card b{font-size:13px;color:var(--ink);line-height:1.3;word-break:break-word;}
+.flow-card .hk-sub{font-size:11.5px;}
+.flow-card.late{border-color:var(--danger);box-shadow:inset 3px 0 0 var(--danger);}
+.flow-note{font-size:11px;color:#b7791f;font-weight:600;}
+.flow-age{font-size:11.5px;color:var(--muted);margin-top:2px;}
+.flow-age.late{color:var(--danger);font-weight:700;}
+.flow-empty{font-size:12px;color:var(--muted);text-align:center;padding:8px 0;}
+.flow-more{margin:4px 0 0;font-size:12px;}
+@media (max-width:760px){
+  .flow-board{grid-auto-flow:row;grid-template-columns:1fr;}
+  .flow-top{padding:14px;}
+  .flow-board{gap:8px;}
+  .flow-col.empty{padding:8px 10px;}
+  .flow-col.empty .flow-col-sub,.flow-col.empty .flow-cards{display:none;}
+}
+/* v8: Telegram kartasi, tasdiqlash oynasi, avtomatik to'ldirish */
+.tg-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.tg-btns{display:flex;gap:10px;align-items:center;}
+.tg-steps{margin:0 0 12px;padding-left:20px;font-size:13px;line-height:1.7;}
+.modal .modal-body > p.sub{font-size:13.5px;line-height:1.5;}
+.apv-sum{margin-top:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.apv-sum div{display:flex;justify-content:space-between;gap:12px;padding:7px 12px;font-size:13px;border-bottom:1px solid var(--line);}
+.apv-sum div:last-child{border-bottom:0;}
+.apv-sum span{color:var(--muted);flex:0 0 auto;}
+.apv-sum b{text-align:right;word-break:break-word;}
+.apv-foot{flex-wrap:wrap;}
+.apv-foot button{min-width:0 !important;flex:1 1 160px;}
+input.auto-filled{box-shadow:0 0 0 3px var(--accent-soft);border-color:var(--accent);transition:box-shadow .3s;}
 </style>
 </head>
 <body>
@@ -1105,6 +1155,8 @@ function showApp(){
   arCloudInitPromise.then(()=>{
     arAdminLoad(true);
     startArAdminPolling();
+    mfoSyncMeta();
+    flowLoad().then(()=>{ renderTabs(); if(activeTab==='panel') renderFlowPanel(); });
     usersLoad();
     startAdminMsgPolling();
     renderTabs();
@@ -2491,6 +2543,7 @@ const FAVICON_DATA = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYA
 const ICONS = {
   users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.3-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.9.7 3.2 2.4 3.5 5.2"/></svg>',
   chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg>',
+  panel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="4" height="6" rx="1.5"/></svg>',
   arizalar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H5.2L4 17.2z"/><path d="M8 8h8M8 12h5"/><path d="M14 20l2 2 4-4"/></svg>',
   hamkor:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/></svg>',
   bosh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>',
@@ -2817,9 +2870,10 @@ function startI18nObserver(){
 }
 
 /* ============================= CHAP MENYU ============================= */
-const NAV_ORDER = ['hamkor','arizalar','users','bosh','bonus','qoshimcha','profil'];
-const NAV_LABEL = {hamkor:'Hamkorlar', arizalar:'Arizalar', users:'Foydalanuvchilar', bosh:'Bosh shartnoma', bonus:'Bonus shartnoma / bekor qilish', qoshimcha:'Qo‘shimcha kelishuv', profil:'Sozlamalar'};
+const NAV_ORDER = ['panel','hamkor','arizalar','users','bosh','bonus','qoshimcha','profil'];
+const NAV_LABEL = {panel:'Hamkor yo‘li', hamkor:'Hamkorlar', arizalar:'Arizalar', users:'Foydalanuvchilar', bosh:'Bosh shartnoma', bonus:'Bonus shartnoma / bekor qilish', qoshimcha:'Qo‘shimcha kelishuv', profil:'Sozlamalar'};
 const PAGE_SUB = {
+  panel:'Arizadan faol hamkorgacha: har bir hamkor qaysi bosqichda va kimning navbati',
   hamkor:'Hamkorlar reestri: rekvizitlar, rasmlar, hujjatlar va tuzilgan shartnomalar',
   arizalar:'Hamkorlardan kelgan shartnoma arizalari: qabul qilish, qaytarish, rad etish',
   users:'Ro‘yxatdan o‘tgan hamkorlar: ma’lumotlar, faollik, login/parol va yozishmalar',
@@ -2834,6 +2888,7 @@ function renderTabs(){
   nav.innerHTML = NAV_ORDER.map(key=>{
     const s = SECTIONS.find(x=>x.key===key);
     let cnt = s && s.storageKey ? `<span class="nav-cnt" data-noi18n>${DB[key].length}</span>` : '';
+    if(key==='panel'){ const n = arLoaded ? flowLateCount() : 0; cnt = n ? `<span class="nav-cnt hot" data-noi18n title="Muddati o‘tganlar">${n}</span>` : ''; }
     if(key==='arizalar'){ const n = arPendingCount(); cnt = n ? `<span class="nav-cnt hot" data-noi18n>${n}</span>` : ''; }
     if(key==='users'){ const n = adminUnreadTotal(); cnt = n ? `<span class="nav-cnt hot" data-noi18n title="O‘qilmagan xabarlar">${n}</span>` : ''; }
     return `<button class="nav-item ${activeTab===key?'active':''}" data-tab="${key}" data-title="${esc(NAV_LABEL[key])}">
@@ -3372,6 +3427,7 @@ function renderApp(){
   if(activeTab==='qoshimcha') app.innerHTML = sectionMarkup('qoshimcha','Qo‘shimcha kelishuv shartnomasi','Mavjud shartnomaga qo‘shimcha kelishuv (2.8, 2.12–2.14-bandlar) shakllantiring.');
   if(activeTab==='bonus') app.innerHTML = bonusMarkup();
   if(activeTab==='profil') app.innerHTML = profilMarkup();
+  if(activeTab==='panel') app.innerHTML = flowPanelMarkup();
   if(activeTab==='arizalar') app.innerHTML = arizalarMarkup();
   if(activeTab==='users') app.innerHTML = usersMarkup();
   bindSectionEvents(activeTab);
@@ -4052,9 +4108,13 @@ const AR_STATUS = {
   qaytarildi: {admin:'Tuzatishga qaytarilgan', user:'Tuzatish uchun qaytarildi', cls:'st-ret'},
   qabul:      {admin:'Qabul qilindi',    user:'Qabul qilindi', cls:'st-ok'},
   didox:      {admin:'Shartnoma Didoxdan yuborildi', user:'Shartnoma Didoxdan yuborildi', cls:'st-re'},
+  imzo:       {admin:'Shartnoma imzolandi', user:'Shartnoma imzolandi', cls:'st-ok'},
   login:      {admin:'Login va parollar hamkorga yuborildi', user:'Login va parollar sizga yuborildi', cls:'st-ok'},
   rad:        {admin:'Rad etildi',       user:'Rad etildi', cls:'st-rej'},
+  bekor:      {admin:'Shartnoma bekor qilindi', user:'Shartnoma bekor qilindi', cls:'st-rej'},
+  bux:        {admin:'Shartnoma buxgalterga yuborildi', user:'Shartnoma tayyorlandi', cls:'st-re', historyOnly:true},
 };
+const AR_OK_STATES = ['qabul','didox','imzo','login'];
 function arStatusBadge(st, role){
   const s = AR_STATUS[st] || AR_STATUS.yangi;
   return `<span class="st-badge ${s.cls}">${esc(role==='user' ? s.user : s.admin)}</span>`;
@@ -4369,7 +4429,7 @@ function renderUserApp(){
         <button type="button" class="hk-tool" id="uRefreshBtn">↻ Yangilash</button>
       </div>
       ${uArizalar.length ? `<div class="ua-filter">
-          <select id="uFltSt"><option value="">Barcha holatlar</option>${Object.keys(AR_STATUS).map(k=>`<option value="${k}" ${uFlt.st===k?'selected':''}>${esc(AR_STATUS[k].user)}</option>`).join('')}</select>
+          <select id="uFltSt"><option value="">Barcha holatlar</option>${Object.keys(AR_STATUS).filter(k=>!AR_STATUS[k].historyOnly).map(k=>`<option value="${k}" ${uFlt.st===k?'selected':''}>${esc(AR_STATUS[k].user)}</option>`).join('')}</select>
           <div class="ua-dates"><input type="date" id="uFltFrom" value="${esc(uFlt.from)}" title="Sanadan"><span>—</span><input type="date" id="uFltTo" value="${esc(uFlt.to)}" title="Sanagacha"></div>
           ${uFlt.st||uFlt.from||uFlt.to ? '<button type="button" class="link-btn" id="uFltClear" style="margin:0;">✕ Filtrni tozalash</button>' : ''}
         </div>` : ''}
@@ -4564,6 +4624,7 @@ async function uSubmit(){
       createdAt: prev ? prev.createdAt : now, updatedAt: now,
     };
     await ST.set(AR_COL, id, doc);
+    notify({role:'admin'}, `${isEdit ? '🔁 Tuzatilgan ariza' : '📨 Yangi ariza'}: «${doc.data.tashkilot_nomi||''}» (STIR ${doc.data.stir||'—'})\nYuboruvchi: ${u.ism||u.login}${u.telefon ? ', '+u.telefon : ''}`);
     const cloud = await arIsCloud();
     uDraft = null; uView = 'view'; uCurrentId = id;
     await uRefresh();
@@ -4618,6 +4679,8 @@ function uViewMarkup(a){
     qaytarildi:'Arizada kamchiliklar bor. Izohni o‘qib, «Tuzatish va qayta yuborish» tugmasini bosing.',
     qabul:'Tabriklaymiz! Arizangiz qabul qilindi. Tez orada shartnoma bo‘yicha siz bilan bog‘lanamiz.',
     didox:'Shartnoma Didox orqali sizga yuborildi. Didox tizimida tekshirib, imzolang.',
+    imzo:'Shartnoma imzolandi. Tez orada tizimga kirish login va parollari beriladi.',
+    bekor:'Shartnoma bekor qilindi. Savollar bo‘lsa, «Xabarlar» bo‘limida yozing.',
     login:'Hammasi tayyor! BirZum Nasiya tizimiga kirish login va parollari sizga yuborildi.',
     rad:'Afsuski, arizangiz rad etildi.',
   }[a.status] || '';
@@ -4700,7 +4763,8 @@ function arFiltered(){
   const q = arQuery.trim().toLowerCase();
   let l = AR_CACHE.slice();
   if(arFilter==='faol') l = l.filter(a=>a.status==='yangi'||a.status==='qayta');
-  else if(arFilter==='qabul') l = l.filter(a=>['qabul','didox','login'].includes(a.status));
+  else if(arFilter==='qabul') l = l.filter(a=>AR_OK_STATES.includes(a.status));
+  else if(arFilter==='rad') l = l.filter(a=>a.status==='rad'||a.status==='bekor');
   else if(arFilter!=='hammasi') l = l.filter(a=>a.status===arFilter);
   if(q) l = l.filter(a=>[a.data&&a.data.tashkilot_nomi, a.data&&a.data.stir, a.userIsm, a.userLogin, a.userTelefon, a.data&&a.data.brend].some(v=>String(v||'').toLowerCase().includes(q)));
   return l;
@@ -4709,7 +4773,7 @@ function renderArList(){
   const wrap = document.getElementById('arListWrap'); if(!wrap) return;
   const cnt = document.getElementById('arCnt'); if(cnt) cnt.textContent = AR_CACHE.length;
   const counts = {faol:arPendingCount(), hammasi:AR_CACHE.length, qaytarildi:0, qabul:0, rad:0, users:arUsers.length||''};
-  AR_CACHE.forEach(a=>{ const k = ['didox','login'].includes(a.status) ? 'qabul' : a.status; if(counts[k]!==undefined && k!=='faol') counts[k]++; });
+  AR_CACHE.forEach(a=>{ const k = AR_OK_STATES.includes(a.status) ? 'qabul' : (a.status==='bekor' ? 'rad' : a.status); if(counts[k]!==undefined && k!=='faol') counts[k]++; });
   document.querySelectorAll('.ar-chip').forEach(c=>{ const n = counts[c.dataset.flt]; c.querySelector('.ar-chip-n').textContent = n===''||n===undefined ? '' : n; });
   if(arFilter==='users'){ renderArUsers(wrap); return; }
   if(!arLoaded){ wrap.innerHTML = '<div class="hk-empty">Yuklanmoqda…</div>'; return; }
@@ -4758,8 +4822,17 @@ function renderArDetail(){
   const soft = [];
   if(!cntF('ijara') && !cntF('aylanma')) soft.push('ijara shartnomasi / kadastr yoki 6 oylik X/R aylanmasi');
   if(!cntF('selfi')) soft.push('xodimning do‘kondagi selfi rasmi');
-  const final = ['qabul','rad','didox','login'].includes(a.status);
-  const afterOk = ['qabul','didox','login'].includes(a.status);
+  const final = AR_OK_STATES.concat(['rad','bekor']).includes(a.status);
+  const afterOk = AR_OK_STATES.includes(a.status);
+  const pending = a.status==='yangi' || a.status==='qayta';
+  if(pending && !(a.seenAt && a.seenAt >= (a.updatedAt||a.createdAt))){
+    a.seenAt = new Date().toISOString();
+    const cp = Object.assign({}, a); delete cp.id; ST.set(AR_COL, a.id, cp).catch(()=>{});
+  }
+  const bxDoc = afterOk ? flowBuxFor(a) : null;
+  const sameStir = String((a.data||{}).stir||'').trim();
+  const dupHk = sameStir && !a.hamkorId ? DB.hamkor.find(r=> String((r.data||{}).stir||'').trim()===sameStir) : null;
+  const dupAr = sameStir ? AR_CACHE.filter(x=> x.id!==a.id && String((x.data||{}).stir||'').trim()===sameStir) : [];
   host.innerHTML = `
     <div class="hk-card-head"><h2>Ariza</h2>${arStatusBadge(a.status,'admin')}</div>
     <div class="hk-detail-body">
@@ -4771,7 +4844,10 @@ function renderArDetail(){
       ${miss.length ? `<div class="ar-note warn"><b>Yetishmayotganlar:</b> <span data-noi18n>${miss.map(esc).join('; ')}</span></div>` : `<div class="ar-note good">✓ Barcha majburiy ma’lumot va hujjatlar yuborilgan.</div>`}
       ${soft.length ? `<div class="ar-note">ℹ️ Ixtiyoriy hujjatlardan yuborilmagan: <span data-noi18n>${soft.map(esc).join('; ')}</span>.</div>` : ''}
       ${a.hamkorId ? `<div class="ar-note good">Hamkorlar ro‘yxatiga qo‘shilgan. <button type="button" class="link-btn" id="arGoHamkor" style="margin:0 0 0 6px;">Hamkorni ochish →</button></div>` : ''}
-      ${a.status==='qabul' ? `<button type="button" class="primary" id="arMakeContract" style="width:100%;margin-top:12px;">📝 Shartnoma yaratish</button>` : ''}
+      ${dupHk ? `<div class="ar-note warn">⚠️ Bu STIR bilan hamkor ro‘yxatda allaqachon bor: <b data-noi18n>${esc((dupHk.data||{}).tashkilot_nomi||'')}</b>. Qabul qilinsa, yangi hamkor ochilmaydi — mavjudining bo‘sh maydonlari to‘ldiriladi.</div>` : ''}
+      ${dupAr.length ? `<div class="ar-note">ℹ️ Shu STIR bilan yana ${dupAr.length} ta ariza bor: <span data-noi18n>${dupAr.slice(0,3).map(x=>esc((x.userIsm||'—')+' · '+((AR_STATUS[x.status]||{}).admin||x.status))).join('; ')}</span></div>` : ''}
+      ${bxDoc ? `<div class="ar-note">📄 Buxgalteriyada: <b data-noi18n>№ ${esc(bxDoc.raqam||'')}</b> — ${buxBadge(bxDoc.status)} <span class="hk-sub" data-noi18n>${arFmtDT(((bxDoc.history||[]).slice(-1)[0]||{}).at||bxDoc.sentAt)}</span></div>` : ''}
+      ${a.status==='qabul' && !bxDoc ? `<div class="ar-decide" style="margin-top:12px;"><button type="button" class="primary" id="arQuickBux">⚡ Shartnomani buxgalterga yuborish</button><button type="button" class="secondary" id="arMakeContract">📝 Formada yaratish</button></div>` : ''}
       <div class="hk-section" style="margin-top:12px;"><h3>Tashkilot ma’lumotlari</h3>${arDataTable(a)}</div>
       <div class="hk-section"><h3>Hujjatlar va rasmlar</h3>${arFilesMarkup(a)}</div>
       <div class="hk-section">
@@ -4779,13 +4855,14 @@ function renderArDetail(){
         <p class="sub">Qaytarish yoki rad etishda sababini yozing — foydalanuvchi uni o‘z sahifasida ko‘radi.</p>
         <textarea id="arIzoh" rows="3" placeholder="Izoh / kamchiliklar (masalan: pasportning 2-sahifasi aniq emas, do‘kon tashqi rasmi yetishmaydi)">${esc(a.status==='qaytarildi'||a.status==='rad' ? (a.adminIzoh||'') : '')}</textarea>
         <div class="ar-decide">
-          <button type="button" class="primary" id="arAccept" ${afterOk?'disabled':''}>✓ Qabul qilish</button>
+          ${pending ? `<button type="button" class="primary" id="arApprove">⚡ Tasdiqlash va buxgalterga yuborish</button>` : ''}
+          <button type="button" class="${pending?'secondary':'primary'}" id="arAccept" ${afterOk?'disabled':''}>✓ ${pending?'Faqat qabul qilish':'Qabul qilish'}</button>
           <button type="button" class="warn-btn" id="arReturn" ${final?'disabled':''}>↩ Tuzatishga qaytarish</button>
           <button type="button" class="danger-btn" id="arReject" ${final?'disabled':''}>✕ Rad etish</button>
         </div>
         ${afterOk ? `<div class="ar-next"><div class="sl">Qabul qilingandan keyingi bosqich</div><div class="sd">Tanlangan holat foydalanuvchi sahifasida ko‘rinadi va unga xabar boradi.</div>
           <div class="ar-decide">
-            <button type="button" class="secondary" id="arDidox" ${a.status==='didox'||a.status==='login'?'disabled':''}>📨 Shartnoma Didoxdan yuborildi</button>
+            <button type="button" class="secondary" id="arDidox" ${['didox','imzo','login'].includes(a.status)?'disabled':''}>📨 Shartnoma Didoxdan yuborildi</button>
             <button type="button" class="secondary" id="arLogin" ${a.status==='login'?'disabled':''}>🔑 Login va parollar hamkorga yuborildi</button>
           </div></div>` : ''}
         <div class="status" id="arDecideStatus"></div>
@@ -4795,7 +4872,9 @@ function renderArDetail(){
   arHydrateFiles(host, a);
   const g = document.getElementById('arGoHamkor');
   if(g) g.onclick = ()=>{ hamkorEditingId = a.hamkorId; activeTab = 'hamkor'; UI.lastTab = 'hamkor'; saveUiPrefs(); renderApp(); };
-  const mk = document.getElementById('arMakeContract'); if(mk) mk.onclick = ()=> openBoshFromAriza(a);
+  const mk = document.getElementById('arMakeContract'); if(mk) mk.onclick = ()=>{ openBoshFromAriza(a); const no = document.getElementById('f_shartnoma_raqami'); if(no && !no.value) no.value = nextBoshRaqam(); };
+  const qb = document.getElementById('arQuickBux'); if(qb) qb.onclick = ()=> openApproveModal(a, true);
+  const ap = document.getElementById('arApprove'); if(ap) ap.onclick = ()=> openApproveModal(a, false);
   document.getElementById('arAccept').onclick = ()=> arDecide(a, 'qabul');
   const dx = document.getElementById('arDidox'); if(dx) dx.onclick = ()=> arDecide(a, 'didox');
   const lg = document.getElementById('arLogin'); if(lg) lg.onclick = ()=> arDecide(a, 'login');
@@ -4803,18 +4882,19 @@ function renderArDetail(){
   document.getElementById('arReject').onclick = ()=> arDecide(a, 'rad');
   i18nApply(host);
 }
-async function arDecide(a, status){
-  const st = document.getElementById('arDecideStatus');
-  const izoh = document.getElementById('arIzoh').value.trim();
+async function arDecide(a, status, opts){
+  opts = opts || {};
+  const st = document.getElementById('arDecideStatus') || {className:'', textContent:''};
+  const izoh = ((document.getElementById('arIzoh')||{}).value || '').trim();
   if((status==='qaytarildi' || status==='rad') && !izoh){ st.className='status err'; st.textContent = status==='qaytarildi' ? 'Qaytarish uchun kamchiliklarni izohga yozing.' : 'Rad etish sababini izohga yozing.'; return; }
   const q = {didox:'Holat «Shartnoma Didoxdan yuborildi» deb belgilansinmi? Foydalanuvchiga xabar boradi.', login:'Holat «Login va parollar hamkorga yuborildi» deb belgilansinmi? Foydalanuvchiga xabar boradi.',
     qabul:'Ariza qabul qilinsin va hamkor «Hamkorlar» ro‘yxatiga (fayllari bilan) qo‘shilsinmi?', qaytarildi:'Ariza tuzatish uchun foydalanuvchiga qaytarilsinmi?', rad:'Ariza rad etilsinmi?'}[status];
-  if(!confirm(q)) return;
+  if(!opts.noConfirm && !confirm(q)) return false;
   document.querySelectorAll('.ar-decide button').forEach(b=>b.disabled = true);
   try{
     const now = new Date().toISOString();
     const upd = Object.assign({}, a);
-    upd.status = status; if(status!=='didox' && status!=='login') upd.adminIzoh = izoh; upd.updatedAt = now;
+    upd.status = status; if(status!=='didox' && status!=='login') upd.adminIzoh = izoh; upd.updatedAt = now; delete upd.id;
     upd.history = (a.history||[]).concat([{at:now, by:'admin', status, izoh}]);
     if(status==='qabul'){
       st.className='status'; st.textContent='Hamkorlar ro‘yxatiga qo‘shilmoqda…';
@@ -4836,10 +4916,13 @@ async function arDecide(a, status){
     const keep = st.textContent;
     renderTabs(); renderArList(); renderArDetail();
     const st2 = document.getElementById('arDecideStatus'); if(st2){ st2.className='status ok'; st2.textContent = keep; }
+    return true;
   }catch(e){
     console.error(e);
     st.className='status err'; st.textContent = 'Xatolik: ' + (e && e.message ? e.message : e);
     document.querySelectorAll('.ar-decide button').forEach(b=>b.disabled = false);
+    if(opts.noConfirm) throw e;
+    return false;
   }
 }
 async function arCreateHamkor(a, progress){
@@ -4902,7 +4985,7 @@ async function renderUserProfile(host){
   const total = uArizalar.length;
   const stats = [
     ['Jami yuborilgan', total, ''], ['Ko‘rib chiqilmoqda', cnt('yangi')+cnt('qayta'), 'st-new'],
-    ['Tuzatishga qaytarilgan', cnt('qaytarildi'), 'st-ret'], ['Qabul qilingan', cnt('qabul')+cnt('didox')+cnt('login'), 'st-ok'], ['Rad etilgan', cnt('rad'), 'st-rej'],
+    ['Tuzatishga qaytarilgan', cnt('qaytarildi'), 'st-ret'], ['Qabul qilingan', cnt('qabul')+cnt('didox')+cnt('imzo')+cnt('login'), 'st-ok'], ['Rad etilgan', cnt('rad')+cnt('bekor'), 'st-rej'],
   ];
   host.innerHTML = `<div class="ua-profile">
     <div class="card">
@@ -4929,11 +5012,13 @@ async function renderUserProfile(host){
         <div class="hk-actions"><button type="submit" class="primary">Saqlash</button></div>
       </form>
     </div>
+    ${tgCardMarkup()}
     <div class="card ua-help">
       <h2>Yordam kerakmi?</h2>
       <p class="sub" style="margin:0;">Savollar bo‘yicha «Xabarlar» bo‘limida yozing yoki bog‘laning: <a href="https://t.me/${ADMIN_CONTACT.telegram.slice(1)}" target="_blank" rel="noopener">Telegram: ${ADMIN_CONTACT.telegram}</a> · <a href="tel:${ADMIN_CONTACT.phoneRaw}">${ADMIN_CONTACT.phone}</a></p>
     </div>
   </div>`;
+  bindTgCard();
   host.querySelectorAll('.pass-eye[data-for2]').forEach(btn=>{
     const inp = document.getElementById(btn.dataset.for2); btn.innerHTML = ICONS.eye;
     btn.onclick = ()=>{ const sh = inp.type==='password'; inp.type = sh?'text':'password'; btn.innerHTML = sh?ICONS.eyeOff:ICONS.eye; };
@@ -4991,6 +5076,14 @@ async function msgSend(userId, from, text, extra){
   const doc = Object.assign({userId, from, text: String(text).slice(0,4000), at: now,
     readByAdmin: from==='admin', readByUser: from==='user'}, extra||{});
   await ST.set(MSG_COL, id, doc);
+  // Telegram: admin yozsa — foydalanuvchiga, foydalanuvchi (hamkor yoki buxgalter) yozsa — adminlarga
+  try{
+    const body = String(text||'').trim() || (doc.att ? (/^image\//.test(doc.att.type) ? '🖼 Rasm' : '📎 Fayl: '+doc.att.name) : '');
+    if(body && typeof notify==='function'){
+      if(from==='admin') notify({userId}, (doc.system ? 'BirZum Nasiya:\n' : '💬 Admin:\n') + body);
+      else notify({role:'admin'}, `💬 ${doc.userIsm || 'Foydalanuvchi'}:\n` + body);
+    }
+  }catch(e){}
   return Object.assign({id}, doc);
 }
 async function msgThread(userId){
@@ -5580,19 +5673,13 @@ async function sendBoshToBux(){
   const btn = document.getElementById('toBux_bosh'); if(btn) btn.disabled = true;
   try{
     say('','PDF tayyorlanmoqda…');
-    const blob = await buildBoshPdfBlob(d);
-    say('','Buxgalterga yuborilmoqda…');
-    const fid = 'f'+uid();
-    const name = fileNameFor('bosh', d);
-    const chunks = await arSaveFile(fid, blob);
-    const now = new Date().toISOString();
-    const safe = Object.assign({}, d); delete safe.login; delete safe.parol;
-    const id = 'bx'+uid();
-    await ST.set(BUX_COL, id, {
-      tur:'bosh', tashkilot_nomi:d.tashkilot_nomi, stir:d.stir||'', raqam:d.shartnoma_raqami, sana:d.shartnoma_sanasi,
-      file:{id:fid, name, type:'application/pdf', size:blob.size, chunks}, data:safe,
-      sentAt:now, sentBy:'Admin', status:'yuborildi', history:[{status:'yuborildi', at:now, by:'Admin'}],
-    });
+    const fa = window.__boshFromAriza && String(window.__boshFromAriza.stir||'')===String(d.stir||'') ? window.__boshFromAriza : null;
+    const bx = await sendBoshDataToBux(d, fa ? {arizaId:fa.id, userId:fa.userId} : {}, t=>say('',t));
+    const now = bx.sentAt;
+    if(fa){
+      try{ const cur = await ST.get(AR_COL, fa.id); if(cur){ cur.history = (cur.history||[]).concat([{at:now, by:'admin', status:'bux', izoh:`№ ${d.shartnoma_raqami}`}]); cur.updatedAt = now; cur.buxDocId = bx.id; await ST.set(AR_COL, fa.id, cur); } }catch(e){ console.error(e); }
+      window.__boshFromAriza = null;
+    }
     say('ok', `«${d.tashkilot_nomi}» shartnomasi buxgalterga yuborildi (${arFmtDT(now)}). Holatini pastdagi «Buxgalteriyaga yuborilganlar» ro‘yxatida kuzatishingiz mumkin.`);
     renderBuxSentCard();
   }catch(e){ console.error(e); say('err','Yuborishda xatolik: '+(e.message||e)); }
@@ -5646,6 +5733,7 @@ function openBoshFromAriza(a){
   activeTab = 'bosh'; UI.lastTab = 'bosh'; saveUiPrefs();
   renderApp();
   writeForm('bosh', data);
+  window.__boshFromAriza = {id:a.id, userId:a.userId, stir:data.stir};
   const st = document.getElementById('status_bosh');
   if(st){ st.className='status ok'; st.textContent = `Ariza ma’lumotlari formaga ko‘chirildi («${data.tashkilot_nomi}»). Shartnoma raqamini kiriting, kerak bo‘lsa maydonlarni tuzating va «Shartnoma yaratish» tugmasini bosing.`; }
   const el = document.getElementById('f_shartnoma_raqami'); if(el){ el.focus(); el.scrollIntoView({behavior:'smooth', block:'center'}); }
@@ -5800,6 +5888,7 @@ function bindBuxDocDetail(x){
       await ST.set(BUX_COL, x.id, cur);
       Object.assign(x, cur);
       try{ await msgSend(u.id, 'user', `📄 «${x.tashkilot_nomi}» (№ ${x.raqam}) — ${BUX_STATUS[ns].l}${izoh.trim()?'\nIzoh: '+izoh.trim():''}`, {userIsm:u.ism, userLogin:u.login, system:true, buxDocId:x.id}); }catch(e){}
+      await arSyncFromBux(x, ns, izoh.trim(), 'Buxgalter: '+(u.ism||u.login));
       renderBux();
     }catch(e){ alert('Saqlanmadi: '+(e.message||e)); document.querySelectorAll('[data-bset]').forEach(z=>z.disabled = false); }
   });
@@ -5901,7 +5990,9 @@ function renderBuxSettings(host){
         <div class="full"><label>Joriy parol <span style="color:var(--danger)">*</span></label><input type="password" id="bpCur" autocomplete="current-password" required></div>
       </div><div class="status" id="bpStatus"></div><div class="hk-actions"><button type="submit" class="primary">Saqlash</button></div></form>
     </div>
+    ${tgCardMarkup()}
   </div>`;
+  bindTgCard();
   const save = ()=>{ saveUiPrefs(); applyUiPrefs(); renderBux(); };
   host.querySelectorAll('[data-bth]').forEach(b=> b.onclick = ()=>{ UI.theme = b.dataset.bth; save(); });
   host.querySelectorAll('[data-bacc]').forEach(b=> b.onclick = ()=>{ UI.accent = b.dataset.bacc; save(); });
@@ -6059,6 +6150,393 @@ function bindServerCard(){
   const b = document.getElementById('srvMigrate'); if(b) b.onclick = srvMigrate;
 }
 
+/* ======================================================================================
+   v8 · 1-BOSQICH: «Hamkor yo‘li» paneli, Telegram bildirishnomalari,
+   avtomatik to‘ldirish (MFO → bank), bitta tugma bilan tasdiqlash
+   ====================================================================================== */
+
+/* ---------- Telegram bildirishnoma (faqat o'z serveri rejimida ishlaydi) ---------- */
+async function notify(to, text, opts){
+  if(!window.__SERVER_MODE || !window.__serverCall) return 0;
+  try{
+    const j = await window.__serverCall('notify', {to, text: String(text||'').slice(0, 1500), link: (opts && opts.link) || ''});
+    return j && j.sent || 0;
+  }catch(e){ console.warn('Telegram xabari yuborilmadi:', e && e.message || e); return 0; }
+}
+let TG_INFO = null;
+async function tgInfo(){
+  if(!window.__SERVER_MODE) return {enabled:false};
+  if(TG_INFO) return TG_INFO;
+  try{ TG_INFO = await window.__serverCall('tginfo', {}); }catch(e){ TG_INFO = {enabled:false, error:e.message}; }
+  return TG_INFO;
+}
+function tgCurrentUserId(){
+  const u = getUserSession(); if(u && u.id) return u.id;
+  try{ return sessionStorage.getItem(ADMIN_ID_KEY) || ''; }catch(e){ return ''; }
+}
+function tgCardMarkup(){
+  if(!window.__SERVER_MODE) return '';
+  return `<div class="card tg-card" id="tgCard"><h2>Telegram bildirishnomalari</h2>
+    <p class="sub">Yangi ariza, status o‘zgarishi va xabarlar Telegram’ingizga darhol keladi — saytni ochiq ushlab turish shart emas.</p>
+    <div id="tgBody"><div class="status">⏳ Tekshirilmoqda…</div></div></div>`;
+}
+async function bindTgCard(){
+  const host = document.getElementById('tgBody'); if(!host) return;
+  const uidv = tgCurrentUserId();
+  const info = await tgInfo();
+  if(!document.body.contains(host)) return;
+  if(!info.enabled){
+    host.innerHTML = `<div class="status err">⚠️ Telegram bot hali sozlanmagan${info.error ? ' ('+esc(info.error)+')' : ''}. Admin <code>D:\\server\\config.json</code> fayliga bot tokenini yozishi kerak.</div>`;
+    return;
+  }
+  if(!uidv){ host.innerHTML = '<div class="status err">Akkaunt aniqlanmadi. Qaytadan kiring.</div>'; return; }
+  let link = null; try{ link = await ST.get('birzum_tg', uidv); }catch(e){}
+  if(!document.body.contains(host)) return;
+  if(link && link.chatId){
+    host.innerHTML = `<div class="tg-row"><div class="status ok" style="margin:0;">✅ Ulangan${link.username ? ': @'+esc(link.username) : (link.name ? ': '+esc(link.name) : '')} · ${arFmtDT(link.linkedAt)}</div>
+      <div class="tg-btns"><button type="button" class="secondary" id="tgTest">Sinov xabari</button><button type="button" class="link-btn del" id="tgOff" style="margin:0;">Uzish</button></div></div><div class="status" id="tgMsg"></div>`;
+    document.getElementById('tgTest').onclick = async ()=>{
+      const n = await notify({userId:uidv}, '🔔 Sinov xabari: BirZum Nasiya bildirishnomalari ishlayapti.');
+      const m = document.getElementById('tgMsg'); if(m){ m.className = 'status ' + (n ? 'ok' : 'err'); m.textContent = n ? 'Xabar yuborildi — Telegram’ni tekshiring.' : 'Xabar yuborilmadi. Botni bloklamaganingizni tekshiring.'; }
+    };
+    document.getElementById('tgOff').onclick = async ()=>{
+      if(!confirm('Telegram bildirishnomalari o‘chirilsinmi?')) return;
+      try{ await ST.del('birzum_tg', uidv); }catch(e){}
+      bindTgCard();
+    };
+    return;
+  }
+  host.innerHTML = `<ol class="tg-steps"><li>«Telegram’ni ulash» tugmasini bosing — Telegram ochiladi.</li><li>Botda <b>START</b> (Запустить) tugmasini bosing.</li><li>Shu sahifaga qayting — holat o‘zi yangilanadi.</li></ol>
+    <button type="button" class="primary" id="tgLink">📲 Telegram’ni ulash</button><div class="status" id="tgMsg"></div>`;
+  document.getElementById('tgLink').onclick = async ()=>{
+    const code = (uid() + uid()).replace(/[^A-Za-z0-9]/g, '').slice(0, 24);
+    try{ await ST.set('birzum_tg_codes', code, {userId:uidv, createdAt:new Date().toISOString()}); }
+    catch(e){ const m = document.getElementById('tgMsg'); if(m){ m.className='status err'; m.textContent='Xatolik: '+(e.message||e); } return; }
+    window.open(`https://t.me/${info.username}?start=${code}`, '_blank', 'noopener');
+    const m = document.getElementById('tgMsg'); if(m){ m.className='status'; m.textContent='⏳ Telegram’da START tugmasini bosishingizni kutyapmiz…'; }
+    let tries = 0;
+    const t = setInterval(async ()=>{
+      tries++;
+      if(!document.getElementById('tgMsg') || tries > 90){ clearInterval(t); return; }
+      try{ const l = await ST.get('birzum_tg', uidv); if(l && l.chatId){ clearInterval(t); bindTgCard(); } }catch(e){}
+    }, 3000);
+  };
+}
+
+/* ---------- MFO → bank nomi (mavjud hamkorlar ma'lumotidan o'rganiladi) ---------- */
+const META_COL = 'birzum_meta';
+let MFO_MAP = null;
+function mfoBuildMap(){
+  const cnt = {};
+  ['hamkor','bosh','qoshimcha'].forEach(k=> (DB[k]||[]).forEach(r=>{
+    const d = r.data || {}; const m = String(d.mfo||'').replace(/\D/g,''); const b = String(d.bank_nomi||'').trim();
+    if(m.length===5 && b){ cnt[m] = cnt[m] || {}; cnt[m][b] = (cnt[m][b]||0) + 1; }
+  }));
+  const map = {};
+  Object.keys(cnt).forEach(m=>{ map[m] = Object.entries(cnt[m]).sort((a,b)=>b[1]-a[1])[0][0]; });
+  return map;
+}
+async function mfoSyncMeta(){
+  // Admin: hamkorlar ro'yxatidan xarita tuzib, hamkorlar ham foydalana olishi uchun serverga yozadi
+  try{
+    const map = mfoBuildMap(); MFO_MAP = map;
+    const n = Object.keys(map).length; if(!n) return;
+    const cur = await ST.get(META_COL, 'mfo').catch(()=>null);
+    if(!cur || JSON.stringify(cur.map||{}) !== JSON.stringify(map)) await ST.set(META_COL, 'mfo', {map, count:n, updatedAt:new Date().toISOString()});
+  }catch(e){ console.warn('MFO xaritasi saqlanmadi', e); }
+}
+async function mfoMap(){
+  if(MFO_MAP) return MFO_MAP;
+  if(typeof DB !== 'undefined' && DB.hamkor && DB.hamkor.length){ MFO_MAP = mfoBuildMap(); return MFO_MAP; }
+  try{ const r = await ST.get(META_COL, 'mfo'); MFO_MAP = (r && r.map) || {}; }catch(e){ MFO_MAP = {}; }
+  return MFO_MAP;
+}
+// Har qanday formada: MFO maydoni 5 raqamga yetganda «Bank nomi» bo'sh bo'lsa — o'zi to'ladi
+document.addEventListener('input', async (e)=>{
+  const el = e.target;
+  if(!el || el.tagName!=='INPUT' || !/(^|_)mfo$/.test(el.id||'')) return;
+  const m = String(el.value||'').replace(/\D/g,''); if(m.length!==5) return;
+  const form = el.closest('form') || el.closest('.hk-form') || document;
+  const bank = form.querySelector('input[id$="bank_nomi"]'); if(!bank) return;
+  const map = await mfoMap(); const name = map[m]; if(!name) return;
+  if(!bank.value.trim() || bank.dataset.auto==='1'){
+    bank.value = name; bank.dataset.auto = '1';
+    bank.dispatchEvent(new Event('input', {bubbles:true}));
+    bank.classList.add('auto-filled'); setTimeout(()=>bank.classList.remove('auto-filled'), 1600);
+  }
+}, true);
+document.addEventListener('input', (e)=>{ const el = e.target; if(el && el.id && /bank_nomi$/.test(el.id) && e.isTrusted) el.dataset.auto = ''; }, true);
+
+/* ---------- Shartnoma raqamini avtomatik taklif qilish ---------- */
+function nextBoshRaqam(){
+  const recs = (DB.bosh||[]).slice().sort((a,b)=>String(a.createdAt||'').localeCompare(String(b.createdAt||'')));
+  for(let i = recs.length - 1; i >= 0; i--){
+    const r = String((recs[i].data||{}).shartnoma_raqami||'').trim();
+    const m = r.match(/^(.*?)(\d+)(\D*)$/);
+    if(m){
+      const n = String(Number(m[2]) + 1).padStart(m[2].length, '0');
+      let cand = m[1] + n + m[3];
+      const used = new Set((DB.bosh||[]).map(x=>String((x.data||{}).shartnoma_raqami||'').trim().toLowerCase()));
+      let k = Number(m[2]) + 1;
+      while(used.has(cand.toLowerCase())){ k++; cand = m[1] + String(k).padStart(m[2].length,'0') + m[3]; }
+      return cand;
+    }
+  }
+  return '';
+}
+function boshDataFromAriza(a){
+  const d = a.data || {};
+  const h = a.hamkorId ? DB.hamkor.find(r=>r.id===a.hamkorId) : DB.hamkor.find(r=> d.stir && String((r.data||{}).stir||'').trim()===String(d.stir).trim());
+  const hd = h ? h.data : {};
+  const t = new Date(); const iso = `${t.getFullYear()}-${pad2(t.getMonth()+1)}-${pad2(t.getDate())}`;
+  return {
+    shartnoma_raqami: nextBoshRaqam(), shartnoma_sanasi: iso,
+    tashkilot_nomi:d.tashkilot_nomi||hd.tashkilot_nomi||'', stir:d.stir||hd.stir||'', rahbar_fish:d.rahbar_fish||hd.rahbar_fish||'',
+    manzil:d.manzil||hd.manzil||'', hisob_raqami:d.hisob_raqami||hd.hisob_raqami||'', bank_nomi:d.bank_nomi||hd.bank_nomi||'', mfo:d.mfo||hd.mfo||'',
+    telefon_raqami:d.telefon_raqami||hd.telefon_raqami||'', telegram_user:hd.telegram_user||'', brend:d.brend||hd.brend||'',
+    filial:hd.filial||'', pinfl:hd.pinfl||'', rahbar:hd.rahbar||'', login:hd.login||'', parol:hd.parol||'',
+  };
+}
+
+/* ---------- Bosh shartnomani buxgalterga yuborish (umumiy qism) ---------- */
+async function sendBoshDataToBux(d, extra, progress){
+  const blob = await buildBoshPdfBlob(d);
+  progress && progress('Buxgalterga yuborilmoqda…');
+  const fid = 'f'+uid();
+  const name = fileNameFor('bosh', d);
+  const chunks = await arSaveFile(fid, blob);
+  const now = new Date().toISOString();
+  const safe = Object.assign({}, d); delete safe.login; delete safe.parol;
+  const id = 'bx'+uid();
+  const rec = Object.assign({
+    tur:'bosh', tashkilot_nomi:d.tashkilot_nomi, stir:d.stir||'', raqam:d.shartnoma_raqami, sana:d.shartnoma_sanasi,
+    file:{id:fid, name, type:'application/pdf', size:blob.size, chunks}, data:safe,
+    sentAt:now, sentBy:'Admin', status:'yuborildi', history:[{status:'yuborildi', at:now, by:'Admin'}],
+  }, extra||{});
+  await ST.set(BUX_COL, id, rec);
+  notify({role:'buxgalter'}, `📄 Yangi shartnoma: «${d.tashkilot_nomi}» (№ ${d.shartnoma_raqami}).\nDidox orqali hamkorga yuboring va saytda «Didoxdan yuborildi» ni bosing.`);
+  return Object.assign({id}, rec);
+}
+
+/* ---------- Buxgalter statusi → ariza statusi (avtomatik) ---------- */
+async function arSyncFromBux(x, ns, izoh, who){
+  const map = {didox:'didox', tasdiq:'imzo', bekor:'bekor'};
+  const st = map[ns]; if(!st) return;
+  try{
+    let a = x.arizaId ? await ST.get(AR_COL, x.arizaId) : null;
+    if(a) a.id = x.arizaId;
+    if(!a && x.stir){
+      const all = await ST.all(AR_COL);
+      a = all.filter(r=> String((r.data||{}).stir||'').trim()===String(x.stir).trim() && ['qabul','didox','imzo'].includes(r.status))
+             .sort((p,q)=>String(q.updatedAt||q.createdAt).localeCompare(String(p.updatedAt||p.createdAt)))[0] || null;
+    }
+    if(!a || a.status==='login' || a.status==='rad') return;
+    const now = new Date().toISOString();
+    const id = a.id; const upd = Object.assign({}, a); delete upd.id;
+    upd.status = st; upd.updatedAt = now;
+    upd.history = (a.history||[]).concat([{at:now, by:'bux', name: who || 'Buxgalter', status:st, izoh: izoh||''}]);
+    await ST.set(AR_COL, id, upd);
+    const nm = (a.data && a.data.tashkilot_nomi) || 'arizangiz';
+    const txt = {didox:`📨 «${nm}» bo‘yicha shartnoma Didox orqali sizga yuborildi. Iltimos, Didox tizimida tekshirib imzolang.`,
+                 imzo:`✅ «${nm}» bo‘yicha shartnoma imzolandi. Tez orada tizimga kirish login va parollari beriladi.`,
+                 bekor:`✕ «${nm}» bo‘yicha shartnoma bekor qilindi.`}[st] + (izoh ? `\nIzoh: ${izoh}` : '');
+    await msgSend(a.userId, 'admin', txt, {userIsm:a.userIsm, system:true, arizaId:id});
+  }catch(e){ console.error('Ariza statusi yangilanmadi', e); }
+}
+
+/* ---------- Bitta tugma: tasdiqlash + shartnoma + buxgalterga yuborish ---------- */
+function openApproveModal(a, alreadyAccepted){
+  const d = boshDataFromAriza(a);
+  const ov = document.createElement('div'); ov.className = 'modal-back'; ov.id = 'apvModal';
+  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true" style="max-width:600px;">
+    <div class="modal-head"><h3>${alreadyAccepted ? 'Shartnomani buxgalterga yuborish' : 'Tasdiqlash va buxgalterga yuborish'}</h3><button type="button" class="modal-x" id="apvX" title="Yopish">✕</button></div>
+    <div class="modal-body">
+      <p class="sub" style="margin-top:0;">${alreadyAccepted ? '' : 'Ariza qabul qilinadi, hamkor ro‘yxatga qo‘shiladi, '}Bosh kelishuv ariza ma’lumotlaridan tuziladi va PDF buxgalterga yuboriladi. Buxgalterga Telegram orqali xabar boradi.</p>
+      <div class="hk-form">
+        <div><label>Shartnoma raqami <span style="color:var(--danger)">*</span></label><input type="text" id="apvNo" value="${esc(d.shartnoma_raqami)}" placeholder="masalan: 125"></div>
+        <div><label>Shartnoma sanasi <span style="color:var(--danger)">*</span></label><input type="date" id="apvDate" value="${esc(d.shartnoma_sanasi)}"></div>
+        <div><label>Rahbar lavozimi</label><input type="text" id="apvRahbar" value="${esc(d.rahbar)}" placeholder="masalan: Direktor"></div>
+        <div><label>Filial</label><input type="text" id="apvFilial" value="${esc(d.filial)}" placeholder="masalan: Bosh ofis"></div>
+      </div>
+      <div class="apv-sum" data-noi18n>
+        <div><span>Tashkilot</span><b>${esc(d.tashkilot_nomi||'—')}</b></div>
+        <div><span>STIR</span><b>${esc(d.stir||'—')}</b></div>
+        <div><span>Rahbar</span><b>${esc(d.rahbar_fish||'—')}</b></div>
+        <div><span>Bank</span><b>${esc([d.bank_nomi, d.mfo && ('MFO '+d.mfo)].filter(Boolean).join(' · ')||'—')}</b></div>
+        <div><span>Hisob raqami</span><b>${esc(d.hisob_raqami||'—')}</b></div>
+      </div>
+      <div class="status" id="apvStatus"></div>
+    </div>
+    <div class="modal-foot apv-foot">
+      <button type="button" class="primary" id="apvGo">✓ ${alreadyAccepted ? 'Yuborish' : 'Tasdiqlash va yuborish'}</button>
+      <button type="button" class="secondary" id="apvForm">✏️ Formada tahrirlash</button>
+      <button type="button" class="secondary" id="apvCancel">Bekor</button>
+    </div></div>`;
+  document.body.appendChild(ov);
+  const close = ()=> ov.remove();
+  ov.addEventListener('mousedown', e=>{ if(e.target===ov) close(); }); i18nApply(ov);
+  document.getElementById('apvX').onclick = close;
+  document.getElementById('apvCancel').onclick = close;
+  const read = ()=> Object.assign({}, d, {
+    shartnoma_raqami: document.getElementById('apvNo').value.trim(), shartnoma_sanasi: document.getElementById('apvDate').value,
+    rahbar: document.getElementById('apvRahbar').value.trim(), filial: document.getElementById('apvFilial').value.trim()});
+  const say = (c,t)=>{ const s = document.getElementById('apvStatus'); if(s){ s.className='status '+c; s.textContent=t; } };
+  document.getElementById('apvForm').onclick = async ()=>{
+    const dd = read();
+    if(!alreadyAccepted){ const ok = await arDecide(a, 'qabul', {noConfirm:true}); if(!ok) return; }
+    close();
+    openBoshFromAriza(a);
+    writeForm('bosh', dd);
+    window.__boshFromAriza = {id:a.id, userId:a.userId, stir:dd.stir};
+  };
+  document.getElementById('apvGo').onclick = async ()=>{
+    const dd = read();
+    const miss = validate('bosh', dd);
+    if(miss.length){ say('err', 'To‘ldirilmagan: '+miss.join(', ')+'. «Formada to‘liq tahrirlash» orqali to‘ldiring.'); return; }
+    if((DB.bosh||[]).some(r=> String((r.data||{}).shartnoma_raqami||'').trim().toLowerCase()===dd.shartnoma_raqami.toLowerCase()) &&
+       !confirm(`${dd.shartnoma_raqami} raqamli shartnoma bazada allaqachon bor. Shu raqam bilan davom etilsinmi?`)) return;
+    ov.querySelectorAll('button').forEach(b=>b.disabled = true);
+    try{
+      if(!alreadyAccepted){
+        say('', 'Ariza qabul qilinmoqda…');
+        const ok = await arDecide(a, 'qabul', {noConfirm:true}); if(!ok) throw new Error('Ariza qabul qilinmadi');
+      }
+      say('', 'Shartnoma tuzilmoqda…');
+      dd.no = nextSequenceNumber('bosh');
+      const rec = {id:uid(), kind:'main', data:dd, createdAt:new Date().toISOString(), fromAriza:a.id};
+      DB.bosh.push(rec); persist('bosh');
+      say('', 'PDF tayyorlanmoqda…');
+      const bx = await sendBoshDataToBux(dd, {arizaId:a.id, userId:a.userId}, t=>say('', t));
+      // arizaga tarix yozuvi
+      const now = new Date().toISOString();
+      const cur = await ST.get(AR_COL, a.id) || a;
+      const upd = Object.assign({}, cur); delete upd.id;
+      upd.history = (cur.history||[]).concat([{at:now, by:'admin', status:'bux', izoh:`№ ${dd.shartnoma_raqami}`}]);
+      upd.updatedAt = now; upd.buxDocId = bx.id;
+      await ST.set(AR_COL, a.id, upd); Object.assign(a, upd);
+      BUX_CACHE = [bx].concat(BUX_CACHE||[]);
+      close();
+      renderTabs();
+      if(activeTab==='arizalar'){ renderArList(); renderArDetail(); const s = document.getElementById('arDecideStatus'); if(s){ s.className='status ok'; s.textContent = `✅ Tasdiqlandi. № ${dd.shartnoma_raqami} shartnoma buxgalterga yuborildi.`; } }
+      else if(activeTab==='panel') renderFlowPanel();
+      showToast({icon:'✅', title:`№ ${dd.shartnoma_raqami} buxgalterga yuborildi`, body:dd.tashkilot_nomi});
+    }catch(e){
+      console.error(e); say('err', 'Xatolik: '+(e.message||e));
+      ov.querySelectorAll('button').forEach(b=>b.disabled = false);
+    }
+  };
+}
+
+/* ---------- «Hamkor yo‘li» paneli ---------- */
+const FLOW_STAGES = [
+  {k:'keldi',     t:'Ariza keldi',       who:'admin',     sla:24},
+  {k:'tekshiruv', t:'Tekshirilmoqda',    who:'admin',     sla:24},
+  {k:'tuzatish',  t:'Tuzatish kerak',    who:'hamkor',    sla:72, side:'warn'},
+  {k:'buxgalter', t:'Buxgalterda',       who:'buxgalter', sla:24},
+  {k:'didox',     t:'Didoxga yuborildi', who:'hamkor imzosi', sla:72},
+  {k:'imzo',      t:'Imzolandi',         who:'admin (login)', sla:24},
+  {k:'faol',      t:'Faol hamkor',       who:'—',         sla:0, side:'ok'},
+  {k:'bekor',     t:'Bekor / rad',       who:'—',         sla:0, side:'bad'},
+];
+let flowSel = 'all', flowQuery = '', flowLoading = false;
+function flowLast(h){ return (h||[]).slice(-1)[0] || null; }
+function flowBuxFor(a){
+  const l = (BUX_CACHE||[]).filter(x=> x.arizaId===a.id || (!x.arizaId && a.data && x.stir && String(x.stir).trim()===String(a.data.stir||'').trim()));
+  return l.sort((p,q)=>String(q.sentAt).localeCompare(String(p.sentAt)))[0] || null;
+}
+function flowStage(a){
+  const bx = flowBuxFor(a);
+  const lastAt = (flowLast(a.history)||{}).at || a.updatedAt || a.createdAt;
+  const bxAt = bx ? ((flowLast(bx.history)||{}).at || bx.sentAt) : null;
+  let k, since = lastAt, note = '';
+  switch(a.status){
+    case 'yangi': case 'qayta':
+      k = a.seenAt && a.seenAt >= (a.updatedAt||a.createdAt) ? 'tekshiruv' : 'keldi'; since = a.updatedAt || a.createdAt;
+      if(a.status==='qayta') note = 'Tuzatilib qayta yuborilgan'; break;
+    case 'qaytarildi': k = 'tuzatish'; break;
+    case 'qabul':
+      if(!bx){ k = 'tekshiruv'; note = 'Qabul qilingan — shartnoma hali yuborilmagan'; }
+      else if(bx.status==='yuborildi'){ k = 'buxgalter'; since = bxAt; }
+      else if(bx.status==='didox'){ k = 'didox'; since = bxAt; }
+      else if(bx.status==='tasdiq'){ k = 'imzo'; since = bxAt; }
+      else { k = 'bekor'; since = bxAt; }
+      break;
+    case 'didox': k = bx && bx.status==='tasdiq' ? 'imzo' : 'didox'; if(bx) since = bxAt || since; break;
+    case 'imzo': k = 'imzo'; break;
+    case 'login': k = 'faol'; break;
+    case 'rad': case 'bekor': k = 'bekor'; break;
+    default: k = 'keldi';
+  }
+  const st = FLOW_STAGES.find(s=>s.k===k);
+  const hours = (Date.now() - Date.parse(since||Date.now())) / 36e5;
+  return {k, since, note, bx, hours, late: st.sla > 0 && hours > st.sla};
+}
+function flowAge(h){
+  if(h < 1) return Math.max(1, Math.round(h*60)) + ' daqiqa';
+  if(h < 24) return Math.floor(h) + ' soat';
+  const d = Math.floor(h/24), r = Math.floor(h%24);
+  return d + ' kun' + (r ? ' ' + r + ' soat' : '');
+}
+function flowPanelMarkup(){
+  return `<div class="flow-wrap">
+    <div class="card flow-top">
+      <div class="flow-head"><div><p class="sub" style="margin:4px 0 0;">Har bir hamkor arizadan faol hamkorgacha qaysi bosqichda turgani. Muddati o‘tganlar <b class="flow-late-word">qizil</b>.</p></div>
+        <div class="hk-tools"><button type="button" class="hk-tool" id="flowReload">↻ Yangilash</button><div class="hk-search">${ICONS.search}<input type="search" id="flowSearch" placeholder="Tashkilot, STIR yoki ism" value="${esc(flowQuery)}"></div></div></div>
+      <div class="flow-sum" id="flowSum"></div>
+    </div>
+    <div class="flow-board" id="flowBoard"><div class="hk-empty">Yuklanmoqda…</div></div>
+  </div>`;
+}
+async function flowLoad(){
+  if(flowLoading) return; flowLoading = true;
+  try{
+    const [ar, bx] = await Promise.all([ST.all(AR_COL), ST.all(BUX_COL).catch(()=>[])]);
+    AR_CACHE = ar.sort((a,b)=> String(b.updatedAt||b.createdAt).localeCompare(String(a.updatedAt||a.createdAt))); arLoaded = true;
+    BUX_CACHE = bx.sort((a,b)=>String(b.sentAt).localeCompare(String(a.sentAt))); BUX_LOADED = true;
+  }catch(e){ console.error(e); const b = document.getElementById('flowBoard'); if(b) b.innerHTML = `<div class="hk-empty">Yuklab bo‘lmadi: ${esc(e.message||e)}</div>`; }
+  finally{ flowLoading = false; }
+}
+function renderFlowPanel(){
+  const board = document.getElementById('flowBoard'), sum = document.getElementById('flowSum'); if(!board) return;
+  const q = flowQuery.trim().toLowerCase();
+  const items = AR_CACHE.filter(a=> !q || [a.data&&a.data.tashkilot_nomi, a.data&&a.data.stir, a.data&&a.data.brend, a.userIsm, a.userLogin].some(v=>String(v||'').toLowerCase().includes(q)))
+    .map(a=>({a, s:flowStage(a)}));
+  const by = {}; FLOW_STAGES.forEach(s=> by[s.k] = []);
+  items.forEach(it=> by[it.s.k].push(it));
+  FLOW_STAGES.forEach(s=> by[s.k].sort((p,q2)=> (q2.s.late - p.s.late) || (q2.s.hours - p.s.hours)));
+  const late = items.filter(it=>it.s.late).length;
+  sum.innerHTML = `<button type="button" class="flow-chip ${flowSel==='all'?'on':''}" data-fsel="all"><b data-noi18n>${items.length}</b><span>Hammasi</span>${late?`<i class="late" data-noi18n>${late} kechikkan</i>`:''}</button>` +
+    FLOW_STAGES.map(s=>{ const n = by[s.k].length, l = by[s.k].filter(it=>it.s.late).length;
+      return `<button type="button" class="flow-chip ${s.side||''} ${flowSel===s.k?'on':''}" data-fsel="${s.k}"><b data-noi18n>${n}</b><span>${esc(s.t)}</span>${l?`<i class="late" data-noi18n>${l} kechikkan</i>`:''}</button>`; }).join('');
+  const cols = flowSel==='all' ? FLOW_STAGES : FLOW_STAGES.filter(s=>s.k===flowSel);
+  board.classList.toggle('single', flowSel!=='all');
+  board.innerHTML = cols.map(s=>{
+    const list = by[s.k]; const lim = (s.k==='faol'||s.k==='bekor') && flowSel==='all' ? 15 : 200;
+    return `<div class="flow-col ${s.side||''} ${list.length?'':'empty'}"><div class="flow-col-head"><b>${esc(s.t)}</b><span class="nav-cnt" data-noi18n>${list.length}</span></div>
+      <div class="flow-col-sub">Navbat: ${esc(s.who)}${s.sla?` · muddat ${s.sla>=24? (s.sla/24)+' kun' : s.sla+' soat'}`:''}</div>
+      <div class="flow-cards">${list.slice(0, lim).map(({a, s:st})=>`<button type="button" class="flow-card ${st.late?'late':''}" data-fid="${a.id}">
+          <b data-noi18n>${esc(a.data&&a.data.tashkilot_nomi||'—')}</b>
+          <span class="hk-sub" data-noi18n>STIR ${esc(a.data&&a.data.stir||'—')}${st.bx&&st.bx.raqam?' · № '+esc(st.bx.raqam):''}</span>
+          <span class="hk-sub" data-noi18n>${esc(a.userIsm||'')}${a.userTelefon?' · '+esc(a.userTelefon):''}</span>
+          ${st.note?`<span class="flow-note">${esc(st.note)}</span>`:''}
+          ${s.sla||st.late ? `<span class="flow-age ${st.late?'late':''}" data-noi18n>${st.late?'⏰ ':''}${flowAge(st.hours)}</span>` : `<span class="flow-age" data-noi18n>${arFmtDT(st.since)}</span>`}
+        </button>`).join('') || '<div class="flow-empty">—</div>'}
+        ${list.length>lim?`<button type="button" class="link-btn flow-more" data-fsel="${s.k}">yana ${list.length-lim} ta →</button>`:''}</div></div>`;
+  }).join('');
+  const root = document.querySelector('.flow-wrap');
+  root.querySelectorAll('[data-fsel]').forEach(b=> b.onclick = ()=>{ flowSel = b.dataset.fsel===flowSel && b.dataset.fsel!=='all' ? 'all' : b.dataset.fsel; renderFlowPanel(); });
+  board.querySelectorAll('[data-fid]').forEach(b=> b.onclick = ()=>{ arSelId = b.dataset.fid; arFilter = 'hammasi'; activeTab = 'arizalar'; UI.lastTab = 'arizalar'; saveUiPrefs(); renderApp(); window.scrollTo(0,0); });
+  i18nApply(root);
+}
+function flowLateCount(){ return AR_CACHE.filter(a=>flowStage(a).late).length; }
+async function bindFlowPanel(){
+  const s = document.getElementById('flowSearch'); if(s) s.oninput = ()=>{ flowQuery = s.value; renderFlowPanel(); };
+  const r = document.getElementById('flowReload'); if(r) r.onclick = async ()=>{ await flowLoad(); renderFlowPanel(); renderTabs(); };
+  if(arLoaded) renderFlowPanel();
+  await flowLoad();
+  if(activeTab==='panel'){ renderFlowPanel(); renderTabs(); }
+}
+
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){
     alert('Excel kutubxonasi yuklanmadi. Internet aloqasini tekshirib, sahifani qayta yuklang.');
@@ -6157,6 +6635,7 @@ function profilMarkup(){
     ${appearanceCardMarkup()}
     ${importsCardMarkup()}
     ${serverCardMarkup()}
+    ${tgCardMarkup()}
     <div class="card">
       <h2>Profil sozlamalari</h2>
       <p class="sub">Tizimga kirish uchun login va parolni shu yerdan o‘zgartirishingiz mumkin.</p>
@@ -6218,6 +6697,7 @@ function bindProfilEvents(){
   bindAppearanceEvents();
   bindImportsCard();
   bindServerCard();
+  bindTgCard();
   const chooseFolderBtn = document.getElementById('chooseFolderBtn');
   if(chooseFolderBtn) chooseFolderBtn.onclick = chooseSaveFolder;
   const clearFolderBtn = document.getElementById('clearFolderBtn');
@@ -6854,6 +7334,7 @@ function renderHistory(key){
 }
 
 function bindSectionEvents(key){
+  if(key === 'panel'){ bindFlowPanel(); return; }
   if(key === 'arizalar'){ bindArizalarEvents(); return; }
   if(key === 'users'){ bindUsersEvents(); return; }
   if(key === 'profil'){

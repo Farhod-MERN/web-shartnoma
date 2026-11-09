@@ -66,7 +66,7 @@ window.BIRZUM_SERVER = {
         body: JSON.stringify(body || {})
       });
     }catch(e){
-      banner(true, '⚠️ Server bilan aloqa yo‘q — ishxonadagi kompyuter o‘chiq yoki internetga ulanmagan bo‘lishi mumkin. Hozir kiritilgan ma’lumotlar saqlanmasligi mumkin.');
+      banner(true, '⚠️ Server bilan aloqa yo‘q — Admin bilan bog`laning. Telegram:@birzumadmin');
       var er = new Error('Serverga ulanib bo‘lmadi. Ishxonadagi kompyuter yoqilgani va server oynasi ochiq turganini tekshiring.');
       er.code = 'unavailable'; throw er;
     }

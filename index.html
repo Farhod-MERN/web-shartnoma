@@ -20,6 +20,154 @@
      turadi va ilovaning boshqa hech qanday joyiga ta'sir qilmaydi. -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ================== SERVER SOZLAMASI ==================
+   url — ishxona kompyuteringizdagi serverning internet manzili
+         (masalan: https://birzum-server.tail1234.ts.net)
+   key — D:\server\config.json faylidagi "apiKey" qiymati
+   Ikkalasi ham bo'sh qolsa — sayt avvalgidek Firebase bilan ishlaydi. */
+window.BIRZUM_SERVER = {
+  url: 'https://office1.taila3afec.ts.net/',
+  key: 'a8Iuu7pvUZdYNkfqIrliKdKz9kfVxtQk'
+};
+</script>
+<script>
+/* ===== O'Z SERVERINGIZ (Firebase o'rniga) =====
+   BIRZUM_SERVER.url bo'sh bo'lsa — sayt avvalgidek Firebase bilan ishlaydi.
+   To'ldirilsa — barcha ma'lumotlar shu serverga (ishxona kompyuteridagi D:\server) yoziladi.
+   Saytning qolgan kodi o'zgarmaydi: bu yerda Firebase bilan bir xil ko'rinishdagi
+   kichik "o'rinbosar" yaratiladi va u so'rovlarni serverga yuboradi. */
+(function(){
+  var S = window.BIRZUM_SERVER || {};
+  if(!S.url) return;
+  var BASE = String(S.url).trim().replace(/\/+$/, '');
+  window.__realFirebase = window.firebase;      // Firebase'dan ko'chirish uchun asl kutubxona
+  window.__SERVER_MODE = true;
+  window.__SERVER_BASE = BASE;
+
+  // Server bilan aloqa uzilsa — ekranning yuqorisida ogohlantirish
+  function banner(off, msg){
+    var el = document.getElementById('srvOffBanner');
+    if(!off){ if(el) el.remove(); return; }
+    if(!document.body) return;
+    if(!el){
+      el = document.createElement('div'); el.id = 'srvOffBanner';
+      el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#c62828;color:#fff;font:600 13px/1.4 sans-serif;padding:8px 14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.25)';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+  }
+  async function call(op, body){
+    var r;
+    try{
+      r = await fetch(BASE + '/api/' + op, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-Key': String(S.key || '')},
+        body: JSON.stringify(body || {})
+      });
+    }catch(e){
+      banner(true, '⚠️ Server bilan aloqa yo‘q — ishxonadagi kompyuter o‘chiq yoki internetga ulanmagan bo‘lishi mumkin. Hozir kiritilgan ma’lumotlar saqlanmasligi mumkin.');
+      var er = new Error('Serverga ulanib bo‘lmadi. Ishxonadagi kompyuter yoqilgani va server oynasi ochiq turganini tekshiring.');
+      er.code = 'unavailable'; throw er;
+    }
+    if(r.status === 401) banner(true, '⚠️ Server kaliti noto‘g‘ri — index.html dagi BIRZUM_SERVER.key ni tekshiring.');
+    else if(r.status >= 502 && r.status <= 504){
+      banner(true, '⚠️ Server javob bermayapti — ishxonadagi kompyuterda server oynasi yopilgan bo‘lishi mumkin.');
+      var er3 = new Error('Server javob bermayapti (' + r.status + ').'); er3.code = 'unavailable'; throw er3;
+    }
+    else banner(false);
+    var j = null; try{ j = await r.json(); }catch(e){}
+    if(!r.ok){
+      var er2 = new Error((j && j.error) || ('Server xatosi: ' + r.status));
+      er2.code = r.status === 401 ? 'permission-denied' : 'server'; throw er2;
+    }
+    return j;
+  }
+  window.__serverCall = call;
+
+  function snap(id, exists, data){
+    return {id: id, exists: !!exists, data: function(){ return exists ? data : undefined; },
+            metadata: {hasPendingWrites: false, fromCache: false}};
+  }
+  function qsnap(list){
+    var docs = list.map(function(d){ return snap(d.id, true, d.data); });
+    return {docs: docs, size: docs.length, empty: !docs.length, forEach: function(f){ docs.forEach(f); }};
+  }
+  function autoId(){
+    var c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', s = '';
+    var a = new Uint8Array(20); crypto.getRandomValues(a);
+    for(var i = 0; i < 20; i++) s += c[a[i] % c.length];
+    return s;
+  }
+  // Yozilayotgan (hali tugamagan) hujjatlar — onSnapshot eski nusxani qaytarib qo'ymasligi uchun
+  var pend = {}, wseq = {};
+
+  function DocRef(col, id){ this.col = col; this.id = String(id); }
+  DocRef.prototype.get = async function(){
+    var j = await call('get', {col: this.col, id: this.id});
+    return snap(this.id, j.exists, j.data);
+  };
+  DocRef.prototype.set = async function(data){
+    var k = this.col + '/' + this.id;
+    pend[k] = (pend[k] || 0) + 1; wseq[k] = (wseq[k] || 0) + 1;
+    try{ await call('set', {col: this.col, id: this.id, data: data}); }
+    finally{ pend[k]--; }
+  };
+  DocRef.prototype.delete = async function(){
+    await call('del', {col: this.col, id: this.id});
+  };
+  DocRef.prototype.onSnapshot = function(cb, errCb){
+    var self = this, k = this.col + '/' + this.id, lastV = null, stop = false, timer = null;
+    async function tick(){
+      if(stop) return;
+      var startSeq = wseq[k] || 0;
+      try{
+        var j = await call('get', {col: self.col, id: self.id, ifv: lastV});
+        if(!stop && !(pend[k] > 0) && (wseq[k] || 0) === startSeq && !j.same){
+          lastV = j.v || null;
+          cb(snap(self.id, j.exists, j.data));
+        }
+      }catch(e){ if(errCb) try{ errCb(e); }catch(_){} }
+      if(!stop) timer = setTimeout(tick, document.hidden ? 30000 : 5000);
+    }
+    tick();
+    return function(){ stop = true; clearTimeout(timer); };
+  };
+
+  function Query(col, field, value){ this.col = col; this.field = field; this.value = value; }
+  Query.prototype.where = function(f, op, v){
+    if(op !== '==') throw new Error('Serverda faqat "==" sharti qo‘llab-quvvatlanadi');
+    return new Query(this.col, f, v);
+  };
+  Query.prototype.get = async function(){
+    var body = {col: this.col};
+    if(this.field !== undefined){ body.field = this.field; body.value = this.value; }
+    var j = await call('list', body);
+    return qsnap(j.docs || []);
+  };
+  function ColRef(col){ Query.call(this, col); }
+  ColRef.prototype = Object.create(Query.prototype);
+  ColRef.prototype.doc = function(id){ return new DocRef(this.col, id === undefined ? autoId() : id); };
+
+  var DB = {
+    collection: function(c){ return new ColRef(String(c)); },
+    __ping: function(){ return call('ping', {}); }
+  };
+  var shim = {
+    apps: [],
+    initializeApp: function(cfg){
+      var app = {name: '[DEFAULT]', options: cfg || {}, delete: async function(){
+        var i = shim.apps.indexOf(app); if(i >= 0) shim.apps.splice(i, 1);
+      }};
+      shim.apps.push(app); return app;
+    },
+    firestore: Object.assign(function(){ return DB; }, {
+      FieldValue: {serverTimestamp: function(){ return {__serverTimestamp: true}; }}
+    })
+  };
+  window.firebase = shim;
+})();
+</script>
 <style>
   :root{
     --ink:#132038;
@@ -772,6 +920,11 @@
   .chat-attach{width:40px;height:40px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;margin:0;border:1px solid var(--line);background:var(--paper-2);}
   .chat-attach:hover{border-color:var(--accent);}
   @media (max-width:760px){ .chat-img img{max-width:180px;} .msg-acts{opacity:.55;} }
+/* v7: server kartasi */
+.srv-table{width:100%;border-collapse:collapse;font-size:13px;}
+.srv-table th{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted,#6b7280);font-weight:600;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);}
+.srv-table td{padding:6px 8px;border-bottom:1px solid var(--line);}
+.srv-table tr:last-child td{border-bottom:0;}
 </style>
 </head>
 <body>
@@ -2062,6 +2215,7 @@ async function initCloud(){
     }
     cloudApp = firebase.initializeApp(cfg);
     cloudDb = firebase.firestore(cloudApp);
+    if(window.__SERVER_MODE) await cloudDb.__ping();
     await cloudPullAll();
     cloudReady = true;
     cloudStatus = 'online'; cloudStatusMsg = '';
@@ -2071,6 +2225,18 @@ async function initCloud(){
     cloudReady = false;
     cloudStatus = 'error';
     cloudStatusMsg = (e && e.message) ? e.message : String(e);
+    // Server vaqtincha o'chiq bo'lsa — 20 soniyadan keyin qayta urinamiz
+    if(window.__SERVER_MODE){
+      clearTimeout(window.__srvRetry);
+      window.__srvRetry = setTimeout(()=>{
+        if(cloudReady) return;
+        arCloudInitPromise = initCloud();
+        arCloudInitPromise.then(()=>{
+          if(!cloudReady || document.getElementById('mainApp').style.display==='none') return;
+          try{ renderTabs(); if(activeTab==='hamkor') renderHamkorTable(); else if(activeTab!=='profil') renderHistory(activeTab); }catch(e){}
+        });
+      }, 20000);
+    }
   }
   updateCloudStatusUI();
 }
@@ -2092,6 +2258,7 @@ async function cloudPullAll(){
       initCounterFromExisting(key);
     }catch(e){
       console.error('Bulutdan o‘qishda xatolik ('+key+'):', e);
+      if(window.__SERVER_MODE) throw e;
     }
   }
   cloudPulledOnce = true;
@@ -3261,7 +3428,7 @@ function sectionMarkup(key,title,sub){
 const HF_DB_NAME = 'birzum_hamkor_files';
 const HF_STORE = 'files';
 const HF_CLOUD_COLLECTION = 'birzum_hamkor_files';
-const HF_CLOUD_MAX = 700 * 1024;
+const HF_CLOUD_MAX = (window.__SERVER_MODE ? 8 * 1024 : 700) * 1024;
 const HF_MAX_FILE = 25 * 1024 * 1024;
 let hfDbPromise = null;
 function hfOpen(){
@@ -5767,6 +5934,131 @@ function renderBuxSettings(host){
   i18nApply(host);
 }
 
+/* ===== Sozlamalar: "Server" kartasi (faqat admin) =====
+   • Server holati va hajmi (qaysi bo'limda nechta yozuv, necha MB)
+   • Firebase'dagi barcha ma'lumotlarni bir marta serverga ko'chirish */
+const SRV_COLS = [
+  ['birzum_nasiya_data',      'Hamkorlar, Bosh / Qo‘shimcha / Bonus shartnomalar', 50],
+  ['birzum_users',            'Foydalanuvchilar', 200],
+  ['birzum_arizalar',         'Arizalar', 100],
+  ['birzum_messages',         'Chat xabarlari', 300],
+  ['birzum_bux_shartnomalar', 'Buxgalteriya shartnomalari', 100],
+  ['birzum_hamkor_files',     'Hamkor fayllari', 5],
+  ['birzum_ariza_chunks',     'Fayllar (ariza hujjatlari, PDF, chat rasmlari)', 5]
+];
+function srvMB(b){ return (b/1048576).toFixed(b < 10485760 ? 2 : 1) + ' MB'; }
+function serverCardMarkup(){
+  if(!window.__SERVER_MODE){
+    return `<div class="card imp-card"><h2>Ma’lumotlar qayerda saqlanadi</h2>
+      <p class="sub">Hozir ma’lumotlar <b>Firebase</b> bulutida saqlanmoqda. O‘z serveringizga o‘tish uchun
+      <code>index.html</code> faylining yuqorisidagi <code>BIRZUM_SERVER</code> qatoriga server manzili va kalitini yozing.</p></div>`;
+  }
+  return `<div class="card imp-card" id="srvCard">
+    <h2>Server (ishxona kompyuteri)</h2>
+    <p class="sub">Barcha ma’lumotlar <b>${esc(window.__SERVER_BASE)}</b> serverida saqlanadi.</p>
+    <div class="status" id="srvState">⏳ Tekshirilmoqda…</div>
+    <div id="srvStats" style="margin:10px 0;"></div>
+    <div class="imp-row">
+      <div class="imp-text"><div class="sl">Firebase’dan ko‘chirish</div>
+        <div class="sd">Firebase’dagi <b>barcha</b> ma’lumotlarni (hamkorlar, shartnomalar, foydalanuvchilar, arizalar, xabarlar, fayllar) serverga nusxalaydi.
+        Firebase’dagi ma’lumotlar o‘chirilmaydi. Odatda <b>bir marta</b>, serverga o‘tgan kuni bajariladi.</div></div>
+      <div class="imp-btns"><button type="button" class="secondary" id="srvMigrate">☁️ → 🖥 Ko‘chirishni boshlash</button></div>
+    </div>
+    <div class="status" id="srvMigStatus"></div>
+  </div>`;
+}
+async function srvRefreshStats(){
+  const st = document.getElementById('srvState'), box = document.getElementById('srvStats');
+  if(!st) return;
+  try{
+    const j = await window.__serverCall('stats', {col: 'birzum_x'});
+    st.className = 'status ok';
+    st.textContent = '✅ Server ishlayapti' + (j.lastBackup ? ' · oxirgi zaxira nusxa: ' + arFmtDT(j.lastBackup) : '');
+    const c = j.cols || {}; let tot = 0;
+    const rows = SRV_COLS.map(([k, label])=>{ const x = c[k] || {count:0, bytes:0}; tot += x.bytes;
+      return `<tr><td>${esc(label)}</td><td style="text-align:right">${x.count}</td><td style="text-align:right">${srvMB(x.bytes)}</td></tr>`; }).join('');
+    box.innerHTML = `<table class="srv-table"><thead><tr><th>Bo‘lim</th><th style="text-align:right">Yozuvlar</th><th style="text-align:right">Hajmi</th></tr></thead>
+      <tbody>${rows}<tr><td><b>Jami</b></td><td></td><td style="text-align:right"><b>${srvMB(tot)}</b></td></tr></tbody></table>`;
+  }catch(e){
+    st.className = 'status err';
+    st.textContent = '⚠️ ' + (e.message || e);
+    box.innerHTML = '';
+  }
+}
+// Firestore Timestamp va boshqa maxsus qiymatlarni oddiy JSON'ga aylantirish
+function srvPlain(v){
+  if(v === null || v === undefined) return v;
+  if(Array.isArray(v)) return v.map(srvPlain);
+  if(typeof v === 'object'){
+    if(typeof v.toDate === 'function'){ try{ return v.toDate().toISOString(); }catch(e){ return null; } }
+    const o = {}; for(const k of Object.keys(v)){ const x = srvPlain(v[k]); if(x !== undefined) o[k] = x; } return o;
+  }
+  return v;
+}
+async function srvMigrate(){
+  const out = document.getElementById('srvMigStatus');
+  const say = (cls, t)=>{ if(out){ out.className = 'status ' + cls; out.innerHTML = t; } };
+  const real = window.__realFirebase;
+  if(!real || !real.initializeApp){ say('err', '⚠️ Firebase kutubxonasi yuklanmadi. Internetni tekshirib, sahifani yangilang.'); return; }
+  if(!confirm('Firebase’dagi barcha ma’lumotlar serverga ko‘chiriladi.\n\nServerda shu nomdagi yozuvlar bo‘lsa, ular Firebase nusxasi bilan almashtiriladi. Davom etasizmi?')) return;
+  const btn = document.getElementById('srvMigrate'); if(btn) btn.disabled = true;
+  let app;
+  try{
+    app = real.apps.find(a=>a.name==='migr') || real.initializeApp(DEFAULT_CLOUD_CONFIG, 'migr');
+    const fdb = app.firestore ? app.firestore() : real.firestore(app);
+    const report = [];
+    for(const [col, label, page] of SRV_COLS){
+      let n = 0, last = null, done = false;
+      say('', `⏳ ${esc(label)}: ${n} ta…`);
+      let paged = true;
+      while(!done){
+        let snap;
+        try{
+          if(paged){
+            let q = fdb.collection(col).orderBy(real.firestore.FieldPath.documentId()).limit(page);
+            if(last) q = q.startAfter(last);
+            snap = await q.get();
+          }else{
+            snap = await fdb.collection(col).get(); done = true;
+          }
+        }catch(e){
+          if(paged && !n){ paged = false; continue; }
+          throw e;
+        }
+        const docs = snap.docs.map(d=>({id: d.id, data: srvPlain(d.data())}));
+        // serverga ~8 MB lik bo'laklarda yuboramiz
+        let batch = [], size = 0;
+        const flush = async ()=>{ if(batch.length){ await window.__serverCall('import', {col, docs: batch}); batch = []; size = 0; } };
+        for(const d of docs){
+          const sz = JSON.stringify(d.data).length;
+          if(size + sz > 8e6) await flush();
+          batch.push(d); size += sz;
+        }
+        await flush();
+        n += docs.length;
+        say('', `⏳ ${esc(label)}: ${n} ta…`);
+        if(paged){ if(snap.docs.length < page) done = true; else last = snap.docs[snap.docs.length - 1]; }
+      }
+      report.push(`${esc(label)}: <b>${n}</b> ta`);
+    }
+    say('ok', '✅ Ko‘chirish tugadi.<br>' + report.join('<br>'));
+    await initCloud();
+    renderTabs && renderTabs();
+    srvRefreshStats();
+  }catch(e){
+    console.error(e);
+    say('err', '⚠️ Ko‘chirishda xatolik: ' + esc(e.message || e) + '<br>Qayta bosib davom ettirishingiz mumkin — takroriy ko‘chirish zarar qilmaydi.');
+  }finally{
+    if(btn) btn.disabled = false;
+    if(app){ try{ await app.delete(); }catch(e){} }
+  }
+}
+function bindServerCard(){
+  if(!window.__SERVER_MODE) return;
+  srvRefreshStats();
+  const b = document.getElementById('srvMigrate'); if(b) b.onclick = srvMigrate;
+}
+
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){
     alert('Excel kutubxonasi yuklanmadi. Internet aloqasini tekshirib, sahifani qayta yuklang.');
@@ -5864,6 +6156,7 @@ function profilMarkup(){
   <div class="set-grid">
     ${appearanceCardMarkup()}
     ${importsCardMarkup()}
+    ${serverCardMarkup()}
     <div class="card">
       <h2>Profil sozlamalari</h2>
       <p class="sub">Tizimga kirish uchun login va parolni shu yerdan o‘zgartirishingiz mumkin.</p>
@@ -5924,6 +6217,7 @@ function parseFirebaseConfigInput(raw){
 function bindProfilEvents(){
   bindAppearanceEvents();
   bindImportsCard();
+  bindServerCard();
   const chooseFolderBtn = document.getElementById('chooseFolderBtn');
   if(chooseFolderBtn) chooseFolderBtn.onclick = chooseSaveFolder;
   const clearFolderBtn = document.getElementById('clearFolderBtn');

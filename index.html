@@ -22,7 +22,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 /* ================== SERVER SOZLAMASI ==================
-   url — ishxona kompyuteringizdagi serverning internet manzili
+   url — serverning internet manzili
          (masalan: https://birzum-server.tail1234.ts.net)
    key — D:\server\config.json faylidagi "apiKey" qiymati
    Ikkalasi ham bo'sh qolsa — sayt avvalgidek Firebase bilan ishlaydi. */
@@ -34,7 +34,7 @@ window.BIRZUM_SERVER = {
 <script>
 /* ===== O'Z SERVERINGIZ (Firebase o'rniga) =====
    BIRZUM_SERVER.url bo'sh bo'lsa — sayt avvalgidek Firebase bilan ishlaydi.
-   To'ldirilsa — barcha ma'lumotlar shu serverga (ishxona kompyuteridagi D:\server) yoziladi.
+   To'ldirilsa — barcha ma'lumotlar shu serverga (D:\server) yoziladi.
    Saytning qolgan kodi o'zgarmaydi: bu yerda Firebase bilan bir xil ko'rinishdagi
    kichik "o'rinbosar" yaratiladi va u so'rovlarni serverga yuboradi. */
 (function(){
@@ -66,13 +66,13 @@ window.BIRZUM_SERVER = {
         body: JSON.stringify(body || {})
       });
     }catch(e){
-      banner(true, '⚠️ Server bilan aloqa yo‘q — ishxonadagi kompyuter o‘chiq yoki internetga ulanmagan bo‘lishi mumkin. Hozir kiritilgan ma’lumotlar saqlanmasligi mumkin.');
-      var er = new Error('Serverga ulanib bo‘lmadi. Ishxonadagi kompyuter yoqilgani va server oynasi ochiq turganini tekshiring.');
+      banner(true, '⚠️ Server bilan aloqa yo‘q — Adminga murojaat qiling. Telegram: @birzumadmin');
+      var er = new Error('Serverga ulanib bo‘lmadi. Adminga murojaat qiling (Telegram: @birzumadmin).');
       er.code = 'unavailable'; throw er;
     }
-    if(r.status === 401) banner(true, '⚠️ Server kaliti noto‘g‘ri — index.html dagi BIRZUM_SERVER.key ni tekshiring.');
+    if(r.status === 401) banner(true, '⚠️ Server bilan aloqa yo‘q (kalit noto‘g‘ri) — Adminga murojaat qiling. Telegram: @birzumadmin');
     else if(r.status >= 502 && r.status <= 504){
-      banner(true, '⚠️ Server javob bermayapti — ishxonadagi kompyuterda server oynasi yopilgan bo‘lishi mumkin.');
+      banner(true, '⚠️ Server bilan aloqa yo‘q — Adminga murojaat qiling. Telegram: @birzumadmin');
       var er3 = new Error('Server javob bermayapti (' + r.status + ').'); er3.code = 'unavailable'; throw er3;
     }
     else banner(false);
@@ -1083,6 +1083,10 @@ input.auto-filled{box-shadow:0 0 0 3px var(--accent-soft);border-color:var(--acc
 .sla-time{border:1px solid var(--line);border-radius:10px;margin-top:10px;}
 .sla-chk{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:13px;}
 .sla-chk input{width:auto;}
+/* v11 */
+.apv-pass{display:flex;gap:6px;} .apv-pass input{flex:1;min-width:0;font-family:var(--mono);letter-spacing:.03em;} .apv-pass button{min-width:0 !important;padding:0 12px;}
+#apvLogin{font-family:var(--mono);}
+.ar-back-mon{margin-right:4px;}
 </style>
 </head>
 <body>
@@ -1721,7 +1725,7 @@ const FIELDS = {
     ['no','№','text',''],
     ['tashkilot_nomi','Tashkilot nomi (Hamkor/Do‘kon)','text','required'],
     ['stir','STIR','text','required'],
-    ['rahbar','Rahbar (lavozimi, qisqa)','text','','masalan: Direktor'],
+    ['rahbar','Rahbar (qisqa F.I.Sh.)','text','','masalan: S.A.Raximov'],
     ['rahbar_fish','Rahbar F.I.Sh. (to‘liq)','text','required','Familiya Ism Sharif to‘liq'],
     ['manzil','Manzil','text',''],
     ['hisob_raqami','Hisob raqami','text',''],
@@ -1742,7 +1746,7 @@ const FIELDS = {
     ['shartnoma_sanasi','Shartnoma sanasi','date','required'],
     ['tashkilot_nomi','Tashkilot nomi (SXKK)','text','required'],
     ['stir','СТИР','text',''],
-    ['rahbar','Раҳбар (lavozimi, qisqa)','text','','masalan: Direktor'],
+    ['rahbar','Rahbar (qisqa F.I.Sh.)','text','','masalan: S.A.Raximov'],
     ['manzil','Manzil','text',''],
     ['hisob_raqami','Ҳисоб рақами','text',''],
     ['bank_nomi','Bank nomi','text',''],
@@ -1764,7 +1768,7 @@ const FIELDS = {
     ['eski_sanasi','Eski shartnoma sanasi','date','required'],
     ['tashkilot_nomi','Tashkilot nomi (SXKK)','text','required'],
     ['stir','СТИР','text',''],
-    ['rahbar','Раҳбар (lavozimi, qisqa)','text',''],
+    ['rahbar','Rahbar (qisqa F.I.Sh.)','text','','masalan: S.A.Raximov'],
     ['manzil','Manzil','text',''],
     ['hisob_raqami','Ҳисоб рақами','text',''],
     ['bank_nomi','Bank nomi','text',''],
@@ -1781,7 +1785,7 @@ const FIELDS = {
     ['tashkilot_nomi','Tashkilot nomi (SXKK)','text','required'],
     ['bonus_miqdori','Bonus miqdori','text','required','masalan: 1.5% (QQS bilan)'],
     ['stir','STIR','text',''],
-    ['rahbar','Rahbar (lavozimi, qisqa)','text',''],
+    ['rahbar','Rahbar (qisqa F.I.Sh.)','text','','masalan: S.A.Raximov'],
     ['manzil','Manzil','text',''],
     ['hr','Hisob raqami (Hr)','text',''],
     ['bank_nomi','Bank nomi','text',''],
@@ -2248,7 +2252,7 @@ function hamkorHTML(d){
     <tr><td><b>STIR</b></td><td>${fv(d.stir,'STIR')}</td></tr>
     <tr><td><b>Brend nomi</b></td><td>${fv(d.brend,'Brend nomi')}</td></tr>
     <tr><td><b>Filial</b></td><td>${fv(d.filial,'Filial')}</td></tr>
-    <tr><td><b>Rahbar (lavozimi)</b></td><td>${fv(d.rahbar,'Rahbar')}</td></tr>
+    <tr><td><b>Rahbar (qisqa F.I.Sh.)</b></td><td>${fv(d.rahbar,'Rahbar')}</td></tr>
     <tr><td><b>Rahbar F.I.Sh. (to‘liq)</b></td><td>${fv(d.rahbar_fish,'Rahbar F.I.Sh.')}</td></tr>
     <tr><td><b>Firma rahbari PINFL</b></td><td>${fv(d.pinfl,'PINFL')}</td></tr>
     <tr><td><b>Manzil</b></td><td>${fv(d.manzil,'Manzil')}</td></tr>
@@ -2712,6 +2716,7 @@ function applyUiPrefs(){
   const z = Number(UI.zoom)||100;
   const app = document.getElementById('appZoom');
   if(app) app.style.zoom = (z===100 ? '' : (z/100));
+  ['bxContent','uaContent'].forEach(id=>{ const el = document.getElementById(id); if(el) el.style.zoom = (z===100 ? '' : (z/100)); });
   const sb = document.getElementById('sidebar');
   if(sb) sb.classList.toggle('collapsed', !!UI.collapsed);
   root.lang = UI.lang==='uz_cyrl' ? 'uz-Cyrl' : (UI.lang||'uz');
@@ -2921,18 +2926,52 @@ function latToCyr(s){
 function t(s){
   const lang = UI.lang||'uz';
   if(lang==='uz') return s;
-  if(lang==='uz_cyrl') return I18N[s] !== undefined || s.length < 120 ? latToCyr(s) : s;
-  const row = I18N[s];
-  return row ? row[LANG_IDX[lang]] : s;
+  if(lang==='uz_cyrl') return latToCyr(s);
+  const o = i18nLookup(String(s));
+  return o == null ? s : o;
 }
 const I18N_SKIP = '.paper,.wl-host,.wl-doc,[data-noi18n],script,style,textarea,select option[data-raw]';
+// Raqam va «nom»li jumlalar uchun shablon: "5 ta ariza" → "{n} ta ariza", "«ABC» qo'shildi" → "«{q}» qo'shildi"
+const I18N_NUM_RE = /\d+(?:[.,:]\d+)*/g, I18N_Q_RE = /«[^«»]*»/g;
+function i18nKeyOf(core){
+  const nums = [], qs = [];
+  const k = core.replace(I18N_Q_RE, m=>{ qs.push(m); return '«{q}»'; }).replace(I18N_NUM_RE, m=>{ nums.push(m); return '{n}'; });
+  return {k, nums, qs};
+}
+function i18nFill(tpl, nums, qs){
+  let i = 0, j = 0;
+  const lang = UI.lang||'uz', idx = LANG_IDX[lang];
+  // «...» ichidagi tugma/bo'lim nomi lug'atda bo'lsa — u ham tarjima qilinadi
+  const qq = q=>{ const inner = q.slice(1, -1).trim(); const row = I18N[inner]; return row && idx !== undefined ? '«' + row[idx] + '»' : q; };
+  return tpl.replace(/\{n\}/g, ()=> nums[i++] ?? '').replace(/«\{q\}»/g, ()=>{ const q = qs[j++]; return q == null ? '' : qq(q); });
+}
+function i18nLookup(core){
+  const lang = UI.lang||'uz';
+  if(lang==='uz') return null;
+  if(lang==='uz_cyrl') return /[A-Za-z]/.test(core) ? latToCyr(core) : null;
+  const idx = LANG_IDX[lang];
+  const row = I18N[core]; if(row) return row[idx];
+  const {k, nums, qs} = i18nKeyOf(core);
+  if(k !== core && I18N[k]) return i18nFill(I18N[k][idx], nums, qs);
+  if(window.__i18nMiss && /[A-Za-z]{2}/.test(core)) window.__i18nMiss.add(k);
+  return null;
+}
 function i18nTranslateText(orig){
   const lead = orig.match(/^\s*/)[0], trail = orig.match(/\s*$/)[0];
   const core = orig.trim();
   if(!core) return orig;
-  if(I18N[core]===undefined) return orig;
-  return lead + t(core) + trail;
+  const out = i18nLookup(core);
+  return out == null ? orig : lead + out + trail;
 }
+// alert / confirm / prompt matnlari ham tarjima qilinadi (har bir qator alohida)
+function i18nMsg(m){
+  if((UI.lang||'uz')==='uz' || m == null) return m;
+  return String(m).split('\n').map(line=>{ const c = line.trim(); if(!c) return line; const o = i18nLookup(c); return o == null ? line : line.replace(c, o); }).join('\n');
+}
+(function(){
+  const A = window.alert.bind(window), C = window.confirm.bind(window), P = window.prompt.bind(window);
+  window.alert = m=> A(i18nMsg(m)); window.confirm = m=> C(i18nMsg(m)); window.prompt = (m, d)=> P(i18nMsg(m), d);
+})();
 let i18nBusy = false;
 function i18nApply(root){
   if(!root || i18nBusy) return;
@@ -2979,8 +3018,8 @@ function startI18nObserver(){
 }
 
 /* ============================= CHAP MENYU ============================= */
-const NAV_ORDER = ['panel','hisobot','hamkor','arizalar','users','bosh','bonus','qoshimcha','profil'];
-const NAV_LABEL = {panel:'Hamkor yo‘li', hisobot:'Hisobotlar', hamkor:'Hamkorlar', arizalar:'Arizalar', users:'Foydalanuvchilar', bosh:'Bosh shartnoma', bonus:'Bonus shartnoma / bekor qilish', qoshimcha:'Qo‘shimcha kelishuv', profil:'Sozlamalar'};
+const NAV_ORDER = ['panel','hisobot','hamkor','users','bosh','bonus','qoshimcha','profil'];
+const NAV_LABEL = {panel:'Arizalar monitoringi', hisobot:'Hisobotlar', hamkor:'Hamkorlar', arizalar:'Arizalar', users:'Foydalanuvchilar', bosh:'Bosh shartnoma', bonus:'Bonus shartnoma / bekor qilish', qoshimcha:'Qo‘shimcha kelishuv', profil:'Sozlamalar'};
 const PAGE_SUB = {
   panel:'Arizadan faol hamkorgacha: har bir hamkor qaysi bosqichda va kimning navbati',
   hisobot:'Oylik natijalar: nechta hamkor qo‘shildi, qancha vaqt ketdi va qaysi bosqichda kutilyapti',
@@ -2998,10 +3037,10 @@ function renderTabs(){
   nav.innerHTML = NAV_ORDER.map(key=>{
     const s = SECTIONS.find(x=>x.key===key);
     let cnt = s && s.storageKey ? `<span class="nav-cnt" data-noi18n>${DB[key].length}</span>` : '';
-    if(key==='panel'){ const n = arLoaded ? flowLateCount() : 0; cnt = n ? `<span class="nav-cnt hot" data-noi18n title="Muddati o‘tganlar">${n}</span>` : ''; }
+    if(key==='panel'){ const n = arPendingCount(), l = arLoaded ? flowLateCount() : 0; cnt = n ? `<span class="nav-cnt hot" data-noi18n title="Ko‘rib chiqilishi kerak${l?' · muddati o‘tgan: '+l:''}">${n}</span>` : (l ? `<span class="nav-cnt hot" data-noi18n title="Muddati o‘tganlar">${l}</span>` : ''); }
     if(key==='arizalar'){ const n = arPendingCount(); cnt = n ? `<span class="nav-cnt hot" data-noi18n>${n}</span>` : ''; }
     if(key==='users'){ const n = adminUnreadTotal(); cnt = n ? `<span class="nav-cnt hot" data-noi18n title="O‘qilmagan xabarlar">${n}</span>` : ''; }
-    return `<button class="nav-item ${activeTab===key?'active':''}" data-tab="${key}" data-title="${esc(NAV_LABEL[key])}">
+    return `<button class="nav-item ${(activeTab===key || (key==='panel' && activeTab==='arizalar'))?'active':''}" data-tab="${key}" data-title="${esc(NAV_LABEL[key])}">
       ${ICONS[key]}<span class="nav-label">${esc(NAV_LABEL[key])}</span>${cnt}</button>`;
   }).join('');
   nav.querySelectorAll('.nav-item').forEach(b=>{
@@ -4202,6 +4241,7 @@ const AR_FIELDS = [
   ['stir','STIR (JShShIR)','text',true,'9 yoki 14 xonali raqam', 14],
   ['brend','Do‘kon brend nomi','text',true,'masalan: Boston'],
   ['rahbar_fish','Rahbar F.I.Sh. (to‘liq)','text',true,'Familiya Ism Otasining ismi'],
+  ['pinfl','Rahbar PINFL (JShShIR)','text',true,'14 xonali raqam (pasportda)', 14],
   ['telefon_raqami','Telefon raqami','tel',true,'+998 __ ___ __ __'],
   ['manzil','Faoliyat manzili','text',true,'Viloyat, tuman, ko‘cha, uy'],
   ['lokatsiya','Faoliyat joyi lokatsiyasi','text',true,'Xarita havolasi yoki «Joylashuvimni aniqlash»'],
@@ -4709,6 +4749,7 @@ function arValidate(data, files){
   if(data.hisob_raqami && !/^\d{20}$/.test(String(data.hisob_raqami).replace(/\s/g,''))) miss.push(`Bank hisob raqami aniq 20 ta raqamdan iborat bo‘lishi kerak (hozir ${dg(data.hisob_raqami).length} ta)`);
   if(data.mfo && !/^\d{5}$/.test(String(data.mfo).trim())) miss.push('Bank MFO aniq 5 ta raqamdan iborat bo‘lishi kerak');
   if(data.stir && !/^(\d{9}|\d{14})$/.test(String(data.stir).trim())) miss.push('STIR 9 ta (tashkilot) yoki 14 ta (JShShIR) raqamdan iborat bo‘lishi kerak');
+  if(data.pinfl && !/^\d{14}$/.test(String(data.pinfl).trim())) miss.push(`Rahbar PINFL aniq 14 ta raqamdan iborat bo‘lishi kerak (hozir ${dg(data.pinfl).length} ta)`);
   if(data.telefon_raqami && dg(data.telefon_raqami).length !== 12) miss.push('Telefon raqami to‘liq emas (+998 __ ___ __ __)');
   const cnt = k=> files.filter(f=>f.docType===k).length;
   AR_DOCS.forEach(d=>{ if(d.min && cnt(d.k) < d.min) miss.push(d.t + (d.min>1 ? ` (kamida ${d.min} ta, hozir ${cnt(d.k)} ta)` : '')); });
@@ -4820,7 +4861,7 @@ function uViewMarkup(a){
   }[a.status] || '';
   return `<div class="card">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
-      <div><h2 style="margin:0 0 4px;" data-noi18n>${esc(a.data && a.data.tashkilot_nomi || 'Ariza')}</h2><div class="sub" style="margin:0;" data-noi18n>Yuborilgan: ${arFmtDT(a.createdAt)}${a.updatedAt && a.updatedAt!==a.createdAt?' · Yangilangan: '+arFmtDT(a.updatedAt):''}</div></div>
+      <div><h2 style="margin:0 0 4px;" data-noi18n>${esc(a.data && a.data.tashkilot_nomi || 'Ariza')}</h2><div class="sub" style="margin:0;" data-noi18n>${esc(t('Yuborilgan'))}: ${arFmtDT(a.createdAt)}${a.updatedAt && a.updatedAt!==a.createdAt?' · '+esc(t('Yangilangan'))+': '+arFmtDT(a.updatedAt):''}</div></div>
       ${arStatusBadge(a.status,'user')}
     </div>
     <div id="uaFlash" class="ua-flash"></div>
@@ -4863,11 +4904,11 @@ async function arAdminLoad(silent){
     const keyOf = a=> a.id+'@'+(a.updatedAt||a.createdAt);
     if(arSeenPending===null){
       arSeenPending = new Set(pend.map(keyOf));
-      if(pend.length) showToast({icon:'📨', title:`${pend.length} ta ariza ko‘rib chiqilishini kutmoqda`, body:'Arizalar bo‘limini oching', onClick:()=>{ activeTab='arizalar'; renderApp(); }});
+      if(pend.length) showToast({icon:'📨', title:`${pend.length} ta ariza ko‘rib chiqilishini kutmoqda`, body:'Arizalar monitoringini oching', onClick:()=>{ activeTab='panel'; renderApp(); }});
     }else{
       pend.filter(a=>!arSeenPending.has(keyOf(a))).forEach(a=>{
         arSeenPending.add(keyOf(a));
-        showToast({icon:'📨', title:(a.status==='qayta'?'Tuzatilgan ariza: ':'Yangi ariza: ') + (a.userIsm||''), time:msgTime(a.updatedAt||a.createdAt), body:a.data&&a.data.tashkilot_nomi||'', onClick:()=>{ arSelId=a.id; activeTab='arizalar'; renderApp(); }});
+        showToast({icon:'📨', title:(a.status==='qayta'?'Tuzatilgan ariza: ':'Yangi ariza: ') + '«' + (a.userIsm||'') + '»', time:msgTime(a.updatedAt||a.createdAt), body:a.data&&a.data.tashkilot_nomi||'', onClick:()=>{ arSelId=a.id; activeTab='arizalar'; renderApp(); }});
       });
     }
     setTitleBadge(adminUnreadTotal() + pend.length);
@@ -4880,7 +4921,7 @@ function arizalarMarkup(){
   return `<div class="hk-grid">
     <div class="hk-card">
       <div class="hk-card-head">
-        <h2>Arizalar</h2><span class="nav-cnt" id="arCnt" data-noi18n>${AR_CACHE.length}</span>
+        <button type="button" class="hk-tool ar-back-mon" id="arBackMon">‹ Monitoring</button><h2>Arizalar</h2><span class="nav-cnt" id="arCnt" data-noi18n>${AR_CACHE.length}</span>
         <div class="hk-tools">
           <button type="button" class="hk-tool" id="arReload">↻ Yangilash</button>
           <div class="hk-search">${ICONS.search}<input type="search" id="arSearch" placeholder="Qidirish uchun matn kiriting" value="${esc(arQuery)}"></div>
@@ -4975,7 +5016,7 @@ function renderArDetail(){
         <div><b>${esc(a.userIsm||'—')}</b><div class="hk-sub">${esc(a.userTelefon||'')} · @${esc(a.userLogin||'')}</div></div>
         <div style="margin-left:auto;text-align:right;" class="hk-sub">Yuborilgan<br>${arFmtDT(a.createdAt)}</div>
       </div>
-      ${miss.length ? `<div class="ar-note warn"><b>Yetishmayotganlar:</b> <span data-noi18n>${miss.map(esc).join('; ')}</span></div>` : `<div class="ar-note good">✓ Barcha majburiy ma’lumot va hujjatlar yuborilgan.</div>`}
+      ${miss.length ? `<div class="ar-note warn"><b>Yetishmayotganlar:</b> <span data-noi18n>${miss.map(x=>esc(t(x))).join('; ')}</span></div>` : `<div class="ar-note good">✓ Barcha majburiy ma’lumot va hujjatlar yuborilgan.</div>`}
       ${soft.length ? `<div class="ar-note">ℹ️ Ixtiyoriy hujjatlardan yuborilmagan: <span data-noi18n>${soft.map(esc).join('; ')}</span>.</div>` : ''}
       ${a.hamkorId ? `<div class="ar-note good">Hamkorlar ro‘yxatiga qo‘shilgan. <button type="button" class="link-btn" id="arGoHamkor" style="margin:0 0 0 6px;">Hamkorni ochish →</button></div>` : ''}
       ${a.status!=='rad' ? `<button type="button" class="secondary ar-edit-btn" id="arEdit">✏️ Ma’lumotlarni tahrirlash</button>` : ''}
@@ -5047,7 +5088,7 @@ async function arDecide(a, status, opts){
                    qaytarildi:`↩ «${nm}» bo‘yicha arizangiz tuzatish uchun qaytarildi.`,
                    rad:`✕ «${nm}» bo‘yicha arizangiz rad etildi.`,
                    didox:`📨 «${nm}» bo‘yicha shartnoma Didox orqali sizga yuborildi. Iltimos, Didox tizimida tekshirib imzolang.`,
-                   login:`🔑 «${nm}» uchun BirZum Nasiya tizimiga kirish login va parollari sizga yuborildi.`}[status] + (izoh ? `\nIzoh: ${izoh}` : '');
+                   login:`🔑 «${nm}» uchun BirZum Nasiya tizimiga kirish login va parollari sizga yuborildi.` + arCredText(a)}[status] + (izoh ? `\nIzoh: ${izoh}` : '');
       await msgSend(a.userId, 'admin', txt, {userIsm:a.userIsm, system:true, arizaId:a.id});
     }catch(e){ console.error('Xabar yuborilmadi', e); }
     st.className='status ok';
@@ -5067,7 +5108,7 @@ async function arDecide(a, status, opts){
 }
 async function arCreateHamkor(a, progress){
   const d = a.data || {};
-  const map = {tashkilot_nomi:d.tashkilot_nomi, stir:d.stir, brend:d.brend, rahbar_fish:d.rahbar_fish, telefon_raqami:d.telefon_raqami,
+  const map = {tashkilot_nomi:d.tashkilot_nomi, stir:d.stir, brend:d.brend, rahbar_fish:d.rahbar_fish, pinfl:d.pinfl, rahbar:d.rahbar_fish ? shortFio(d.rahbar_fish) : '', telefon_raqami:d.telefon_raqami,
                manzil:d.manzil, lokatsiya:d.lokatsiya, hisob_raqami:d.hisob_raqami, mfo:d.mfo, bank_nomi:d.bank_nomi};
   let rec = DB.hamkor.find(r=> String((r.data&&r.data.stir)||'').trim() === String(d.stir||'').trim() && d.stir);
   if(rec){
@@ -5094,6 +5135,7 @@ async function arCreateHamkor(a, progress){
   return rec.id;
 }
 function bindArizalarEvents(){
+  const bm = document.getElementById('arBackMon'); if(bm) bm.onclick = ()=>{ activeTab = 'panel'; UI.lastTab = 'panel'; saveUiPrefs(); renderApp(); window.scrollTo(0,0); };
   const s = document.getElementById('arSearch');
   if(s) s.oninput = ()=>{ arQuery = s.value; renderArList(); };
   document.querySelectorAll('.ar-chip').forEach(c=> c.onclick = ()=>{ arFilter = c.dataset.flt; document.querySelectorAll('.ar-chip').forEach(x=>x.classList.toggle('on', x===c)); renderArList(); });
@@ -5388,7 +5430,7 @@ function showToast(opts){
   if(!box){ box = document.createElement('div'); box.id = 'toastBox'; document.body.appendChild(box); }
   const el = document.createElement('div');
   el.className = 'toast';
-  el.innerHTML = `<div class="toast-ic">${opts.icon||'💬'}</div><div class="toast-tx"><b data-noi18n>${esc(opts.title||'')}</b>${opts.time?`<span class="toast-time" data-noi18n>${esc(opts.time)}</span>`:''}${opts.body?`<div class="toast-body" data-noi18n>${esc(opts.body)}</div>`:''}</div><button type="button" class="toast-x">✕</button>`;
+  el.innerHTML = `<div class="toast-ic">${opts.icon||'💬'}</div><div class="toast-tx"><b data-noi18n>${esc(t(opts.title||''))}</b>${opts.time?`<span class="toast-time" data-noi18n>${esc(opts.time)}</span>`:''}${opts.body?`<div class="toast-body" data-noi18n>${esc(UI.lang==='uz_cyrl' && !I18N[String(opts.body).trim()] ? opts.body : t(opts.body))}</div>`:''}</div><button type="button" class="toast-x">✕</button>`;
   el.querySelector('.toast-x').onclick = (e)=>{ e.stopPropagation(); el.remove(); };
   el.onclick = ()=>{ el.remove(); if(opts.onClick) opts.onClick(); };
   box.appendChild(el);
@@ -5531,7 +5573,7 @@ async function renderUserDetail(keepScroll){
       <div class="ar-applicant" data-noi18n>
         <div class="ar-av">${esc(String(u.ism||'?').trim().charAt(0).toUpperCase())}</div>
         <div><b>${esc(u.ism||'—')}</b><div class="hk-sub">@${esc(u.login)}</div></div>
-        <label class="hk-toggle" style="margin:0 0 0 auto;" title="Nofaol foydalanuvchi tizimga kira olmaydi"><span class="switch"><input type="checkbox" id="uActiveSw" ${u.blocked?'':'checked'}><span></span></span><span>Faol</span></label>
+        <label class="hk-toggle" style="margin:0 0 0 auto;" title="Nofaol foydalanuvchi tizimga kira olmaydi"><span class="switch"><input type="checkbox" id="uActiveSw" ${u.blocked?'':'checked'}><span></span></span><span>${esc(t('Faol'))}</span></label>
       </div>
       <div class="hk-form hk-ro" style="margin-top:6px;">
         <div><label>Ism va familiya</label><input type="text" readonly tabindex="-1" value="${esc(u.ism||'')}"></div>
@@ -5872,7 +5914,7 @@ function openBoshFromAriza(a){
     tashkilot_nomi:d.tashkilot_nomi||hd.tashkilot_nomi||'', stir:d.stir||hd.stir||'', rahbar_fish:d.rahbar_fish||hd.rahbar_fish||'',
     manzil:d.manzil||hd.manzil||'', hisob_raqami:d.hisob_raqami||hd.hisob_raqami||'', bank_nomi:d.bank_nomi||hd.bank_nomi||'', mfo:d.mfo||hd.mfo||'',
     telefon_raqami:d.telefon_raqami||hd.telefon_raqami||'', telegram_user:hd.telegram_user||'', brend:d.brend||hd.brend||'',
-    filial:hd.filial||'', pinfl:hd.pinfl||'', rahbar:hd.rahbar||'', login:hd.login||'', parol:hd.parol||'',
+    filial:hd.filial||'', pinfl:hd.pinfl||(a.data||{}).pinfl||'', rahbar:hd.rahbar||shortFio((a.data||{}).rahbar_fish||hd.rahbar_fish||''), login:hd.login||'', parol:hd.parol||'',
   };
   activeTab = 'bosh'; UI.lastTab = 'bosh'; saveUiPrefs();
   renderApp();
@@ -5937,7 +5979,7 @@ async function bPoll(){
   const firstD = bSeenDocs === null; if(firstD) bSeenDocs = new Set();
   const freshD = bDocs.filter(x=>!bSeenDocs.has(x.id)); freshD.forEach(x=>bSeenDocs.add(x.id));
   if(firstD){ const n = bNewDocs(); if(n) showToast({icon:'📄', title:`${n} ta yangi shartnoma`, body:'Shartnomalar bo‘limida ko‘ring', onClick:()=>bGo('docs')}); }
-  else freshD.forEach(x=> showToast({icon:'📄', title:'Yangi shartnoma: '+(x.tashkilot_nomi||''), time:msgTime(x.sentAt), body:(x.raqam||'')+' · Admin yubordi', onClick:()=>{ bDocSel = x.id; bGo('docs'); }}));
+  else freshD.forEach(x=> showToast({icon:'📄', title:'Yangi shartnoma: «'+(x.tashkilot_nomi||'')+'»', time:msgTime(x.sentAt), body:(x.raqam||'')+' · Admin yubordi', onClick:()=>{ bDocSel = x.id; bGo('docs'); }}));
   try{ bMsgs = await msgThread(u.id); }catch(e){}
   const firstM = bSeenMsg === null; if(firstM) bSeenMsg = new Set();
   const freshM = bMsgs.filter(m=>m.from==='admin' && !m.readByUser && !bSeenMsg.has(m.id)); freshM.forEach(m=>bSeenMsg.add(m.id));
@@ -6190,7 +6232,7 @@ function serverCardMarkup(){
       <code>index.html</code> faylining yuqorisidagi <code>BIRZUM_SERVER</code> qatoriga server manzili va kalitini yozing.</p></div>`;
   }
   return `<div class="card imp-card" id="srvCard">
-    <h2>Server (ishxona kompyuteri)</h2>
+    <h2>Server</h2>
     <p class="sub">Barcha ma’lumotlar <b>${esc(window.__SERVER_BASE)}</b> serverida saqlanadi.</p>
     <div class="status" id="srvState">⏳ Tekshirilmoqda…</div>
     <div id="srvStats" style="margin:10px 0;"></div>
@@ -6412,6 +6454,58 @@ document.addEventListener('input', async (e)=>{
 }, true);
 document.addEventListener('input', (e)=>{ const el = e.target; if(el && el.id && /bank_nomi$/.test(el.id) && e.isTrusted) el.dataset.auto = ''; }, true);
 
+/* ---------- Qisqa F.I.Sh., login va parol yordamchilari ---------- */
+// «Raximov Sardor Akmalovich» → «S.A.Raximov»
+function shortFio(fish){
+  const w = String(fish||'').trim().split(/\s+/).filter(Boolean);
+  if(w.length < 2) return w[0] || '';
+  const ini = s=>{ const m = String(s).match(/^[A-Za-zА-Яа-яЁёЎўҚқҒғҲҳ][‘’ʻ'`]?/); return m ? m[0].charAt(0).toUpperCase() + m[0].slice(1).replace(/[`']/,'‘') : ''; };
+  const fam = w[0].charAt(0).toUpperCase() + w[0].slice(1);
+  return [ini(w[1]), w[2] && !/^(o‘g‘li|o'g'li|ogli|qizi)$/i.test(w[2]) ? ini(w[2]) : ''].filter(Boolean).join('.') + '.' + fam;
+}
+function filialList(){
+  const m = {};
+  [].concat(DB.hamkor||[], DB.bosh||[]).forEach(r=>{ const f = normFilial((r.data||{}).filial); if(f) m[f.toLowerCase()] = m[f.toLowerCase()] || f; });
+  return Object.values(m).sort((a,b)=>a.localeCompare(b));
+}
+function normFilial(f){
+  let s = String(f||'').replace(/\s+/g,' ').trim();
+  if(!s || /^[0\-—–.\s]*$/.test(s) || /^(ko‘rsatilmagan|ko'rsatilmagan|nomalum|noma’lum)$/i.test(s)) return '';
+  s = s.replace(/\bfiliali\b/i, 'filiali').replace(/\bfilial\b/i, 'filial');
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+function latinSlug(s){
+  const map = {'ш':'sh','ч':'ch','ё':'yo','ю':'yu','я':'ya','ў':'o','қ':'q','ғ':'g','ҳ':'h','а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ж':'j','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'x','ц':'ts','ы':'i','э':'e'};
+  return String(s||'').toLowerCase().replace(/[а-яёўқғҳ]/g, c=>map[c]||'').replace(/(mchj|ooo|yatt|x\/k|o\/k|xk|ok)\b/g,'').replace(/[^a-z0-9]/g,'');
+}
+function suggestLogin(d){
+  const base = (latinSlug(d && (d.brend || d.tashkilot_nomi)) || 'hamkor').slice(0, 14);
+  const used = new Set((DB.hamkor||[]).map(r=>String((r.data||{}).login||'').trim().toLowerCase()).filter(Boolean));
+  let c = base, n = 1; while(used.has(c)){ n++; c = base + n; }
+  return c;
+}
+function genPassword(){
+  const A = 'abcdefghjkmnpqrstuvwxyz', N = '23456789', U = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const r = new Uint32Array(10); crypto.getRandomValues(r);
+  const pick = (s,i)=> s[r[i] % s.length];
+  return pick(U,0) + pick(A,1) + pick(A,2) + pick(A,3) + pick(N,4) + pick(N,5) + pick(A,6) + pick(A,7) + pick(N,8) + pick(U,9);
+}
+// «Login berildi» xabariga hamkorning login va parolini qo'shadi
+function arCredText(a){
+  const d = a.data || {};
+  const rec = a.hamkorId ? DB.hamkor.find(r=>r.id===a.hamkorId) : DB.hamkor.find(r=> d.stir && String((r.data||{}).stir||'').trim()===String(d.stir).trim());
+  const h = rec ? rec.data : {};
+  return h.login && h.parol ? `\nLogin: ${h.login}\nParol: ${h.parol}` : '';
+}
+// Shartnoma formalarida: to'liq F.I.Sh. yozilganda qisqa shakli o'zi to'ladi
+document.addEventListener('input', (e)=>{
+  const el = e.target; if(!el || !el.id) return;
+  if(el.id === 'f_rahbar' && e.isTrusted){ el.dataset.auto = ''; return; }
+  if(el.id !== 'f_rahbar_fish') return;
+  const form = el.closest('form') || document; const r = form.querySelector('#f_rahbar'); if(!r) return;
+  if(!r.value.trim() || r.dataset.auto === '1'){ r.value = shortFio(el.value); r.dataset.auto = '1'; }
+}, true);
+
 /* ---------- Shartnoma raqamini avtomatik taklif qilish ---------- */
 function nextBoshRaqam(){
   const recs = (DB.bosh||[]).slice().sort((a,b)=>String(a.createdAt||'').localeCompare(String(b.createdAt||'')));
@@ -6439,7 +6533,7 @@ function boshDataFromAriza(a){
     tashkilot_nomi:d.tashkilot_nomi||hd.tashkilot_nomi||'', stir:d.stir||hd.stir||'', rahbar_fish:d.rahbar_fish||hd.rahbar_fish||'',
     manzil:d.manzil||hd.manzil||'', hisob_raqami:d.hisob_raqami||hd.hisob_raqami||'', bank_nomi:d.bank_nomi||hd.bank_nomi||'', mfo:d.mfo||hd.mfo||'',
     telefon_raqami:d.telefon_raqami||hd.telefon_raqami||'', telegram_user:hd.telegram_user||'', brend:d.brend||hd.brend||'',
-    filial:hd.filial||'', pinfl:hd.pinfl||'', rahbar:hd.rahbar||'', login:hd.login||'', parol:hd.parol||'',
+    filial:hd.filial||'', pinfl:d.pinfl||hd.pinfl||'', rahbar:hd.rahbar||shortFio(d.rahbar_fish||hd.rahbar_fish||''), login:hd.login||'', parol:hd.parol||'',
   };
 }
 
@@ -6492,7 +6586,7 @@ async function arSyncFromBux(x, ns, izoh, who){
 
 /* ---------- Bitta tugma: tasdiqlash + shartnoma + buxgalterga yuborish ---------- */
 /* ---------- Ariza ma'lumotlarini admin tomonidan tahrirlash ---------- */
-const AR_EDIT_KEYS = ['tashkilot_turi','tashkilot_nomi','stir','brend','rahbar_fish','telefon_raqami','manzil','lokatsiya','hisob_raqami','mfo','bank_nomi'];
+const AR_EDIT_KEYS = ['tashkilot_turi','tashkilot_nomi','stir','brend','rahbar_fish','pinfl','telefon_raqami','manzil','lokatsiya','hisob_raqami','mfo','bank_nomi'];
 function arEditFieldsMarkup(d){
   return AR_EDIT_KEYS.map(k=>{
     const f = AR_FIELDS.find(x=>x[0]===k); if(!f) return '';
@@ -6550,8 +6644,14 @@ function openApproveModal(a, alreadyAccepted, modeArg){
       <div class="hk-form apv-grid">
         <div><label>Shartnoma raqami <span style="color:var(--danger)">*</span></label><input type="text" id="apvNo" value="${esc(d.shartnoma_raqami)}" placeholder="masalan: 125"></div>
         <div><label>Shartnoma sanasi <span style="color:var(--danger)">*</span></label><input type="date" id="apvDate" value="${esc(d.shartnoma_sanasi)}"></div>
-        <div><label>Rahbar lavozimi</label><input type="text" id="apvRahbar" value="${esc(d.rahbar)}" placeholder="masalan: Direktor"></div>
-        <div><label>Filial</label><input type="text" id="apvFilial" value="${esc(d.filial)}" placeholder="masalan: Bosh ofis"></div>
+        <div><label>Rahbar (qisqa F.I.Sh.)</label><input type="text" id="apvRahbar" value="${esc(d.rahbar)}" placeholder="masalan: S.A.Raximov" data-auto="${d.rahbar && d.rahbar===shortFio(ad.rahbar_fish||'') ? '1' : (d.rahbar ? '' : '1')}"></div>
+        <div><label>Filial <span style="color:var(--danger)">*</span></label><input type="text" id="apvFilial" list="apvFilList" value="${esc(d.filial)}" placeholder="Ro‘yxatdan tanlang yoki yozing"><datalist id="apvFilList">${filialList().map(f=>`<option value="${esc(f)}">`).join('')}</datalist></div>
+      </div>
+      <div class="apv-sec">Hamkorning tizimga kirishi (login va parol)</div>
+      <div class="hk-form apv-grid">
+        <div><label>Login <span style="color:var(--danger)">*</span></label><input type="text" id="apvLogin" value="${esc(d.login || suggestLogin(ad))}" autocomplete="off" spellcheck="false"></div>
+        <div><label>Parol <span style="color:var(--danger)">*</span></label><div class="apv-pass"><input type="text" id="apvParol" value="${esc(d.parol || genPassword())}" autocomplete="off" spellcheck="false"><button type="button" class="secondary" id="apvGen" title="Yangi parol yaratish">🎲</button></div></div>
+        <div class="apv-wide hk-sub">Login va parol hamkor kartochkasida saqlanadi (buxgalter ko‘rmaydi). «🔑 Login va parollar hamkorga yuborildi» bosilganda ular hamkorga xabar va Telegram orqali avtomatik yuboriladi.</div>
       </div>`}
       <div class="status" id="apvStatus"></div>
     </form></div>
@@ -6581,19 +6681,49 @@ function openApproveModal(a, alreadyAccepted, modeArg){
     if(miss.length){ say('err', '<b>Tuzating:</b><br>• ' + miss.map(esc).join('<br>• ')); return false; }
     return true;
   };
+  const gen = document.getElementById('apvGen'); if(gen) gen.onclick = ()=>{ document.getElementById('apvParol').value = genPassword(); };
+  const rh = document.getElementById('apvRahbar');
+  if(rh){
+    rh.addEventListener('input', ()=>{ rh.dataset.auto = ''; });
+    const fi = ov.querySelector('#apv_rahbar_fish');
+    if(fi) fi.addEventListener('input', ()=>{ if(rh.dataset.auto==='1') rh.value = shortFio(fi.value); });
+  }
+  const credCheck = ()=>{
+    const lg = document.getElementById('apvLogin'), pw = document.getElementById('apvParol'); if(!lg) return true;
+    const L = lg.value.trim(), P = pw.value.trim();
+    if(!/^[a-zA-Z0-9_.-]{3,32}$/.test(L)){ say('err', 'Login 3–32 ta lotin harfi, raqam, «_», «.» yoki «-» dan iborat bo‘lsin.'); lg.focus(); return false; }
+    if(P.length < 6){ say('err', 'Parol kamida 6 ta belgidan iborat bo‘lsin.'); pw.focus(); return false; }
+    const dup = DB.hamkor.find(r=> r.id!==a.hamkorId && String((r.data||{}).login||'').trim().toLowerCase()===L.toLowerCase() && String((r.data||{}).stir||'').trim()!==String(readAr().stir||'').trim());
+    if(dup){ say('err', `«${L}» logini «${(dup.data||{}).tashkilot_nomi||'boshqa hamkor'}» uchun band. Boshqa login kiriting.`); lg.focus(); return false; }
+    const fl = document.getElementById('apvFilial'); if(fl && !fl.value.trim()){ say('err', 'Filialni tanlang.'); fl.focus(); return false; }
+    return true;
+  };
+  const saveCreds = (dd)=>{
+    const rec = a.hamkorId ? DB.hamkor.find(r=>r.id===a.hamkorId) : DB.hamkor.find(r=> String((r.data||{}).stir||'').trim()===String(dd.stir||'').trim());
+    if(!rec) return;
+    const before = Object.assign({}, rec.data);
+    dd.filial = normFilial(dd.filial) || dd.filial;
+    ['login','parol','rahbar','filial','pinfl'].forEach(k=>{ if(String(dd[k]||'').trim()) rec.data[k] = String(dd[k]).trim(); });
+    rec.updatedAt = new Date().toISOString(); persist('hamkor');
+    const ch = logChangedFields(before, rec.data, ['rahbar','filial','pinfl','login'], k=>fieldLabel('hamkor',k));
+    if(before.parol !== rec.data.parol) ch.push('Parol: o‘zgartirildi');
+    if(ch.length) logAct('hamkor.tahrir', {type:'hamkor', id:rec.id, name:rec.data.tashkilot_nomi, stir:rec.data.stir}, ch.join('\n'));
+  };
   const toBosh = nd=> Object.assign({}, d, {
     tashkilot_nomi:nd.tashkilot_nomi, stir:nd.stir, rahbar_fish:nd.rahbar_fish, manzil:nd.manzil, hisob_raqami:nd.hisob_raqami,
-    bank_nomi:nd.bank_nomi, mfo:nd.mfo, telefon_raqami:nd.telefon_raqami, brend:nd.brend,
+    bank_nomi:nd.bank_nomi, mfo:nd.mfo, telefon_raqami:nd.telefon_raqami, brend:nd.brend, pinfl:nd.pinfl,
     shartnoma_raqami: document.getElementById('apvNo').value.trim(), shartnoma_sanasi: document.getElementById('apvDate').value,
-    rahbar: document.getElementById('apvRahbar').value.trim(), filial: document.getElementById('apvFilial').value.trim()});
+    rahbar: document.getElementById('apvRahbar').value.trim(), filial: document.getElementById('apvFilial').value.trim(),
+    login: document.getElementById('apvLogin').value.trim(), parol: document.getElementById('apvParol').value.trim()});
   const fb = document.getElementById('apvForm');
   if(fb) fb.onclick = async ()=>{
-    const nd = readAr(); if(!checkAr(nd)) return;
+    const nd = readAr(); if(!checkAr(nd) || !credCheck()) return;
     ov.querySelectorAll('button').forEach(b=>b.disabled = true);
     try{
       await arSaveEdits(a, nd);
       const dd = toBosh(nd);
       if(mode==='approve'){ const ok = await arDecide(a, 'qabul', {noConfirm:true}); if(!ok) throw new Error('Ariza qabul qilinmadi'); }
+      saveCreds(dd);
       close();
       openBoshFromAriza(a);
       writeForm('bosh', dd);
@@ -6612,6 +6742,7 @@ function openApproveModal(a, alreadyAccepted, modeArg){
       }catch(e){ say('err', 'Xatolik: '+esc(e.message||e)); ov.querySelectorAll('button').forEach(b=>b.disabled = false); }
       return;
     }
+    if(!credCheck()) return;
     const dd = toBosh(nd);
     const miss = validate('bosh', dd);
     if(miss.length){ say('err', 'To‘ldirilmagan: '+esc(miss.join(', '))); return; }
@@ -6625,6 +6756,7 @@ function openApproveModal(a, alreadyAccepted, modeArg){
         say('', 'Ariza qabul qilinmoqda…');
         const ok = await arDecide(a, 'qabul', {noConfirm:true}); if(!ok) throw new Error('Ariza qabul qilinmadi');
       }
+      saveCreds(dd);
       say('', 'Shartnoma tuzilmoqda…');
       dd.no = nextSequenceNumber('bosh');
       const rec = {id:uid(), kind:'main', data:dd, createdAt:new Date().toISOString(), fromAriza:a.id};
@@ -6696,15 +6828,15 @@ function flowStage(a){
   return {k, since, note, bx, hours, late: st.sla > 0 && hours > st.sla};
 }
 function flowAge(h){
-  if(h < 1) return Math.max(1, Math.round(h*60)) + ' daqiqa';
-  if(h < 24) return Math.floor(h) + ' soat';
+  if(h < 1) return Math.max(1, Math.round(h*60)) + ' ' + t('daqiqa');
+  if(h < 24) return Math.floor(h) + ' ' + t('soat');
   const d = Math.floor(h/24), r = Math.floor(h%24);
-  return d + ' kun' + (r ? ' ' + r + ' soat' : '');
+  return d + ' ' + t('kun') + (r ? ' ' + r + ' ' + t('soat') : '');
 }
 function flowPanelMarkup(){
   return `<div class="flow-wrap">
     <div class="card flow-top">
-      <div class="flow-head"><div><p class="sub" style="margin:4px 0 0;">Har bir hamkor arizadan faol hamkorgacha qaysi bosqichda turgani. Muddati o‘tganlar <b class="flow-late-word">qizil</b>.</p></div>
+      <div class="flow-head"><div><p class="sub" style="margin:4px 0 0;">Barcha arizalar bosqichlar bo‘yicha. Kartochkani bossangiz — ariza ochiladi va u yerda tekshirib, qaror qabul qilasiz. Muddati o‘tganlar <b class="flow-late-word">qizil</b>.</p></div>
         <div class="hk-tools"><button type="button" class="hk-tool" id="flowReload">↻ Yangilash</button><div class="hk-search">${ICONS.search}<input type="search" id="flowSearch" placeholder="Tashkilot, STIR yoki ism" value="${esc(flowQuery)}"></div></div></div>
       <div class="flow-sum" id="flowSum"></div>
     </div>
@@ -7034,7 +7166,7 @@ function slaCardMarkup(){
   const s = SLA_CFG.sla;
   const fmt = h=> (h % 24 === 0) ? {v:h/24, u:'kun'} : {v:h, u:'soat'};
   return `<div class="card imp-card" id="slaCard"><h2>Muddatlar va eslatmalar</h2>
-    <p class="sub">Har bir bosqich uchun ruxsat etilgan vaqt. Muddat o‘tsa, «Hamkor yo‘li» panelida kartochka qizil bo‘ladi va mas’ul odamga Telegram orqali eslatma boradi.</p>
+    <p class="sub">Har bir bosqich uchun ruxsat etilgan vaqt. Muddat o‘tsa, «Arizalar monitoringi» sahifasida kartochka qizil bo‘ladi va mas’ul odamga Telegram orqali eslatma boradi.</p>
     <div class="sla-grid">${SLA_LABELS.map(([k,l,who])=>{ const f = fmt(s[k]); return `<div class="sla-row"><div><b>${esc(l)}</b><div class="hk-sub">Eslatma: ${esc(who)}</div></div>
       <div class="sla-in"><input type="number" min="1" step="1" id="sla_${k}" value="${f.v}"><select id="slaU_${k}"><option value="24" ${f.u==='kun'?'selected':''}>kun</option><option value="1" ${f.u==='soat'?'selected':''}>soat</option></select></div></div>`; }).join('')}</div>
     <div class="sla-row sla-time"><div><b>Eslatma yuboriladigan vaqt</b><div class="hk-sub">Shu vaqt oralig‘idan tashqarida eslatma yuborilmaydi; ertalabki ro‘yxat boshlanish vaqtida keladi</div></div>
@@ -7095,7 +7227,8 @@ function rpShortMonth(k){ const [y,m] = k.split('-'); return ['Yan','Fev','Mar',
 function rpPrevMonth(k){ const [y,m] = k.split('-').map(Number); const d = new Date(y, m-2, 1); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}`; }
 function rpInPeriod(iso, mk){ return !!iso && (!mk || rpMonthKey(iso) === mk); }
 function rpHours(a, b){ const x = Date.parse(a), y = Date.parse(b); return isFinite(x) && isFinite(y) && y >= x ? (y - x) / 36e5 : null; }
-function rpDur(h){ if(h == null) return '—'; if(h < 1) return Math.max(1, Math.round(h*60)) + ' daq'; if(h < 48) return (Math.round(h*10)/10).toString().replace('.', ',') + ' soat'; return (Math.round(h/24*10)/10).toString().replace('.', ',') + ' kun'; }
+function rpDurUz(h){ if(h == null) return '—'; if(h < 1) return Math.max(1, Math.round(h*60)) + ' daq'; if(h < 48) return (Math.round(h*10)/10).toString().replace('.', ',') + ' soat'; return (Math.round(h/24*10)/10).toString().replace('.', ',') + ' kun'; }
+function rpDur(h){ if(h == null) return '—'; if(h < 1) return Math.max(1, Math.round(h*60)) + ' ' + t('daq'); if(h < 48) return (Math.round(h*10)/10).toString().replace('.', ',') + ' ' + t('soat'); return (Math.round(h/24*10)/10).toString().replace('.', ',') + ' ' + t('kun'); }
 function rpBoshDate(r){ const d = r.data||{}; const iso = normalizeDateString(d.shartnoma_sanasi||d.qoshimcha_sanasi||d.bonus_sanasi||''); return /^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso : (r.createdAt||''); }
 
 // Har bir ariza uchun voqealar va bosqichlar vaqti
@@ -7166,10 +7299,12 @@ function rpCompute(mk){
   const trend = months.map(m=>({m, yangi: ars.filter(x=> rpMonthKey(x.ev.created)===m).length, faol: ars.filter(x=> rpMonthKey(x.ev.login)===m).length,
     bosh: (DB.bosh||[]).filter(r=> rpMonthKey(rpBoshDate(r))===m).length}));
   // filiallar: shu davrda tuzilgan Bosh shartnomalar va jami hamkorlar
+  // filial nomlari bir xil yoziladi: «Hazorasp Filiali» = «Hazorasp filiali»; bo'sh va «0» qatorlar olinmaydi
   const fil = {};
-  (DB.bosh||[]).forEach(r=>{ const f = String((r.data||{}).filial||'').trim() || 'Ko‘rsatilmagan'; fil[f] = fil[f] || {bosh:0, hamkor:0}; if(rpInPeriod(rpBoshDate(r), mk)) fil[f].bosh++; });
-  (DB.hamkor||[]).forEach(r=>{ const f = String((r.data||{}).filial||'').trim() || 'Ko‘rsatilmagan'; fil[f] = fil[f] || {bosh:0, hamkor:0}; fil[f].hamkor++; });
-  const filial = Object.entries(fil).map(([f,v])=>Object.assign({f}, v)).filter(x=>x.bosh||x.hamkor).sort((p,q)=> q.bosh-p.bosh || q.hamkor-p.hamkor);
+  const fadd = (raw, kind, inc)=>{ const f = normFilial(raw); if(!f) return; const k = f.toLowerCase(); fil[k] = fil[k] || {f, bosh:0, hamkor:0}; if(inc) fil[k][kind]++; };
+  (DB.bosh||[]).forEach(r=> fadd((r.data||{}).filial, 'bosh', rpInPeriod(rpBoshDate(r), mk)));
+  (DB.hamkor||[]).forEach(r=> fadd((r.data||{}).filial, 'hamkor', true));
+  const filial = Object.values(fil).filter(x=>x.bosh||x.hamkor).sort((p,q)=> q.bosh-p.bosh || q.hamkor-p.hamkor);
   // hududlar: shu davrdagi arizalar va jami hamkorlar (manzil bo'yicha)
   const reg = {};
   RP_REGIONS.forEach(([n])=> reg[n] = {ariza:0, faol:0, hamkor:0}); reg['Aniqlanmagan'] = {ariza:0, faol:0, hamkor:0};
@@ -7211,7 +7346,7 @@ function renderReports(){
     ['Qabul qilingan', c.qabul, p && rpDelta(c.qabul, p.qabul)],
     ['Shartnoma imzolangan', c.imzo, p && rpDelta(c.imzo, p.imzo)],
     ['Faol hamkor bo‘ldi', c.faol, p && rpDelta(c.faol, p.faol)],
-    ['Arizadan faolgacha (o‘rtacha)', rpDur(c.ortacha), p && p.ortacha!=null && c.ortacha!=null ? (c.ortacha <= p.ortacha ? `<span class="rp-d up">▼ ${rpDur(p.ortacha - c.ortacha)} tezroq</span>` : `<span class="rp-d down">▲ ${rpDur(c.ortacha - p.ortacha)} sekinroq</span>`) : ''],
+    ['Arizadan faolgacha (o‘rtacha)', rpDur(c.ortacha), p && p.ortacha!=null && c.ortacha!=null ? (c.ortacha <= p.ortacha ? `<span class="rp-d up">▼ ${rpDurUz(p.ortacha - c.ortacha)} tezroq</span>` : `<span class="rp-d down">▲ ${rpDurUz(c.ortacha - p.ortacha)} sekinroq</span>`) : ''],
     ['Rad etilgan', c.rad, p && rpDelta(c.rad, p.rad, true)],
   ];
   const fMax = Math.max(1, R.funnel[0][1]);
@@ -7227,7 +7362,7 @@ function renderReports(){
         <div class="rp-bars">${R.funnel.map(([l,n],i)=>`<div class="rp-bar-row"><span class="rp-bl">${esc(l)}</span><div class="rp-bar"><i style="width:${(n/fMax*100).toFixed(1)}%"></i></div><b data-noi18n>${n}</b><span class="rp-pct" data-noi18n>${i && R.funnel[0][1] ? Math.round(n/R.funnel[0][1]*100)+'%' : ''}</span></div>`).join('')}</div>
         ${R.funnel[0][1] ? '' : '<p class="hk-sub">Bu davrda ariza kelmagan.</p>'}</div>
       <div class="card rp-card"><h3>Qaysi bosqichda ko‘p kutilyapti</h3><p class="sub">Har bir bosqich o‘rtacha qancha vaqt olgani${slow ? ` · eng uzuni: <b>${esc(slow.l)}</b>` : ''}</p>
-        <div class="rp-bars">${R.segs.map(s=>`<div class="rp-bar-row ${slow && s.k===slow.k ? 'slow':''}"><span class="rp-bl">${esc(s.l)}<small>${esc(s.who)}${s.n?` · ${s.n} ta`:''}</small></span><div class="rp-bar"><i style="width:${s.avg!=null?(s.avg/sMax*100).toFixed(1):0}%"></i></div><b data-noi18n>${rpDur(s.avg)}</b><span class="rp-pct" data-noi18n>${s.max!=null?'eng ko‘pi '+rpDur(s.max):''}</span></div>`).join('')}</div></div>
+        <div class="rp-bars">${R.segs.map(s=>`<div class="rp-bar-row ${slow && s.k===slow.k ? 'slow':''}"><span class="rp-bl">${esc(s.l)}<small>${esc(s.who)}${s.n?` · ${s.n} ta`:''}</small></span><div class="rp-bar"><i style="width:${s.avg!=null?(s.avg/sMax*100).toFixed(1):0}%"></i></div><b data-noi18n>${rpDur(s.avg)}</b><span class="rp-pct" data-noi18n>${s.max!=null?t('eng ko‘pi')+' '+rpDur(s.max):''}</span></div>`).join('')}</div></div>
     </div>
     <div class="card rp-card"><h3>Oxirgi 12 oy</h3><p class="sub">Oyma-oy: kelgan arizalar, faol bo‘lgan hamkorlar va tuzilgan Bosh shartnomalar</p>
       <div class="rp-legend"><span><i class="k1"></i>Yangi arizalar</span><span><i class="k2"></i>Faol hamkor</span><span><i class="k3"></i>Bosh shartnomalar</span></div>
@@ -7236,9 +7371,9 @@ function renderReports(){
         <span data-noi18n>${rpShortMonth(t.m)}</span></div>`).join('')}</div></div>
     <div class="rp-cols">
       <div class="card rp-card"><h3>Filiallar bo‘yicha</h3><p class="sub">${mk?'Shu oyda':'Jami'} tuzilgan Bosh shartnomalar va ro‘yxatdagi hamkorlar</p>
-        ${R.filial.length ? `<table class="srv-table"><thead><tr><th>Filial</th><th style="text-align:right">Shartnomalar</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${R.filial.map(f=>`<tr><td data-noi18n>${esc(f.f)}<div class="rp-mini"><i style="width:${(f.bosh/filMax*100).toFixed(1)}%"></i></div></td><td style="text-align:right" data-noi18n><b>${f.bosh}</b></td><td style="text-align:right" data-noi18n>${f.hamkor}</td></tr>`).join('')}</tbody></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+        ${R.filial.length ? `<table class="srv-table"><thead><tr><th style="width:36px">№</th><th>Filial</th><th style="text-align:right">Shartnomalar</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${R.filial.map((f,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td data-noi18n>${esc(f.f)}<div class="rp-mini"><i style="width:${(f.bosh/filMax*100).toFixed(1)}%"></i></div></td><td style="text-align:right" data-noi18n><b>${f.bosh}</b></td><td style="text-align:right" data-noi18n>${f.hamkor}</td></tr>`).join('')}</tbody></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
       <div class="card rp-card"><h3>Hududlar bo‘yicha</h3><p class="sub">Manzil bo‘yicha aniqlangan: ${mk?'shu oydagi':'barcha'} arizalar, faol bo‘lganlar va jami hamkorlar</p>
-        ${R.hudud.length ? `<table class="srv-table"><thead><tr><th>Hudud</th><th style="text-align:right">Arizalar</th><th style="text-align:right">Faol</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${R.hudud.map(h=>`<tr><td>${esc(h.n)}</td><td style="text-align:right" data-noi18n><b>${h.ariza}</b></td><td style="text-align:right" data-noi18n>${h.faol}</td><td style="text-align:right" data-noi18n>${h.hamkor}</td></tr>`).join('')}</tbody></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+        ${R.hudud.length ? `<table class="srv-table"><thead><tr><th style="width:36px">№</th><th>Hudud</th><th style="text-align:right">Arizalar</th><th style="text-align:right">Faol</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${R.hudud.map((h,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td>${esc(h.n)}</td><td style="text-align:right" data-noi18n><b>${h.ariza}</b></td><td style="text-align:right" data-noi18n>${h.faol}</td><td style="text-align:right" data-noi18n>${h.hamkor}</td></tr>`).join('')}</tbody></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
     </div>
     <div class="card rp-card"><h3>Tuzilgan hujjatlar</h3><div class="rp-docs">
       <div><b data-noi18n>${c.bosh}</b><span>Bosh shartnoma</span>${p?rpDelta(c.bosh,p.bosh):''}</div>
@@ -7267,8 +7402,8 @@ function rpExcel(){
   add('Voronka', R.funnel.map(([l,n])=>({'Bosqich':l, 'Soni':n, 'Ulushi, %':R.funnel[0][1]?Math.round(n/R.funnel[0][1]*100):''})), [26,10,10]);
   add('Bosqichlar vaqti', R.segs.map(s=>({'Bosqich':s.l, 'Mas’ul':s.who, 'Soni':s.n, 'O‘rtacha (soat)':s.avg!=null?+s.avg.toFixed(1):'', 'Mediana (soat)':s.med!=null?+s.med.toFixed(1):'', 'Eng ko‘pi (soat)':s.max!=null?+s.max.toFixed(1):''})), [28,12,8,14,14,14]);
   add('12 oy', R.trend.map(t=>({'Oy':rpMonthLabel(t.m), 'Yangi arizalar':t.yangi, 'Faol hamkor':t.faol, 'Bosh shartnomalar':t.bosh})), [16,14,12,16]);
-  add('Filiallar', R.filial.map(f=>({'Filial':f.f, 'Shartnomalar':f.bosh, 'Hamkorlar':f.hamkor})), [28,14,12]);
-  add('Hududlar', R.hudud.map(h=>({'Hudud':h.n, 'Arizalar':h.ariza, 'Faol':h.faol, 'Hamkorlar':h.hamkor})), [20,10,8,12]);
+  add('Filiallar', R.filial.map((f,i)=>({'№':i+1, 'Filial':f.f, 'Shartnomalar':f.bosh, 'Hamkorlar':f.hamkor})), [5,28,14,12]);
+  add('Hududlar', R.hudud.map((h,i)=>({'№':i+1, 'Hudud':h.n, 'Arizalar':h.ariza, 'Faol':h.faol, 'Hamkorlar':h.hamkor})), [5,20,10,8,12]);
   add('Arizalar', R.coh.map(x=>({'Tashkilot':(x.a.data||{}).tashkilot_nomi||'', 'STIR':(x.a.data||{}).stir||'', 'Hudud':rpRegion((x.a.data||{}).manzil), 'Yuboruvchi':x.a.userIsm||'',
     'Status':(AR_STATUS[x.a.status]||{}).admin||x.a.status, 'Kelgan':arFmtDT(x.ev.created), 'Qabul':x.ev.qabul?arFmtDT(x.ev.qabul):'', 'Imzo':x.ev.imzo?arFmtDT(x.ev.imzo):'', 'Faol':x.ev.login?arFmtDT(x.ev.login):'',
     'Arizadan faolgacha (kun)':x.ev.login?+(rpHours(x.ev.created,x.ev.login)/24).toFixed(1):''})), [34,16,14,20,26,17,17,17,17,12]);
@@ -7284,6 +7419,2106 @@ async function bindReports(){
   await flowLoad();
   if(activeTab==='hisobot') renderReports();
 }
+
+/* v11: to‘liq tarjima lug‘ati (rus, ingliz). Kalitlarda {n} — raqam, «{q}» — nom o‘rni. */
+Object.assign(I18N, {
+"(BirZum Nasiya)": [
+"(BirZum Nasiya)",
+"(BirZum Nasiya)"
+],
+"(bular yo‘q bo‘lsa, {n} oylik X/R aylanmasi olinadi)": [
+"(если их нет — берётся оборот по р/с за {n} месяцев)",
+"(if unavailable, a {n}-month account turnover statement is taken)"
+],
+"(kamida {n} ta)": [
+"(не менее {n} шт.)",
+"(at least {n})"
+],
+"(shartnomalarda —": [
+"(в договорах —",
+"(in contracts —"
+],
+"(Запустить) tugmasini bosing.": [
+"(Запустить).",
+"(Start)."
+],
+") bo‘yicha solishtiriladi.": [
+") сравниваются.",
+") are compared."
+],
+", serverga o‘tgan kuni bajariladi.": [
+", выполняется в день перехода на сервер.",
+", done on the day of moving to the server."
+],
+". Bo‘sh katak eski ma’lumotni o‘chirmaydi.": [
+". Пустая ячейка не удаляет старые данные.",
+". An empty cell does not erase old data."
+],
+"/ {n} ta hujjat": [
+"/ {n} документов",
+"/ {n} documents"
+],
+"Admin": [
+"Админ",
+"Admin"
+],
+"Admin arizani ko‘rib chiqishi": [
+"Рассмотрение заявки админом",
+"Admin reviews the application"
+],
+"Admin izohi:": [
+"Комментарий админа:",
+"Admin comment:"
+],
+"Admin ko‘rib chiqishi": [
+"Рассмотрение админом",
+"Admin review"
+],
+"Admin ma’lumotlarni tuzatdi": [
+"Админ исправил данные",
+"Admin corrected the data"
+],
+"Admin · {n} ta": [
+"Админ · {n}",
+"Admin · {n}"
+],
+"Adminlar": [
+"Админы",
+"Admins"
+],
+"Akkauntingiz bormi?": [
+"Уже есть аккаунт?",
+"Already have an account?"
+],
+"Andijon": [
+"Андижан",
+"Andijan"
+],
+"Ariza foydalanuvchiga tuzatish uchun qaytarildi.": [
+"Заявка возвращена пользователю на доработку.",
+"The application was returned to the user for corrections."
+],
+"Ariza keldi": [
+"Заявка поступила",
+"Application received"
+],
+"Ariza ma’lumotlari": [
+"Данные заявки",
+"Application details"
+],
+"Ariza ma’lumotlarini tahrirladi": [
+"Отредактировал данные заявки",
+"Edited application details"
+],
+"Ariza ma’lumotlarini tahrirlash": [
+"Редактирование данных заявки",
+"Edit application details"
+],
+"Ariza qabul qilindi. Hamkor ro‘yxatga qo‘shildi — endi Bosh shartnoma bo‘limida STIR orqali shartnoma tuzishingiz mumkin.": [
+"Заявка принята. Партнёр добавлен в список — теперь можно оформить договор по ИНН в разделе «Основной договор».",
+"Application accepted. The partner was added to the list — you can now create a contract by TIN in the Main contract section."
+],
+"Ariza qabul qilinmoqda…": [
+"Заявка принимается…",
+"Accepting the application…"
+],
+"Ariza tuzatish uchun foydalanuvchiga qaytarilsinmi?": [
+"Вернуть заявку пользователю на доработку?",
+"Return the application to the user for corrections?"
+],
+"Ariza yubordi": [
+"Отправил заявку",
+"Submitted an application"
+],
+"Arizada kamchiliklar bor. Izohni o‘qib, «{q}» tugmasini bosing.": [
+"В заявке есть недочёты. Прочитайте комментарий и нажмите «{q}».",
+"The application has issues. Read the comment and press «{q}»."
+],
+"Arizadan faol hamkorgacha: har bir hamkor qaysi bosqichda va kimning navbati": [
+"От заявки до активного партнёра: на каком этапе каждый партнёр и чья очередь",
+"From application to active partner: which stage each partner is at and whose turn it is"
+],
+"Arizadan faolgacha (o‘rtacha)": [
+"От заявки до активности (в среднем)",
+"Application to active (average)"
+],
+"Arizalar monitoringi": [
+"Мониторинг заявок",
+"Applications monitoring"
+],
+"Arizalar qayergacha yetdi": [
+"До какого этапа дошли заявки",
+"How far applications got"
+],
+"Arizalari": [
+"Заявки",
+"Applications"
+],
+"Arizangiz qabul qilindi va ko‘rib chiqilmoqda. Natija shu yerda ko‘rinadi.": [
+"Ваша заявка получена и рассматривается. Результат появится здесь.",
+"Your application has been received and is under review. The result will appear here."
+],
+"Arizani qabul qildi": [
+"Принял заявку",
+"Accepted the application"
+],
+"Arizani tuzatib qayta yubordi": [
+"Исправил и повторно отправил заявку",
+"Corrected and resubmitted the application"
+],
+"Arizani tuzatish va qayta yuborish": [
+"Исправить и отправить заявку повторно",
+"Correct and resubmit the application"
+],
+"Arizani tuzatishga qaytardi": [
+"Вернул заявку на доработку",
+"Returned the application for corrections"
+],
+"Avval ma’lumotlarni tekshiring va kerak bo‘lsa tuzating. So‘ng ariza qabul qilinadi, hamkor ro‘yxatga qo‘shiladi, Bosh kelishuv shu ma’lumotlardan tuziladi va PDF buxgalterga yuboriladi.": [
+"Сначала проверьте данные и при необходимости исправьте. Затем заявка будет принята, партнёр добавлен в список, основной договор составлен по этим данным и PDF отправлен бухгалтеру.",
+"First check the data and correct it if needed. Then the application is accepted, the partner is added to the list, the main contract is built from this data and the PDF is sent to the accountant."
+],
+"Bank": [
+"Банк",
+"Bank"
+],
+"Bank MFO": [
+"МФО банка",
+"Bank MFO"
+],
+"Bank hisob raqami": [
+"Расчётный счёт",
+"Bank account number"
+],
+"Bank hisob-raqami, bank MFOsi": [
+"Расчётный счёт и МФО банка",
+"Bank account and bank MFO"
+],
+"Barcha arizalar bosqichlar bo‘yicha. Kartochkani bossangiz — ariza ochiladi va u yerda tekshirib, qaror qabul qilasiz. Muddati o‘tganlar": [
+"Все заявки по этапам. Нажмите на карточку — откроется заявка, где можно проверить её и принять решение. Просроченные —",
+"All applications by stage. Click a card to open the application, review it and decide. Overdue ones are"
+],
+"Barcha foydalanuvchilar": [
+"Все пользователи",
+"All users"
+],
+"Barcha harakatlar": [
+"Все действия",
+"All actions"
+],
+"Barcha holatlar": [
+"Все статусы",
+"All statuses"
+],
+"Barcha ma’lumotlar": [
+"Все данные",
+"All data"
+],
+"Barcha {n} ta ariza bo‘yicha": [
+"По всем {n} заявкам",
+"Across all {n} applications"
+],
+"Bazaga yozilgan barcha bosh kelishuv shartnomasilar": [
+"Все основные договоры в базе",
+"All main contracts in the database"
+],
+"Bazaga yozilgan barcha qo‘shimcha kelishuv shartnomasilar": [
+"Все дополнительные соглашения в базе",
+"All supplementary agreements in the database"
+],
+"Bekor": [
+"Отмена",
+"Cancel"
+],
+"Bekor / rad": [
+"Отменено / отклонено",
+"Cancelled / rejected"
+],
+"Bekor qilindi": [
+"Отменено",
+"Cancelled"
+],
+"Bekor qilingan": [
+"Отменённые",
+"Cancelled"
+],
+"Binafsha": [
+"Фиолетовый",
+"Purple"
+],
+"BirZum yashil": [
+"Зелёный BirZum",
+"BirZum green"
+],
+"Bonus / bekor qilish": [
+"Бонус / отмена",
+"Bonus / cancellation"
+],
+"Bonus shartnomalari va bekor qilish kelishuvlari": [
+"Бонусные договоры и соглашения об отмене",
+"Bonus contracts and cancellation agreements"
+],
+"Bosh shartnomalar": [
+"Основные договоры",
+"Main contracts"
+],
+"Boshqa rang": [
+"Другой цвет",
+"Other colour"
+],
+"Botda": [
+"В боте нажмите",
+"In the bot press"
+],
+"Bo‘lim": [
+"Раздел",
+"Section"
+],
+"Bu STIR bo‘yicha onlayn ariza yuborilmagan.": [
+"По этому ИНН онлайн-заявка не отправлялась.",
+"No online application was sent for this TIN."
+],
+"Bu bo‘limda shartnoma yo‘q.": [
+"В этом разделе нет договоров.",
+"There are no contracts in this section."
+],
+"Bu hamkor bilan № BN-{n} Bosh shartnoma bor. Yangi rekvizitlar bilan Qo‘shimcha kelishuv tayyorlansinmi?": [
+"С этим партнёром есть основной договор № BN-{n}. Подготовить доп. соглашение с новыми реквизитами?",
+"This partner has main contract № BN-{n}. Prepare a supplementary agreement with the new details?"
+],
+"Bu ma’lumotlarni unga xabar qilib ham yuborib qo‘yilsinmi? (U tizimga kirganda «{q}» bo‘limida ko‘radi.)": [
+"Отправить ему эти данные также сообщением? (Он увидит их в разделе «{q}» после входа.)",
+"Also send these details to them as a message? (They will see it in «{q}» after logging in.)"
+],
+"Bu sozlamalar faqat sizning qurilmangizdagi ko‘rinishga ta’sir qiladi.": [
+"Эти настройки влияют только на вид на вашем устройстве.",
+"These settings only affect the view on your device."
+],
+"Butun davr": [
+"За весь период",
+"All time"
+],
+"Buxgalter": [
+"Бухгалтер",
+"Accountant"
+],
+"Buxgalter shartnomani Didox’ga yuborishi": [
+"Бухгалтер отправляет договор в Didox",
+"Accountant sends the contract via Didox"
+],
+"Buxgalter · {n} ta": [
+"Бухгалтер · {n}",
+"Accountant · {n}"
+],
+"Buxgalterda": [
+"У бухгалтера",
+"With accountant"
+],
+"Buxgalterga shartnoma yuborilmagan.": [
+"Договор бухгалтеру не отправлялся.",
+"No contract was sent to the accountant."
+],
+"Buxgalterga yuborildi": [
+"Отправлено бухгалтеру",
+"Sent to accountant"
+],
+"Buxgalterga yuborilmoqda…": [
+"Отправляется бухгалтеру…",
+"Sending to accountant…"
+],
+"Buxgalteriya": [
+"Бухгалтерия",
+"Accounting"
+],
+"Buxgalteriya holati": [
+"Статус в бухгалтерии",
+"Accounting status"
+],
+"Buxgalteriya shartnomalari": [
+"Договоры бухгалтерии",
+"Accounting contracts"
+],
+"Buxgalteriyaga yuborilganlar": [
+"Отправленные в бухгалтерию",
+"Sent to accounting"
+],
+"Buxgalterlar": [
+"Бухгалтеры",
+"Accountants"
+],
+"Buxoro": [
+"Бухара",
+"Bukhara"
+],
+"Chat xabarlari": [
+"Сообщения чата",
+"Chat messages"
+],
+"Davom etish uchun login va parolni kiriting": [
+"Введите логин и пароль, чтобы продолжить",
+"Enter your login and password to continue"
+],
+"Davr": [
+"Период",
+"Period"
+],
+"Didoxdan yuborildi": [
+"Отправлен через Didox",
+"Sent via Didox"
+],
+"Didoxga yuborildi": [
+"Отправлено в Didox",
+"Sent to Didox"
+],
+"Didox’ga yuborildi": [
+"Отправлено в Didox",
+"Sent to Didox"
+],
+"Didox’ga yuborish": [
+"Отправка в Didox",
+"Sending via Didox"
+],
+"Do‘kon brend nomi": [
+"Бренд магазина",
+"Store brand name"
+],
+"Do‘kon ichida turib bosing — xarita havolasi avtomatik yoziladi.": [
+"Нажмите, находясь в магазине — ссылка на карту запишется автоматически.",
+"Press while inside the store — the map link will be filled in automatically."
+],
+"Eslatma yuboriladigan vaqt": [
+"Время отправки напоминаний",
+"Reminder sending hours"
+],
+"Eslatma: Admin": [
+"Напоминание: админу",
+"Reminder: admin"
+],
+"Eslatma: Buxgalter": [
+"Напоминание: бухгалтеру",
+"Reminder: accountant"
+],
+"Eslatma: Hamkor va admin": [
+"Напоминание: партнёру и админу",
+"Reminder: partner and admin"
+],
+"Excel/CSV fayldan ma’lumot yuklash.": [
+"Загрузка данных из файла Excel/CSV.",
+"Load data from an Excel/CSV file."
+],
+"Familiya Ism Otasining ismi": [
+"Фамилия Имя Отчество",
+"Surname Name Patronymic"
+],
+"Familiya Ism Sharif to‘liq": [
+"Фамилия Имя Отчество полностью",
+"Full surname, name and patronymic"
+],
+"Faol hamkor bo‘ldi": [
+"Стали активными",
+"Became active"
+],
+"Faoliyat joyi ijara shartnomasi yoki o‘ziga tegishli ekanligini asoslovchi hujjat ya’ni kadastr pasporti yoki ko‘chirmasi": [
+"Договор аренды места деятельности или документ, подтверждающий собственность, т.е. кадастровый паспорт или выписка",
+"Lease agreement for the business premises or a document proving ownership, i.e. cadastral passport or extract"
+],
+"Faoliyat joyi lokatsiyasi": [
+"Локация места деятельности",
+"Business location"
+],
+"Faoliyat joyi lokatsiyasi va faoliyat manzili": [
+"Локация и адрес места деятельности",
+"Business location and address"
+],
+"Faoliyat joyi o‘ziga tegishli ekanini asoslovchi hujjat": [
+"Документ, подтверждающий, что место деятельности принадлежит ему",
+"Document proving the premises belong to them"
+],
+"Faoliyat manzili": [
+"Адрес деятельности",
+"Business address"
+],
+"Faoliyat suratlari — ichki va tashqi tarafdan": [
+"Фото места деятельности — внутри и снаружи",
+"Photos of the premises — inside and outside"
+],
+"Faoliyat suratlari, ichki va tashqi tarafdan ({n} {n} ta)": [
+"Фото места деятельности, внутри и снаружи ({n}–{n} шт.)",
+"Photos of the premises, inside and outside ({n}–{n})"
+],
+"Faqat bonusni bekor qilish hujjatlari — fayldagi barcha qatorlar «{q}» deb yoziladi.": [
+"Только документы об отмене бонуса — все строки файла записываются как «{q}».",
+"Only bonus cancellation documents — all rows in the file are saved as «{q}»."
+],
+"Faqat ko‘rish": [
+"Только просмотр",
+"View only"
+],
+"Farg‘ona": [
+"Фергана",
+"Fergana"
+],
+"Fayl qo‘shish": [
+"Добавить файл",
+"Add file"
+],
+"Fayldagi har bir qator saytdagi yozuv bilan": [
+"Каждая строка файла с записью на сайте",
+"Each row of the file with the record on the site"
+],
+"Fayldagi ustun sarlavhalari forma maydonlari nomi bilan mos bo‘lsin (masalan: «{q}», «{q}» va h.k.). № ustuni kerak emas — u avtomatik tayinlanadi.": [
+"Заголовки столбцов в файле должны совпадать с названиями полей формы (например: «{q}», «{q}» и т.д.). Столбец № не нужен — он присваивается автоматически.",
+"Column headers in the file must match the form field names (e.g. «{q}», «{q}», etc.). The № column is not needed — it is assigned automatically."
+],
+"Fayllar (ariza hujjatlari, PDF, chat rasmlari)": [
+"Файлы (документы заявок, PDF, фото чата)",
+"Files (application documents, PDFs, chat images)"
+],
+"Fayllar hamkorga ko‘chirilmoqda: {n} / {n}": [
+"Файлы переносятся партнёру: {n} / {n}",
+"Copying files to the partner: {n} / {n}"
+],
+"Filiallar bo‘yicha": [
+"По филиалам",
+"By branch"
+],
+"Filialni tanlang.": [
+"Выберите филиал.",
+"Select a branch."
+],
+"Firebase’dagi": [
+"в Firebase",
+"in Firebase"
+],
+"Firebase’dan ko‘chirish": [
+"Перенос из Firebase",
+"Move from Firebase"
+],
+"Firuza": [
+"Бирюзовый",
+"Turquoise"
+],
+"Foydalanuvchi qo‘shdi": [
+"Добавил пользователя",
+"Added a user"
+],
+"Hajmi": [
+"Размер",
+"Size"
+],
+"Hamkor": [
+"Партнёр",
+"Partner"
+],
+"Hamkor (ariza yuboruvchi)": [
+"Партнёр (подаёт заявку)",
+"Partner (submits applications)"
+],
+"Hamkor akkaunti": [
+"Аккаунт партнёра",
+"Partner account"
+],
+"Hamkor arizani tuzatishi": [
+"Партнёр исправляет заявку",
+"Partner corrects the application"
+],
+"Hamkor fayllari": [
+"Файлы партнёров",
+"Partner files"
+],
+"Hamkor imzosi (Didox)": [
+"Подпись партнёра (Didox)",
+"Partner signature (Didox)"
+],
+"Hamkor imzosini kutish": [
+"Ожидание подписи партнёра",
+"Waiting for partner signature"
+],
+"Hamkor kabineti": [
+"Кабинет партнёра",
+"Partner portal"
+],
+"Hamkor kabineti: hujjatlar ro‘yxati, ariza yuborish, arizalar holati va admin bilan yozishma.": [
+"Кабинет партнёра: список документов, отправка заявки, статус заявок и переписка с админом.",
+"Partner portal: document list, application submission, application status and chat with the admin."
+],
+"Hamkor kiritgan ma’lumotlardagi xatolarni shu yerda tuzating. O‘zgarishlar ariza tarixida ko‘rinadi.": [
+"Исправьте здесь ошибки в данных, введённых партнёром. Изменения видны в истории заявки.",
+"Correct mistakes in the partner's data here. Changes are shown in the application history."
+],
+"Hamkor ma’lumotlarini o‘zgartirdi": [
+"Изменил данные партнёра",
+"Changed partner details"
+],
+"Hamkor tuzatishi": [
+"Исправление партнёром",
+"Partner corrections"
+],
+"Hamkor · {n} ta": [
+"Партнёр · {n}",
+"Partner · {n}"
+],
+"Hamkorlar ro‘yxatiga qo‘shilgan.": [
+"Добавлен в список партнёров.",
+"Added to the partner list."
+],
+"Hamkorlar, Bosh / Qo‘shimcha / Bonus shartnomalar": [
+"Партнёры, основные / доп. / бонусные договоры",
+"Partners, main / supplementary / bonus contracts"
+],
+"Hamkorlarni faqat ko‘radi (tahrirlay olmaydi, login/parollarni ko‘rmaydi), admin yuborgan shartnomalar statusini yuritadi, admin bilan yozishadi.": [
+"Только просматривает партнёров (не может редактировать, не видит логины/пароли), ведёт статусы договоров от админа, переписывается с админом.",
+"Views partners only (cannot edit, cannot see logins/passwords), manages statuses of contracts sent by the admin, chats with the admin."
+],
+"Hamkorlik shartnomasi uchun ariza yuborish maqsadida akkaunt yarating": [
+"Создайте аккаунт, чтобы подать заявку на договор о партнёрстве",
+"Create an account to apply for a partnership contract"
+],
+"Hamkormisiz va akkauntingiz yo‘qmi?": [
+"Вы партнёр и у вас нет аккаунта?",
+"Are you a partner without an account?"
+],
+"Hamkorni ochish →": [
+"Открыть партнёра →",
+"Open partner →"
+],
+"Hamkorning tizimga kirishi (login va parol)": [
+"Вход партнёра в систему (логин и пароль)",
+"Partner system access (login and password)"
+],
+"Har bir bosqich o‘rtacha qancha vaqt olgani · eng uzuni:": [
+"Сколько в среднем занимает каждый этап · самый долгий:",
+"Average time per stage · longest:"
+],
+"Har bir bosqich uchun ruxsat etilgan vaqt. Muddat o‘tsa, «{q}» sahifasida kartochka qizil bo‘ladi va mas’ul odamga Telegram orqali eslatma boradi.": [
+"Допустимое время для каждого этапа. Если срок истёк, карточка в разделе «{q}» станет красной, а ответственному придёт напоминание в Telegram.",
+"Allowed time for each stage. When it is exceeded, the card in «{q}» turns red and the responsible person gets a Telegram reminder."
+],
+"Har bir hujjat tagidagi «{q}» yoki «{q}» tugmasini bosing. Noto‘g‘ri belgilanganlar qaytarishda hamkorga avtomatik yoziladi.": [
+"Нажмите «{q}» или «{q}» под каждым документом. Отмеченные как неверные автоматически попадут в комментарий партнёру при возврате.",
+"Press «{q}» or «{q}» under each document. Ones marked wrong are automatically added to the comment for the partner on return."
+],
+"Har bir hujjatni rasmga olib yoki PDF ko‘rinishida yuklang. Rasmlar avtomatik ixchamlashtiriladi.": [
+"Сфотографируйте каждый документ или загрузите в PDF. Фото сжимаются автоматически.",
+"Photograph each document or upload it as PDF. Images are compressed automatically."
+],
+"Harakat": [
+"Действие",
+"Action"
+],
+"Harakatlar jurnali": [
+"Журнал действий",
+"Activity log"
+],
+"Hisobotlar": [
+"Отчёты",
+"Reports"
+],
+"Hozir jarayonda:": [
+"Сейчас в процессе:",
+"In progress now:"
+],
+"Hozircha ariza yubormagansiz. «{q}» tugmasini bosing.": [
+"Вы ещё не отправляли заявку. Нажмите «{q}».",
+"You have not submitted an application yet. Press «{q}»."
+],
+"Hozircha buxgalterga shartnoma yuborilmagan. Shartnomani yaratib, «{q}» tugmasini bosing.": [
+"Бухгалтеру ещё не отправлялись договоры. Создайте договор и нажмите «{q}».",
+"No contracts have been sent to the accountant yet. Create a contract and press «{q}»."
+],
+"Hozircha xabar yo‘q. Birinchi xabarni yozing.": [
+"Сообщений пока нет. Напишите первое сообщение.",
+"No messages yet. Write the first one."
+],
+"Hozircha yozuv yo‘q. Bundan keyingi barcha o‘zgarishlar shu yerda ko‘rinadi.": [
+"Записей пока нет. Все дальнейшие изменения будут видны здесь.",
+"No records yet. All future changes will appear here."
+],
+"Hudud": [
+"Регион",
+"Region"
+],
+"Hududlar bo‘yicha": [
+"По регионам",
+"By region"
+],
+"Hujjatni tekshirdi": [
+"Проверил документ",
+"Checked a document"
+],
+"Ijara shartnomasi yoki kadastr bo‘lmasa yuklanadi": [
+"Загружается, если нет договора аренды или кадастра",
+"Upload if there is no lease agreement or cadastre"
+],
+"Ijara shartnomasi yoki kadastr pasporti / ko‘chirmasi": [
+"Договор аренды или кадастровый паспорт / выписка",
+"Lease agreement or cadastral passport / extract"
+],
+"Import faylida ixtiyoriy «{q}» ustuni bo‘lishi mumkin — qiymatida «{q}» so‘zi bo‘lsa, yozuv bonusni bekor qilish sifatida saqlanadi, aks holda oddiy Bonus deb qabul qilinadi.": [
+"В файле импорта может быть необязательный столбец «{q}» — если в значении есть слово «{q}», запись сохраняется как отмена бонуса, иначе как обычный бонус.",
+"The import file may have an optional «{q}» column — if its value contains «{q}», the record is saved as a bonus cancellation, otherwise as a regular bonus."
+],
+"Imzo bo‘lmasa — adminga xabar": [
+"Нет подписи — сообщить админу",
+"No signature — notify admin"
+],
+"Imzodan keyin login berish": [
+"Выдача логина после подписи",
+"Issue login after signing"
+],
+"Imzolandi": [
+"Подписан",
+"Signed"
+],
+"Indigo": [
+"Индиго",
+"Indigo"
+],
+"Interfeys tili": [
+"Язык интерфейса",
+"Interface language"
+],
+"Ism": [
+"Имя",
+"Name"
+],
+"Ism va familiya": [
+"Имя и фамилия",
+"Name and surname"
+],
+"Jami": [
+"Итого",
+"Total"
+],
+"Jami tuzilgan Bosh shartnomalar va ro‘yxatdagi hamkorlar": [
+"Всего заключено основных договоров и партнёров в списке",
+"Total main contracts and partners in the list"
+],
+"Jami yuborilgan": [
+"Всего отправлено",
+"Total sent"
+],
+"Jami: {n} ta": [
+"Всего: {n}",
+"Total: {n}"
+],
+"Jarayon": [
+"Процесс",
+"Progress"
+],
+"Jarayonda": [
+"В процессе",
+"In progress"
+],
+"Kamida {n} ta ({n}–{n} ta) rasm": [
+"Не менее {n} фото ({n}–{n} шт.)",
+"At least {n} photos ({n}–{n})"
+],
+"Kim": [
+"Кто",
+"Who"
+],
+"Ko‘k": [
+"Синий",
+"Blue"
+],
+"Kunduzgi / tungi rejim": [
+"Дневной / ночной режим",
+"Light / dark mode"
+],
+"Login berish": [
+"Выдача логина",
+"Issuing login"
+],
+"Login va parol hamkor kartochkasida saqlanadi (buxgalter ko‘rmaydi). «{q}» bosilganda ular hamkorga xabar va Telegram orqali avtomatik yuboriladi.": [
+"Логин и пароль хранятся в карточке партнёра (бухгалтер их не видит). При нажатии «{q}» они автоматически отправляются партнёру сообщением и в Telegram.",
+"The login and password are stored in the partner card (the accountant cannot see them). When «{q}» is pressed they are sent to the partner automatically by message and Telegram."
+],
+"Login va parollar hamkorga yuborildi": [
+"Логин и пароль отправлены партнёру",
+"Login and password sent to partner"
+],
+"Login va parollar sizga yuborildi": [
+"Логин и пароль отправлены вам",
+"Your login and password have been sent"
+],
+"Loginingiz": [
+"Ваш логин",
+"Your login"
+],
+"Manzil bo‘yicha aniqlangan: barcha arizalar, faol bo‘lganlar va jami hamkorlar": [
+"Определено по адресу: все заявки, ставшие активными и все партнёры",
+"Detected from address: all applications, activated and total partners"
+],
+"Manzil bo‘yicha aniqlangan: shu oydagi arizalar, faol bo‘lganlar va jami hamkorlar": [
+"Определено по адресу: заявки за месяц, ставшие активными и все партнёры",
+"Detected from address: this month's applications, activated and total partners"
+],
+"Marketing mukofoti (bonus) kelishuvi yoki uni bekor qilish hujjatini shakllantiring.": [
+"Оформите соглашение о маркетинговом вознаграждении (бонусе) или документ о его отмене.",
+"Create a marketing reward (bonus) agreement or a cancellation document."
+],
+"Marketing mukofoti (bonus) kelishuvlari. «{q}» ustunida «{q}» so‘zi bo‘lsa, bekor qilish deb olinadi.": [
+"Соглашения о маркетинговом вознаграждении (бонусе). Если в столбце «{q}» есть слово «{q}», запись считается отменой.",
+"Marketing reward (bonus) agreements. If the «{q}» column contains «{q}», the record is treated as a cancellation."
+],
+"Masalan: Aliyeva Dilnoza": [
+"Например: Алиева Дильноза",
+"E.g. Aliyeva Dilnoza"
+],
+"Masalan: Karimov Sardor": [
+"Например: Каримов Сардор",
+"E.g. Karimov Sardor"
+],
+"Mavjud shartnomaga qo‘shimcha kelishuv ({n}, {n}–{n}-bandlar) shakllantiring.": [
+"Оформите дополнительное соглашение к существующему договору (пункты {n}, {n}–{n}).",
+"Create a supplementary agreement to an existing contract (clauses {n}, {n}–{n})."
+],
+"Ma’lumotlar saqlanmoqda…": [
+"Данные сохраняются…",
+"Saving data…"
+],
+"Ma’lumotlar tahrirlandi": [
+"Данные отредактированы",
+"Data edited"
+],
+"Mening arizalarim": [
+"Мои заявки",
+"My applications"
+],
+"Menyu": [
+"Меню",
+"Menu"
+],
+"Menyuni kichraytirish / kattalashtirish": [
+"Свернуть / развернуть меню",
+"Collapse / expand menu"
+],
+"Muddatlar va eslatmalar": [
+"Сроки и напоминания",
+"Deadlines and reminders"
+],
+"Namangan": [
+"Наманган",
+"Namangan"
+],
+"Navbat: admin (login) ·": [
+"Очередь: админ (логин) ·",
+"Turn: admin (login) ·"
+],
+"Navbat: admin (login) · muddat {n} kun": [
+"Очередь: админ (логин) · срок {n} дн.",
+"Turn: admin (login) · deadline {n} d"
+],
+"Navbat: admin · muddat {n} kun": [
+"Очередь: админ · срок {n} дн.",
+"Turn: admin · deadline {n} d"
+],
+"Navbat: buxgalter · muddat {n} kun": [
+"Очередь: бухгалтер · срок {n} дн.",
+"Turn: accountant · deadline {n} d"
+],
+"Navbat: hamkor imzosi · muddat {n} kun": [
+"Очередь: подпись партнёра · срок {n} дн.",
+"Turn: partner signature · deadline {n} d"
+],
+"Navbat: hamkor · muddat {n} kun": [
+"Очередь: партнёр · срок {n} дн.",
+"Turn: partner · deadline {n} d"
+],
+"Navbat: —": [
+"Очередь: —",
+"Turn: —"
+],
+"Nima noto‘g‘ri? (masalan: rasm xira)": [
+"Что не так? (например: фото размыто)",
+"What is wrong? (e.g. blurry photo)"
+],
+"Nomi, STIR, brend, rahbar…": [
+"Название, ИНН, бренд, руководитель…",
+"Name, TIN, brand, head…"
+],
+"Noyabr {n}": [
+"Ноябрь {n}",
+"November {n}"
+],
+"O/K (oilaviy korxona)": [
+"СП (семейное предприятие)",
+"FE (family enterprise)"
+],
+"Oltin (Fortuna)": [
+"Золотой (Fortuna)",
+"Gold (Fortuna)"
+],
+"Oxirgi kirish": [
+"Последний вход",
+"Last login"
+],
+"Oxirgi o‘zgarish": [
+"Последнее изменение",
+"Last change"
+],
+"Oxirgi {n} oy": [
+"Последние {n} мес.",
+"Last {n} months"
+],
+"Oylik natijalar: nechta hamkor qo‘shildi, qancha vaqt ketdi va qaysi bosqichda kutilyapti": [
+"Итоги месяца: сколько партнёров добавлено, сколько ушло времени и на каком этапе ожидание",
+"Monthly results: how many partners were added, how long it took and where things wait"
+],
+"Oyma-oy: kelgan arizalar, faol bo‘lgan hamkorlar va tuzilgan Bosh shartnomalar": [
+"По месяцам: поступившие заявки, ставшие активными партнёры и заключённые основные договоры",
+"By month: applications received, partners activated and main contracts signed"
+],
+"O‘zgarishlar tarixi": [
+"История изменений",
+"Change history"
+],
+"O‘zgarishlarni saqlash uchun joriy parolni kiriting.": [
+"Чтобы сохранить изменения, введите текущий пароль.",
+"Enter your current password to save changes."
+],
+"PDF tayyorlanmoqda…": [
+"Готовится PDF…",
+"Preparing PDF…"
+],
+"Parolni takrorlang": [
+"Повторите пароль",
+"Repeat password"
+],
+"Profil": [
+"Профиль",
+"Profile"
+],
+"Profil ma’lumotlari": [
+"Данные профиля",
+"Profile details"
+],
+"Profilni tahrirlash": [
+"Редактировать профиль",
+"Edit profile"
+],
+"Qabul qilingan arizaga shartnoma yuborish": [
+"Отправка договора по принятой заявке",
+"Sending a contract for an accepted application"
+],
+"Qabul qilingandan keyingi bosqich": [
+"Этап после принятия",
+"Stage after acceptance"
+],
+"Qashqadaryo": [
+"Кашкадарья",
+"Kashkadarya"
+],
+"Qaysi bosqichda ko‘p kutilyapti": [
+"На каком этапе дольше всего ждут",
+"Which stage takes longest"
+],
+"Qayta yuborildi — ko‘rib chiqilmoqda": [
+"Отправлена повторно — на рассмотрении",
+"Resubmitted — under review"
+],
+"Qaytarish yoki rad etishda sababini yozing — foydalanuvchi uni o‘z sahifasida ko‘radi.": [
+"При возврате или отклонении укажите причину — пользователь увидит её на своей странице.",
+"When returning or rejecting, state the reason — the user will see it on their page."
+],
+"Qidirish: tashkilot, STIR, izoh…": [
+"Поиск: организация, ИНН, комментарий…",
+"Search: organization, TIN, comment…"
+],
+"Qizil": [
+"Красный",
+"Red"
+],
+"Qoraqalpog‘iston": [
+"Каракалпакстан",
+"Karakalpakstan"
+],
+"Qo‘shimcha izoh": [
+"Дополнительный комментарий",
+"Additional comment"
+],
+"Qo‘shimcha kelishuvlar (qo‘shimcha va eski shartnoma raqami/sanasi, tashkilot, STIR).": [
+"Дополнительные соглашения (номер/дата доп. и старого договора, организация, ИНН).",
+"Supplementary agreements (supplementary and old contract number/date, organization, TIN)."
+],
+"Qo‘shish": [
+"Добавить",
+"Add"
+],
+"Rahbar": [
+"Руководитель",
+"Head"
+],
+"Rahbar (qisqa F.I.Sh.)": [
+"Руководитель (кратко Ф.И.О.)",
+"Head (short name)"
+],
+"Rahbar PINFL (JShShIR)": [
+"ПИНФЛ руководителя (ЖШШИР)",
+"Head's PINFL (personal ID)"
+],
+"Raqam": [
+"Номер",
+"Number"
+],
+"Rasm yoki fayl biriktirish": [
+"Прикрепить фото или файл",
+"Attach image or file"
+],
+"Rol": [
+"Роль",
+"Role"
+],
+"Ro‘yxatdan arizani bosing — yuborilgan ma’lumotlar va hujjatlar shu yerda ochiladi.": [
+"Нажмите на заявку в списке — отправленные данные и документы откроются здесь.",
+"Click an application in the list — its data and documents will open here."
+],
+"Ro‘yxatdan bosing — ma’lumotlari, arizalari va u bilan yozishmalar shu yerda ochiladi.": [
+"Нажмите в списке — данные, заявки и переписка откроются здесь.",
+"Click in the list — details, applications and messages will open here."
+],
+"Ro‘yxatdan o‘tgan": [
+"Зарегистрирован",
+"Registered"
+],
+"Ro‘yxatdan o‘tish": [
+"Регистрация",
+"Sign up"
+],
+"Ro‘yxatdan tanlang yoki yozing": [
+"Выберите из списка или введите",
+"Choose from the list or type"
+],
+"STIR (JShShIR)": [
+"ИНН (ПИНФЛ)",
+"TIN (PINFL)"
+],
+"STIR kiriting va «{q}»ni bosing — Bosh kelishuvdagi ma’lumotlar avtomatik to‘ldiriladi.": [
+"Введите ИНН и нажмите «{q}» — данные из основного договора заполнятся автоматически.",
+"Enter the TIN and press «{q}» — details from the main contract will be filled in automatically."
+],
+"STIR kiriting va «{q}»ni bosing — Hamkorlar ma’lumotlardan avtomatik to‘ldiriladi.": [
+"Введите ИНН и нажмите «{q}» — данные заполнятся из списка партнёров.",
+"Enter the TIN and press «{q}» — details will be filled in from the partner list."
+],
+"Samarqand": [
+"Самарканд",
+"Samarkand"
+],
+"Sanadan": [
+"С даты",
+"From date"
+],
+"Sanagacha": [
+"По дату",
+"To date"
+],
+"Saqlanmoqda…": [
+"Сохранение…",
+"Saving…"
+],
+"Savdo hamkorlar reestri (nomi, STIR, rahbar, bank rekvizitlari, login, filial…).": [
+"Реестр торговых партнёров (название, ИНН, руководитель, банковские реквизиты, логин, филиал…).",
+"Merchant partner registry (name, TIN, head, bank details, login, branch…)."
+],
+"Savollar bo‘yicha «{q}» bo‘limida yozing yoki bog‘laning:": [
+"По вопросам пишите в разделе «{q}» или свяжитесь:",
+"For questions write in «{q}» or contact:"
+],
+"Sayt sozlamalari": [
+"Настройки сайта",
+"Site settings"
+],
+"Saytda bor bo‘lsa — faqat Excelda": [
+"Если есть на сайте — только в Excel",
+"If on the site — only in Excel"
+],
+"Saytda yo‘q bo‘lsa —": [
+"Если нет на сайте —",
+"If not on the site —"
+],
+"Saytdagi mavjud ma’lumotlar o‘chirilmaydi": [
+"Существующие данные сайта не удаляются",
+"Existing site data is not deleted"
+],
+"Server": [
+"Сервер",
+"Server"
+],
+"Shartnoma": [
+"Договор",
+"Contract"
+],
+"Shartnoma Didoxdan yuborildi": [
+"Договор отправлен через Didox",
+"Contract sent via Didox"
+],
+"Shartnoma bekor qilindi": [
+"Договор отменён",
+"Contract cancelled"
+],
+"Shartnoma buxgalterga yuborildi": [
+"Договор отправлен бухгалтеру",
+"Contract sent to accountant"
+],
+"Shartnoma imzolandi": [
+"Договор подписан",
+"Contract signed"
+],
+"Shartnoma imzolandi. Tez orada tizimga kirish login va parollari beriladi.": [
+"Договор подписан. Скоро будут выданы логин и пароль для входа в систему.",
+"The contract is signed. A system login and password will be issued shortly."
+],
+"Shartnoma imzolangan": [
+"Подписано договоров",
+"Contracts signed"
+],
+"Shartnoma ma’lumotlari": [
+"Данные договора",
+"Contract details"
+],
+"Shartnoma tasdiqlandi": [
+"Договор подтверждён",
+"Contract confirmed"
+],
+"Shartnoma tasdiqlandi deb belgiladi": [
+"Отметил договор как подтверждённый",
+"Marked the contract as confirmed"
+],
+"Shartnoma tayyorlandi": [
+"Договор подготовлен",
+"Contract prepared"
+],
+"Shartnoma tayyorlash": [
+"Подготовка договора",
+"Preparing the contract"
+],
+"Shartnoma uchun kerakli hujjatlar ro‘yxati": [
+"Список документов, необходимых для договора",
+"Documents required for the contract"
+],
+"Shartnomalar": [
+"Договоры",
+"Contracts"
+],
+"Shartnomalar tizimiga kirish": [
+"Вход в систему договоров",
+"Sign in to the contracts system"
+],
+"Shartnomani Didoxdan yubordi": [
+"Отправил договор через Didox",
+"Sent the contract via Didox"
+],
+"Shartnomani buxgalterga yubordi": [
+"Отправил договор бухгалтеру",
+"Sent the contract to the accountant"
+],
+"Shu oyda kelgan {n} ta ariza bo‘yicha": [
+"По {n} заявкам за этот месяц",
+"Across {n} applications this month"
+],
+"Shu oyda tuzilgan Bosh shartnomalar va ro‘yxatdagi hamkorlar": [
+"Основные договоры за месяц и партнёры в списке",
+"Main contracts this month and partners in the list"
+],
+"Shu sahifaga qayting — holat o‘zi yangilanadi.": [
+"Вернитесь на эту страницу — статус обновится сам.",
+"Return to this page — the status updates by itself."
+],
+"Shu vaqt oralig‘idan tashqarida eslatma yuborilmaydi; ertalabki ro‘yxat boshlanish vaqtida keladi": [
+"Вне этого времени напоминания не отправляются; утренний список приходит в начале периода",
+"No reminders are sent outside these hours; the morning list arrives at the start"
+],
+"Sinov xabari": [
+"Тестовое сообщение",
+"Test message"
+],
+"Standart qiymatlar": [
+"Значения по умолчанию",
+"Default values"
+],
+"Status tarixi": [
+"История статусов",
+"Status history"
+],
+"Status «{q}» ga o‘zgartirilsinmi?": [
+"Изменить статус на «{q}»?",
+"Change the status to «{q}»?"
+],
+"Statuslar tarixi": [
+"История статусов",
+"Status history"
+],
+"Statusni o‘zgartirish": [
+"Изменить статус",
+"Change status"
+],
+"Tabriklaymiz! Arizangiz qabul qilindi. Tez orada shartnoma bo‘yicha siz bilan bog‘lanamiz.": [
+"Поздравляем! Ваша заявка принята. Скоро свяжемся с вами по договору.",
+"Congratulations! Your application has been accepted. We will contact you about the contract soon."
+],
+"Tafsilot": [
+"Подробности",
+"Details"
+],
+"Tahrirlash": [
+"Редактировать",
+"Edit"
+],
+"Tanlangan holat foydalanuvchi sahifasida ko‘rinadi va unga xabar boradi.": [
+"Выбранный статус появится на странице пользователя, и ему придёт сообщение.",
+"The selected status appears on the user's page and they receive a message."
+],
+"Tasdiqlandi": [
+"Подтверждён",
+"Confirmed"
+],
+"Tasdiqlangan": [
+"Подтверждённые",
+"Confirmed"
+],
+"Tashkilot guvohnomasi (YaTT, MCHJ yoki X/K, O/K)": [
+"Свидетельство организации (ИП, ООО или ЧП, СП)",
+"Company certificate (sole trader, LLC, PE or FE)"
+],
+"Tashkilot rahbari pasporti": [
+"Паспорт руководителя организации",
+"Passport of the company head"
+],
+"Tashkilot turi": [
+"Тип организации",
+"Organization type"
+],
+"Tashkilot, STIR yoki ism": [
+"Организация, ИНН или имя",
+"Organization, TIN or name"
+],
+"Tekshirilmoqda": [
+"На проверке",
+"Under review"
+],
+"Tekshirish, tasdiqlash va buxgalterga yuborish": [
+"Проверка, подтверждение и отправка бухгалтеру",
+"Review, approve and send to the accountant"
+],
+"Telefon": [
+"Телефон",
+"Phone"
+],
+"Telefon raqami,": [
+"Номер телефона,",
+"Phone number,"
+],
+"Telefon raqami, login yoki parolni o‘zgartirish uchun joriy parolni kiriting.": [
+"Чтобы изменить телефон, логин или пароль, введите текущий пароль.",
+"Enter your current password to change phone, login or password."
+],
+"Telegram bildirishnomalari": [
+"Уведомления в Telegram",
+"Telegram notifications"
+],
+"Tizimda kim, qachon va nimani o‘zgartirgani shu yerda yoziladi: arizalar, shartnomalar, hamkorlar, foydalanuvchilar, buxgalteriya statuslari. Jurnal yozuvlarini o‘chirib yoki o‘zgartirib bo‘lmaydi.": [
+"Здесь записывается, кто, когда и что изменил: заявки, договоры, партнёры, пользователи, статусы бухгалтерии. Записи журнала нельзя удалить или изменить.",
+"Who changed what and when is recorded here: applications, contracts, partners, users, accounting statuses. Log entries cannot be deleted or edited."
+],
+"Tizimga kirdi": [
+"Вошёл в систему",
+"Signed in"
+],
+"Tizimga kirish": [
+"Вход в систему",
+"Sign in"
+],
+"Toshkent": [
+"Ташкент",
+"Tashkent"
+],
+"To‘q sariq": [
+"Оранжевый",
+"Orange"
+],
+"Tugmalar va belgilar rangi": [
+"Цвет кнопок и значков",
+"Button and icon colour"
+],
+"Tuzatilgan ariza ko‘rib chiqilmoqda.": [
+"Исправленная заявка рассматривается.",
+"The corrected application is under review."
+],
+"Tuzating:": [
+"Исправьте:",
+"Please fix:"
+],
+"Tuzatish kerak": [
+"Нужны исправления",
+"Needs corrections"
+],
+"Tuzatish uchun qaytarildi": [
+"Возвращена на доработку",
+"Returned for corrections"
+],
+"Tuzilgan bosh kelishuv shartnomalari ro‘yxati (raqami, sanasi, tashkilot, STIR…).": [
+"Список основных договоров (номер, дата, организация, ИНН…).",
+"List of main contracts (number, date, organization, TIN…)."
+],
+"Tuzilgan hujjatlar": [
+"Оформленные документы",
+"Documents created"
+],
+"Uzish": [
+"Отключить",
+"Disconnect"
+],
+"Vaqt": [
+"Время",
+"Time"
+],
+"Viloyat, tuman, ko‘cha, uy": [
+"Область, район, улица, дом",
+"Region, district, street, building"
+],
+"X/K (xususiy korxona)": [
+"ЧП (частное предприятие)",
+"PE (private enterprise)"
+],
+"Xabarlar": [
+"Сообщения",
+"Messages"
+],
+"Xarita havolasi yoki mo‘ljal": [
+"Ссылка на карту или ориентир",
+"Map link or landmark"
+],
+"Xarita havolasi yoki «{q}»": [
+"Ссылка на карту или «{q}»",
+"Map link or «{q}»"
+],
+"Xodimni do‘konda tushgan selfi rasmi": [
+"Селфи сотрудника в магазине",
+"Selfie of an employee in the store"
+],
+"Xodimning do‘konda tushgan selfi rasmi": [
+"Селфи сотрудника в магазине",
+"Selfie of an employee in the store"
+],
+"YaTT": [
+"ИП",
+"Sole trader"
+],
+"Yakshanba kuni eslatma yuborilmasin": [
+"Не отправлять напоминания в воскресенье",
+"Do not send reminders on Sunday"
+],
+"Yangi ariza": [
+"Новая заявка",
+"New application"
+],
+"Yangi ariza, status o‘zgarishi va xabarlar Telegram’ingizga darhol keladi — saytni ochiq ushlab turish shart emas.": [
+"Новые заявки, смена статуса и сообщения сразу приходят в ваш Telegram — держать сайт открытым не нужно.",
+"New applications, status changes and messages arrive in your Telegram instantly — no need to keep the site open."
+],
+"Yangi arizalar": [
+"Новые заявки",
+"New applications"
+],
+"Yangi foydalanuvchi qo‘shish": [
+"Добавить пользователя",
+"Add user"
+],
+"Yangi parol yaratish": [
+"Создать новый пароль",
+"Generate new password"
+],
+"Yangi rekvizitlar va eski shartnoma ma’lumotlari formaga qo‘yildi. Qo‘shimcha kelishuv raqamini kiriting va tekshirib, yarating.": [
+"Новые реквизиты и данные старого договора внесены в форму. Введите номер доп. соглашения, проверьте и создайте.",
+"New details and old contract data were put in the form. Enter the supplementary agreement number, check and create it."
+],
+"Yangi — buxgalterga yuborildi": [
+"Новый — отправлен бухгалтеру",
+"New — sent to accountant"
+],
+"Yangi — yuborildi": [
+"Новый — отправлен",
+"New — sent"
+],
+"Yetishmayotganlar:": [
+"Не хватает:",
+"Missing:"
+],
+"Yordam kerakmi?": [
+"Нужна помощь?",
+"Need help?"
+],
+"Yozishdan oldin nechta yozuv qo‘shilishi va yangilanishi ko‘rsatiladi — tasdiqlasangizgina saqlanadi.": [
+"Перед записью будет показано, сколько записей добавится и обновится — сохраняется только после подтверждения.",
+"Before saving, the number of records to add and update is shown — they are saved only after you confirm."
+],
+"Yozuvlar": [
+"Записи",
+"Records"
+],
+"Yuborildi — ko‘rib chiqilmoqda": [
+"Отправлена — на рассмотрении",
+"Submitted — under review"
+],
+"Yuborilgan": [
+"Отправлено",
+"Sent"
+],
+"Yuborilgan hujjatlar": [
+"Отправленные документы",
+"Submitted documents"
+],
+"Yuborilmagan": [
+"Не отправлено",
+"Not sent"
+],
+"Yuborish": [
+"Отправить",
+"Send"
+],
+"Yuklanmoqda…": [
+"Загрузка…",
+"Loading…"
+],
+"Yulduzcha (*) bilan belgilangan maydonlar va hujjatlar majburiy.": [
+"Поля и документы, отмеченные звёздочкой (*), обязательны.",
+"Fields and documents marked with an asterisk (*) are required."
+],
+"Zumrad": [
+"Изумрудный",
+"Emerald"
+],
+"aniq {n} ta raqam": [
+"ровно {n} цифр",
+"exactly {n} digits"
+],
+"barcha": [
+"все",
+"all"
+],
+"bir marta": [
+"один раз",
+"once"
+],
+"kamida {n} ta belgi": [
+"не менее {n} символов",
+"at least {n} characters"
+],
+"kun": [
+"дн.",
+"days"
+],
+"lotin harflari va raqamlar": [
+"латинские буквы и цифры",
+"Latin letters and digits"
+],
+"masalan: \"BOSTON TELEFON BAZAR\" MCHJ": [
+"например: \"BOSTON TELEFON BAZAR\" ООО",
+"e.g. \"BOSTON TELEFON BAZAR\" LLC"
+],
+"masalan: Boston": [
+"например: Boston",
+"e.g. Boston"
+],
+"masalan: Hamkorbank": [
+"например: Hamkorbank",
+"e.g. Hamkorbank"
+],
+"masalan: S.A.Raximov": [
+"например: С.А.Рахимов",
+"e.g. S.A.Raximov"
+],
+"masalan: {n}": [
+"например: {n}",
+"e.g. {n}"
+],
+"masalan: {n}% (QQS bilan)": [
+"например: {n}% (с НДС)",
+"e.g. {n}% (incl. VAT)"
+],
+"ma’lumotlarni (hamkorlar, shartnomalar, foydalanuvchilar, arizalar, xabarlar, fayllar) serverga nusxalaydi.\n        Firebase’dagi ma’lumotlar o‘chirilmaydi. Odatda": [
+"данные (партнёры, договоры, пользователи, заявки, сообщения, файлы) копируются на сервер.\n        Данные в Firebase не удаляются. Обычно",
+"data (partners, contracts, users, applications, messages, files) to the server.\n        Data in Firebase is not deleted. Usually"
+],
+"o‘tgan oy bilan teng": [
+"как в прошлом месяце",
+"same as last month"
+],
+"o‘zgargan maydonlar yangilanadi": [
+"изменённые поля обновляются",
+"changed fields are updated"
+],
+"qizil": [
+"красные",
+"red"
+],
+"raqam + STIR": [
+"номер + ИНН",
+"number + TIN"
+],
+"serverida saqlanadi.": [
+"хранятся на сервере.",
+"are stored on the server."
+],
+"soat": [
+"ч",
+"hours"
+],
+"ta hamkor": [
+"партнёров",
+"partners"
+],
+"yana {n} ta →": [
+"ещё {n} →",
+"{n} more →"
+],
+"yangi yozuv qo‘shiladi": [
+"добавляется новая запись",
+"a new record is added"
+],
+"yoki shu yerga sudrab tashlang · rasm, PDF, Word, Excel ({n} MB gacha)": [
+"или перетащите сюда · фото, PDF, Word, Excel (до {n} МБ)",
+"or drag here · image, PDF, Word, Excel (up to {n} MB)"
+],
+"yuklanmagan": [
+"не загружено",
+"not uploaded"
+],
+"{n} MB": [
+"{n} МБ",
+"{n} MB"
+],
+"{n} oylik hisob raqam (X/R) aylanmasi": [
+"Оборот по р/с за {n} месяцев",
+"{n}-month account turnover statement"
+],
+"{n} ta yozuv": [
+"{n} записей",
+"{n} records"
+],
+"{n} xonali": [
+"{n} цифр",
+"{n} digits"
+],
+"{n} xonali hisob raqam": [
+"Расчётный счёт из {n} цифр",
+"{n}-digit account number"
+],
+"{n} xonali raqam (pasportda)": [
+"{n} цифр (в паспорте)",
+"{n} digits (in passport)"
+],
+"{n} yoki {n} ta raqam": [
+"{n} или {n} цифр",
+"{n} or {n} digits"
+],
+"{n} yoki {n} xonali raqam": [
+"{n} или {n} цифр",
+"{n} or {n} digits"
+],
+"{n}. Hujjatlar va rasmlar": [
+"{n}. Документы и фото",
+"{n}. Documents and photos"
+],
+"{n}. Tashkilot ma’lumotlari": [
+"{n}. Данные организации",
+"{n}. Organization details"
+],
+"«{q}» (Buxgalter) qo‘shildi.": [
+"«{q}» (бухгалтер) добавлен.",
+"«{q}» (accountant) added."
+],
+"«{q}» (Hamkor) qo‘shildi.": [
+"«{q}» (партнёр) добавлен.",
+"«{q}» (partner) added."
+],
+"«{q}» bank rekvizitlari o‘zgardi (Hisob raqami).": [
+"Банковские реквизиты «{q}» изменились (Расчётный счёт).",
+"Bank details of «{q}» changed (Account number)."
+],
+"«{q}» ma’lumotlari saqlandi.": [
+"Данные «{q}» сохранены.",
+"«{q}» details saved."
+],
+"«{q}» tugmasini bosing — Telegram ochiladi.": [
+"Нажмите «{q}» — откроется Telegram.",
+"Press «{q}» — Telegram will open."
+],
+"· {n} ta maydon o‘zgartirildi": [
+"· изменено полей: {n}",
+"· {n} fields changed"
+],
+"— tanlang —": [
+"— выберите —",
+"— select —"
+],
+"• Bank MFO": [
+"• МФО банка",
+"• Bank MFO"
+],
+"• Bank hisob raqami": [
+"• Расчётный счёт",
+"• Bank account number"
+],
+"• Bank hisob raqami aniq {n} ta raqamdan iborat bo‘lishi kerak (hozir {n} ta)": [
+"• Расчётный счёт должен состоять ровно из {n} цифр (сейчас {n})",
+"• Bank account number must be exactly {n} digits (now {n})"
+],
+"• Do‘kon brend nomi": [
+"• Бренд магазина",
+"• Store brand name"
+],
+"• Faoliyat joyi lokatsiyasi": [
+"• Локация места деятельности",
+"• Business location"
+],
+"• Rahbar F.I.Sh. (to‘liq)": [
+"• Ф.И.О. руководителя (полностью)",
+"• Head's full name"
+],
+"• Rahbar PINFL (JShShIR)": [
+"• ПИНФЛ руководителя",
+"• Head's PINFL"
+],
+"• Telefon raqami": [
+"• Номер телефона",
+"• Phone number"
+],
+"‹ Arizalarim": [
+"‹ Мои заявки",
+"‹ My applications"
+],
+"‹ Hamkorlar": [
+"‹ Партнёры",
+"‹ Partners"
+],
+"‹ Monitoring": [
+"‹ Мониторинг",
+"‹ Monitoring"
+],
+"‹ Shartnomalar": [
+"‹ Договоры",
+"‹ Contracts"
+],
+"ℹ️ Ixtiyoriy hujjatlardan yuborilmagan:": [
+"ℹ️ Не отправлены необязательные документы:",
+"ℹ️ Optional documents not submitted:"
+],
+"⏳ Tekshirilmoqda…": [
+"⏳ Проверяется…",
+"⏳ Checking…"
+],
+"⏳ Telegram’da START tugmasini bosishingizni kutyapmiz…": [
+"⏳ Ждём, когда вы нажмёте START в Telegram…",
+"⏳ Waiting for you to press START in Telegram…"
+],
+"▼ {n} kun tezroq": [
+"▼ быстрее на {n} дн.",
+"▼ {n} days faster"
+],
+"▼ {n} o‘tgan oyga nisbatan": [
+"▼ {n} по сравнению с прошлым месяцем",
+"▼ {n} vs last month"
+],
+"☁️ → 🖥 Ko‘chirishni boshlash": [
+"☁️ → 🖥 Начать перенос",
+"☁️ → 🖥 Start transfer"
+],
+"⚡ Shartnomani buxgalterga yuborish": [
+"⚡ Отправить договор бухгалтеру",
+"⚡ Send contract to accountant"
+],
+"⚡ Tasdiqlash va buxgalterga yuborish": [
+"⚡ Подтвердить и отправить бухгалтеру",
+"⚡ Approve and send to accountant"
+],
+"✅ Server ishlayapti · oxirgi zaxira nusxa: {n} {n}": [
+"✅ Сервер работает · последняя резервная копия: {n} {n}",
+"✅ Server is running · last backup: {n} {n}"
+],
+"✅ Tasdiqlandi. № BN-{n} shartnoma buxgalterga yuborildi.": [
+"✅ Подтверждено. Договор № BN-{n} отправлен бухгалтеру.",
+"✅ Approved. Contract № BN-{n} sent to the accountant."
+],
+"✏️ Ma’lumotlarni tahrirlash": [
+"✏️ Редактировать данные",
+"✏️ Edit details"
+],
+"✏️ Shartnoma formasida": [
+"✏️ В форме договора",
+"✏️ In contract form"
+],
+"✏️ Tuzatish va qayta yuborish": [
+"✏️ Исправить и отправить повторно",
+"✏️ Correct and resubmit"
+],
+"✏️ Yangilandi — admin qayta tekshiradi": [
+"✏️ Обновлено — админ проверит снова",
+"✏️ Updated — admin will re-check"
+],
+"✓ Barcha majburiy ma’lumot va hujjatlar yuborilgan.": [
+"✓ Все обязательные данные и документы отправлены.",
+"✓ All required data and documents submitted."
+],
+"✓ Faqat qabul qilish": [
+"✓ Только принять",
+"✓ Accept only"
+],
+"✓ Qabul qilindi": [
+"✓ Принято",
+"✓ Accepted"
+],
+"✓ Shartnoma tasdiqlandi": [
+"✓ Договор подтверждён",
+"✓ Contract confirmed"
+],
+"✓ Tasdiqlash va yuborish": [
+"✓ Подтвердить и отправить",
+"✓ Approve and send"
+],
+"✓ To‘g‘ri": [
+"✓ Верно",
+"✓ Correct"
+],
+"✓ to‘g‘ri": [
+"✓ верно",
+"✓ correct"
+],
+"✓ {n} ta to‘g‘ri": [
+"✓ верных: {n}",
+"✓ {n} correct"
+],
+"✕ Noto‘g‘ri": [
+"✕ Неверно",
+"✕ Wrong"
+],
+"✕ Shartnoma bekor qilindi": [
+"✕ Договор отменён",
+"✕ Contract cancelled"
+],
+"✕ Tozalash": [
+"✕ Очистить",
+"✕ Clear"
+],
+"✕ {n} ta noto‘g‘ri": [
+"✕ неверных: {n}",
+"✕ {n} wrong"
+],
+"⬇ Excel": [
+"⬇ Excel",
+"⬇ Excel"
+],
+"⬇ PDF faylni yuklab olish": [
+"⬇ Скачать PDF",
+"⬇ Download PDF"
+],
+"＋ Yangi ariza yuborish": [
+"＋ Отправить новую заявку",
+"＋ Submit new application"
+],
+"💾 Saqlash": [
+"💾 Сохранить",
+"💾 Save"
+],
+"📄 Buxgalteriyada:": [
+"📄 В бухгалтерии:",
+"📄 In accounting:"
+],
+"📊 Excelga yuklab olish": [
+"📊 Скачать в Excel",
+"📊 Download Excel"
+],
+"📍 Joylashuvimni aniqlash": [
+"📍 Определить моё местоположение",
+"📍 Detect my location"
+],
+"📜 Jurnalni ochish": [
+"📜 Открыть журнал",
+"📜 Open log"
+],
+"📝 Formada yaratish": [
+"📝 Создать в форме",
+"📝 Create in form"
+],
+"📤 Buxgalterga yuborish": [
+"📤 Отправить бухгалтеру",
+"📤 Send to accountant"
+],
+"📥 Import (Excel/CSV)": [
+"📥 Импорт (Excel/CSV)",
+"📥 Import (Excel/CSV)"
+],
+"📨 Adminga yuborish": [
+"📨 Отправить админу",
+"📨 Send to admin"
+],
+"📨 Didoxdan yuborildi": [
+"📨 Отправлен через Didox",
+"📨 Sent via Didox"
+],
+"📨 Qayta yuborish": [
+"📨 Отправить повторно",
+"📨 Resubmit"
+],
+"📨 Shartnoma Didoxdan yuborildi": [
+"📨 Договор отправлен через Didox",
+"📨 Contract sent via Didox"
+],
+"📲 Telegram’ni ulash": [
+"📲 Подключить Telegram",
+"📲 Connect Telegram"
+],
+"🔍 STIR yoki tashkilot nomi bo‘yicha qidirish…": [
+"🔍 Поиск по ИНН или названию организации…",
+"🔍 Search by TIN or organization name…"
+],
+"🔑 Login va parollar hamkorga yuborildi": [
+"🔑 Логин и пароль отправлены партнёру",
+"🔑 Login and password sent to partner"
+],
+"Yanvar {n}": [
+"Январь {n}",
+"January {n}"
+],
+"Yanvar {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Январь {n}: заявок {n}, активных {n}, договоров {n}",
+"January {n}: {n} applications, {n} active, {n} contracts"
+],
+"Yan": [
+"Янв",
+"Jan"
+],
+"Fevral {n}": [
+"Февраль {n}",
+"February {n}"
+],
+"Fevral {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Февраль {n}: заявок {n}, активных {n}, договоров {n}",
+"February {n}: {n} applications, {n} active, {n} contracts"
+],
+"Fev": [
+"Фев",
+"Feb"
+],
+"Mart {n}": [
+"Март {n}",
+"March {n}"
+],
+"Mart {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Март {n}: заявок {n}, активных {n}, договоров {n}",
+"March {n}: {n} applications, {n} active, {n} contracts"
+],
+"Mar": [
+"Мар",
+"Mar"
+],
+"Aprel {n}": [
+"Апрель {n}",
+"April {n}"
+],
+"Aprel {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Апрель {n}: заявок {n}, активных {n}, договоров {n}",
+"April {n}: {n} applications, {n} active, {n} contracts"
+],
+"Apr": [
+"Апр",
+"Apr"
+],
+"May {n}": [
+"Май {n}",
+"May {n}"
+],
+"May {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Май {n}: заявок {n}, активных {n}, договоров {n}",
+"May {n}: {n} applications, {n} active, {n} contracts"
+],
+"May": [
+"Май",
+"May"
+],
+"Iyun {n}": [
+"Июнь {n}",
+"June {n}"
+],
+"Iyun {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Июнь {n}: заявок {n}, активных {n}, договоров {n}",
+"June {n}: {n} applications, {n} active, {n} contracts"
+],
+"Iyn": [
+"Июн",
+"Jun"
+],
+"Iyul {n}": [
+"Июль {n}",
+"July {n}"
+],
+"Iyul {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Июль {n}: заявок {n}, активных {n}, договоров {n}",
+"July {n}: {n} applications, {n} active, {n} contracts"
+],
+"Iyl": [
+"Июл",
+"Jul"
+],
+"Avgust {n}": [
+"Август {n}",
+"August {n}"
+],
+"Avgust {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Август {n}: заявок {n}, активных {n}, договоров {n}",
+"August {n}: {n} applications, {n} active, {n} contracts"
+],
+"Avg": [
+"Авг",
+"Aug"
+],
+"Sentabr {n}": [
+"Сентябрь {n}",
+"September {n}"
+],
+"Sentabr {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Сентябрь {n}: заявок {n}, активных {n}, договоров {n}",
+"September {n}: {n} applications, {n} active, {n} contracts"
+],
+"Sen": [
+"Сен",
+"Sep"
+],
+"Oktabr {n}": [
+"Октябрь {n}",
+"October {n}"
+],
+"Oktabr {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Октябрь {n}: заявок {n}, активных {n}, договоров {n}",
+"October {n}: {n} applications, {n} active, {n} contracts"
+],
+"Okt": [
+"Окт",
+"Oct"
+],
+"Noyabr {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Ноябрь {n}: заявок {n}, активных {n}, договоров {n}",
+"November {n}: {n} applications, {n} active, {n} contracts"
+],
+"Noy": [
+"Ноя",
+"Nov"
+],
+"Dekabr {n}": [
+"Декабрь {n}",
+"December {n}"
+],
+"Dekabr {n}: {n} ariza, {n} faol, {n} shartnoma": [
+"Декабрь {n}: заявок {n}, активных {n}, договоров {n}",
+"December {n}: {n} applications, {n} active, {n} contracts"
+],
+"Dek": [
+"Дек",
+"Dec"
+],
+"Faol hamkor": [
+"Активный партнёр",
+"Active partner"
+],
+"Hammasi": [
+"Все",
+"All"
+],
+"Ariza": [
+"Заявка",
+"Application"
+],
+"Qabul qilingan": [
+"Принятые",
+"Accepted"
+],
+"Rad etilgan": [
+"Отклонённые",
+"Rejected"
+],
+"Rad etildi": [
+"Отклонена",
+"Rejected"
+],
+"Qabul qilindi": [
+"Принята",
+"Accepted"
+],
+"Yangi": [
+"Новая",
+"New"
+],
+"Shartnoma yaratish": [
+"Создать договор",
+"Create contract"
+],
+"↻ Yangilash": [
+"↻ Обновить",
+"↻ Refresh"
+],
+"Aniqlanmagan": [
+"Не определён",
+"Unknown"
+],
+"Bosh ofis": [
+"Головной офис",
+"Head office"
+],
+"Hamkorlar": [
+"Партнёры",
+"Partners"
+],
+"Arizalar": [
+"Заявки",
+"Applications"
+],
+"Faol": [
+"Активные",
+"Active"
+],
+"Filial": [
+"Филиал",
+"Branch"
+],
+"№": [
+"№",
+"№"
+],
+"Filial *": [
+"Филиал *",
+"Branch *"
+],
+"Login": [
+"Логин",
+"Login"
+],
+"Parol": [
+"Пароль",
+"Password"
+],
+"Saqlash": [
+"Сохранить",
+"Save"
+],
+"Bekor qilish": [
+"Отмена",
+"Cancel"
+],
+"Yopish": [
+"Закрыть",
+"Close"
+],
+"⚠️ Server bilan aloqa yo‘q — Adminga murojaat qiling. Telegram: @birzumadmin": [
+"⚠️ Нет связи с сервером — обратитесь к админу. Telegram: @birzumadmin",
+"⚠️ No connection to the server — contact the admin. Telegram: @birzumadmin"
+],
+"Serverga ulanib bo‘lmadi. Adminga murojaat qiling (Telegram: @birzumadmin).": [
+"Не удалось подключиться к серверу. Обратитесь к админу (Telegram: @birzumadmin).",
+"Could not connect to the server. Contact the admin (Telegram: @birzumadmin)."
+],
+"Ko‘rib chiqilishi kerak": [
+"Требуют рассмотрения",
+"Needs review"
+],
+"Qaytarilgan": [
+"Возвращённые",
+"Returned"
+],
+"Tasdiqlash va buxgalterga yuborish": [
+"Подтвердить и отправить бухгалтеру",
+"Approve and send to accountant"
+],
+"Shartnomani buxgalterga yuborish": [
+"Отправка договора бухгалтеру",
+"Send contract to accountant"
+],
+"Shartnoma raqami": [
+"Номер договора",
+"Contract number"
+],
+"Shartnoma sanasi": [
+"Дата договора",
+"Contract date"
+],
+"Tashkilot nomi": [
+"Название организации",
+"Organization name"
+],
+"Tashkilot": [
+"Организация",
+"Organization"
+],
+"STIR": [
+"ИНН",
+"TIN"
+],
+"Rahbar F.I.Sh. (to‘liq)": [
+"Ф.И.О. руководителя (полностью)",
+"Head full name"
+],
+"Telefon raqami": [
+"Номер телефона",
+"Phone number"
+],
+"Bank nomi": [
+"Название банка",
+"Bank name"
+],
+"Hisob raqami": [
+"Расчётный счёт",
+"Account number"
+],
+"Sahifa o‘lchami": [
+"Размер страницы",
+"Page size"
+],
+"Matn va elementlar kattaligi": [
+"Размер текста и элементов",
+"Text and element size"
+],
+"Til": [
+"Язык",
+"Language"
+],
+"Mavzu": [
+"Тема",
+"Theme"
+],
+"Rang": [
+"Цвет",
+"Colour"
+]
+});
+Object.assign(I18N, {"daqiqa":["мин","min"],"daq":["мин","min"],"soat":["ч","h"],"kun":["дн.","d"],
+"{n} ta ariza ko‘rib chiqilishini kutmoqda":["{n} заявок ожидают рассмотрения","{n} applications awaiting review"],
+"Arizalar monitoringini oching":["Откройте мониторинг заявок","Open applications monitoring"],
+"Admindan {n} ta yangi xabar":["Новых сообщений от админа: {n}","{n} new messages from admin"],
+"{n} ta o‘qilmagan xabar":["Непрочитанных сообщений: {n}","{n} unread messages"],
+"Foydalanuvchilar bo‘limida ko‘ring":["Смотрите в разделе «Пользователи»","See the Users section"],
+"Yangi ariza: «{q}»":["Новая заявка: «{q}»","New application: «{q}»"],
+"Joylashuvimni aniqlash":["Определить моё местоположение","Detect my location"],
+"Yangi ariza":["Новая заявка","New application"],
+"Tasdiqlash va yuborish":["Подтвердить и отправить","Approve and send"]});
+Object.assign(I18N, {"Tuzatilgan ariza: «{q}»":["Исправленная заявка: «{q}»","Corrected application: «{q}»"],
+"Yangi shartnoma: «{q}»":["Новый договор: «{q}»","New contract: «{q}»"],
+"{n} ta yangi shartnoma":["Новых договоров: {n}","{n} new contracts"],
+"Shartnomalar bo‘limida ko‘ring":["Смотрите в разделе «Договоры»","See the Contracts section"],
+"{n} ta maydon saqlandi":["Сохранено полей: {n}","{n} fields saved"],"O‘zgarish yo‘q":["Изменений нет","No changes"],
+"№ BN-{n} buxgalterga yuborildi":["№ BN-{n} отправлен бухгалтеру","№ BN-{n} sent to accountant"],
+"№ {n} buxgalterga yuborildi":["№ {n} отправлен бухгалтеру","№ {n} sent to accountant"],
+"Foydalanuvchi":["Пользователь","User"]});
+Object.assign(I18N, {"▼ {n} soat tezroq":["▼ быстрее на {n} ч","▼ {n} h faster"],"▼ {n} daq tezroq":["▼ быстрее на {n} мин","▼ {n} min faster"],
+"▲ {n} kun sekinroq":["▲ медленнее на {n} дн.","▲ {n} days slower"],"▲ {n} soat sekinroq":["▲ медленнее на {n} ч","▲ {n} h slower"],"▲ {n} daq sekinroq":["▲ медленнее на {n} мин","▲ {n} min slower"],
+"▲ {n} o‘tgan oyga nisbatan":["▲ {n} по сравнению с прошлым месяцем","▲ {n} vs last month"],
+"Faoliyat suratlari — ichki va tashqi tarafdan (kamida {n} ta, hozir {n} ta)":["Фото места деятельности — внутри и снаружи (не менее {n}, сейчас {n})","Photos of the premises — inside and outside (at least {n}, now {n})"],
+"Tashkilot guvohnomasi (YaTT, MCHJ yoki X/K, O/K)":["Свидетельство организации (ИП, ООО или ЧП, СП)","Company certificate (sole trader, LLC, PE or FE)"]});
+Object.assign(I18N, {"eng ko‘pi":["максимум","max"],"Yuborilgan":["Отправлено","Sent"],"Yangilangan":["Обновлено","Updated"],
+"Tuzatish va qayta yuborish":["Исправить и отправить повторно","Correct and resubmit"],"Nofaol":["Неактивные","Inactive"],"Yangi xabar":["Новое сообщение","New message"],
+"Ma’lumotlarni tahrirlash":["Редактировать данные","Edit details"],"Tasdiqlash va buxgalterga yuborish":["Подтвердить и отправить бухгалтеру","Approve and send to accountant"],
+"Login va parollar hamkorga yuborildi":["Логин и пароль отправлены партнёру","Login and password sent to partner"],"To‘g‘ri":["Верно","Correct"],"Noto‘g‘ri":["Неверно","Wrong"],
+"Tuzatishga qaytarish":["Вернуть на доработку","Return for corrections"],"Rad etish":["Отклонить","Reject"],"Faqat qabul qilish":["Только принять","Accept only"]});
 
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){
@@ -7304,7 +9539,7 @@ async function exportHamkorExcel(){
       'STIR': r.data.stir||'',
       'Brend nomi': r.data.brend||'',
       'Filial': r.data.filial||'',
-      'Rahbar (lavozimi)': r.data.rahbar||'',
+      'Rahbar (qisqa F.I.Sh.)': r.data.rahbar||'',
       'Rahbar F.I.Sh.': r.data.rahbar_fish||'',
       'PINFL': r.data.pinfl||'',
       'Manzil': r.data.manzil||'',

@@ -1016,6 +1016,73 @@ input.auto-filled{box-shadow:0 0 0 3px var(--accent-soft);border-color:var(--acc
 .hk-acc{display:flex;flex-wrap:wrap;gap:8px;}
 .hk-log{max-height:340px;overflow:auto;}
 @media (max-width:640px){ .log-table thead{display:none;} .log-table tr{display:block;border-bottom:1px solid var(--line);padding:6px 0;} .log-table td{display:block;border:0 !important;padding:2px 10px !important;} }
+/* v10: hisobotlar */
+.rp-wrap{display:flex;flex-direction:column;gap:14px;min-width:0;}
+.rp-top{padding:12px 16px;}
+.rp-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.rp-period{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.rp-period label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+.rp-period input{width:auto;}
+.hk-tool.on{border-color:var(--accent);color:var(--accent);font-weight:700;}
+#rpBody{display:flex;flex-direction:column;gap:14px;min-width:0;}
+.rp-title{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+.rp-title h2{margin:0;}
+.rp-late{color:var(--danger);}
+.rp-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;}
+.rp-kpi{padding:14px 16px;display:flex;flex-direction:column;gap:4px;}
+.rp-kpi span{font-size:12px;color:var(--muted);}
+.rp-kpi b{font-size:26px;line-height:1.15;color:var(--ink);}
+.rp-d{font-size:11.5px !important;color:var(--muted) !important;font-weight:600;}
+.rp-d.up{color:var(--accent) !important;} .rp-d.down{color:var(--danger) !important;}
+.rp-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.rp-cols > *{min-width:0;}
+.rp-card{padding:16px 18px;}
+.rp-card h3{margin:0 0 2px;font-size:15px;}
+.rp-card > .sub{margin:0 0 12px;}
+.rp-bars{display:flex;flex-direction:column;gap:9px;}
+.rp-bar-row{display:grid;grid-template-columns:minmax(120px,190px) 1fr 64px 92px;gap:10px;align-items:center;font-size:13px;}
+.rp-bl{color:var(--text);line-height:1.25;}
+.rp-bl small{display:block;color:var(--muted);font-size:11px;}
+.rp-bar{height:14px;background:var(--paper);border-radius:7px;overflow:hidden;}
+.rp-bar i{display:block;height:100%;background:var(--accent);border-radius:7px;min-width:2px;}
+.rp-bar-row.slow .rp-bar i{background:var(--danger);}
+.rp-bar-row.slow b{color:var(--danger);}
+.rp-bar-row b{text-align:right;color:var(--ink);}
+.rp-pct{font-size:11.5px;color:var(--muted);}
+.rp-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:10px;}
+.rp-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;}
+.k1{background:var(--accent);} .k2{background:#2f7ab8;} .k3{background:#c9a227;}
+.rp-trend{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;align-items:end;height:200px;overflow-x:auto;}
+.rp-tm{display:flex;flex-direction:column;align-items:stretch;gap:6px;height:100%;min-width:42px;}
+.rp-tm > span{font-size:11px;color:var(--muted);text-align:center;white-space:nowrap;}
+.rp-tm.cur > span{color:var(--ink);font-weight:700;}
+.rp-tb{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:2px;border-bottom:1px solid var(--line);}
+.rp-tb i{flex:1;max-width:12px;border-radius:3px 3px 0 0;position:relative;min-height:0;}
+.rp-tb i em{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-style:normal;font-size:10px;color:var(--muted);padding-bottom:1px;}
+.rp-tm.cur .rp-tb{background:var(--accent-soft);border-radius:6px 6px 0 0;}
+.rp-mini{height:4px;background:var(--paper);border-radius:2px;margin-top:4px;overflow:hidden;max-width:220px;}
+.rp-mini i{display:block;height:100%;background:var(--accent);}
+.rp-docs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px;}
+.rp-docs > div{display:flex;flex-direction:column;gap:2px;padding:12px;border:1px solid var(--line);border-radius:10px;}
+.rp-docs b{font-size:22px;color:var(--ink);} .rp-docs span{font-size:12.5px;color:var(--muted);}
+@media (max-width:900px){ .rp-cols{grid-template-columns:1fr;} }
+@media (max-width:640px){
+  .rp-bar-row{grid-template-columns:1fr 54px;grid-template-areas:"l b" "bar bar" "p p";gap:4px 10px;}
+  .rp-bl{grid-area:l;} .rp-bar-row b{grid-area:b;} .rp-bar{grid-area:bar;} .rp-pct{grid-area:p;}
+  .rp-kpis{grid-template-columns:1fr 1fr;} .rp-kpi b{font-size:22px;}
+  .rp-docs{grid-template-columns:1fr;}
+  .rp-trend{gap:2px;height:170px;overflow:visible;} .rp-tm{min-width:0;} .rp-tm small,.rp-tb i em{display:none;} .rp-tm > span{font-size:10px;} .rp-tb i{max-width:7px;}
+}
+/* v10: muddatlar */
+.sla-grid{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.sla-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.sla-grid .sla-row:last-child{border-bottom:0;}
+.sla-row b{font-size:13px;}
+.sla-in{display:flex;gap:6px;align-items:center;}
+.sla-in input{width:72px !important;} .sla-in select{width:auto;}
+.sla-time{border:1px solid var(--line);border-radius:10px;margin-top:10px;}
+.sla-chk{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:13px;}
+.sla-chk input{width:auto;}
 </style>
 </head>
 <body>
@@ -1197,7 +1264,7 @@ function showApp(){
     arAdminLoad(true);
     startArAdminPolling();
     mfoSyncMeta();
-    flowLoad().then(()=>{ renderTabs(); if(activeTab==='panel') renderFlowPanel(); });
+    slaLoad().then(()=>flowLoad()).then(()=>{ renderTabs(); if(activeTab==='panel') renderFlowPanel(); });
     usersLoad();
     startAdminMsgPolling();
     renderTabs();
@@ -2584,6 +2651,7 @@ const FAVICON_DATA = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYA
 const ICONS = {
   users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.3-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.9.7 3.2 2.4 3.5 5.2"/></svg>',
   chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg>',
+  hisobot:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg>',
   panel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="4" height="6" rx="1.5"/></svg>',
   arizalar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H5.2L4 17.2z"/><path d="M8 8h8M8 12h5"/><path d="M14 20l2 2 4-4"/></svg>',
   hamkor:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/></svg>',
@@ -2911,10 +2979,11 @@ function startI18nObserver(){
 }
 
 /* ============================= CHAP MENYU ============================= */
-const NAV_ORDER = ['panel','hamkor','arizalar','users','bosh','bonus','qoshimcha','profil'];
-const NAV_LABEL = {panel:'Hamkor yo‘li', hamkor:'Hamkorlar', arizalar:'Arizalar', users:'Foydalanuvchilar', bosh:'Bosh shartnoma', bonus:'Bonus shartnoma / bekor qilish', qoshimcha:'Qo‘shimcha kelishuv', profil:'Sozlamalar'};
+const NAV_ORDER = ['panel','hisobot','hamkor','arizalar','users','bosh','bonus','qoshimcha','profil'];
+const NAV_LABEL = {panel:'Hamkor yo‘li', hisobot:'Hisobotlar', hamkor:'Hamkorlar', arizalar:'Arizalar', users:'Foydalanuvchilar', bosh:'Bosh shartnoma', bonus:'Bonus shartnoma / bekor qilish', qoshimcha:'Qo‘shimcha kelishuv', profil:'Sozlamalar'};
 const PAGE_SUB = {
   panel:'Arizadan faol hamkorgacha: har bir hamkor qaysi bosqichda va kimning navbati',
+  hisobot:'Oylik natijalar: nechta hamkor qo‘shildi, qancha vaqt ketdi va qaysi bosqichda kutilyapti',
   hamkor:'Hamkorlar reestri: rekvizitlar, rasmlar, hujjatlar va tuzilgan shartnomalar',
   arizalar:'Hamkorlardan kelgan shartnoma arizalari: qabul qilish, qaytarish, rad etish',
   users:'Ro‘yxatdan o‘tgan hamkorlar: ma’lumotlar, faollik, login/parol va yozishmalar',
@@ -3470,6 +3539,7 @@ function renderApp(){
   if(activeTab==='bonus') app.innerHTML = bonusMarkup();
   if(activeTab==='profil') app.innerHTML = profilMarkup();
   if(activeTab==='panel') app.innerHTML = flowPanelMarkup();
+  if(activeTab==='hisobot') app.innerHTML = reportsMarkup();
   if(activeTab==='arizalar') app.innerHTML = arizalarMarkup();
   if(activeTab==='users') app.innerHTML = usersMarkup();
   bindSectionEvents(activeTab);
@@ -6707,7 +6777,7 @@ const LOG_ACT = {
   'bux.didox':'Shartnomani Didoxdan yubordi', 'bux.tasdiq':'Shartnoma tasdiqlandi deb belgiladi', 'bux.bekor':'Shartnomani bekor qildi',
   'hamkor.qoshildi':'Hamkor qo‘shdi', 'hamkor.tahrir':'Hamkor ma’lumotlarini o‘zgartirdi', 'hamkor.ochirildi':'Hamkorni o‘chirdi',
   'user.qoshildi':'Foydalanuvchi qo‘shdi', 'user.tahrir':'Foydalanuvchini tahrirladi', 'user.faol':'Foydalanuvchini faollashtirdi', 'user.nofaol':'Foydalanuvchini nofaol qildi',
-  'import':'Import qildi',
+  'import':'Import qildi', 'sozlama.muddat':'Muddatlarni o‘zgartirdi',
 };
 const LOG_SECT = {bosh:'Bosh shartnoma', qoshimcha:'Qo‘shimcha kelishuv', bonus:'Bonus shartnoma', hamkor:'Hamkor'};
 function logActor(){
@@ -6931,6 +7001,290 @@ function offerQoshimchaFor(rec, before){
   const no = document.getElementById('f_qoshimcha_raqami'); if(no) no.focus();
 }
 
+/* ======================================================================================
+   v10 · 3-BOSQICH: Hisobotlar va muddatlarni saytdan sozlash
+   ====================================================================================== */
+
+/* ---------- Muddatlar (SLA) — Sozlamalardan o'zgartiriladi, server ham shu qiymatlarni o'qiydi ---------- */
+const SLA_DEFAULT = {ariza:24, tuzatish:72, noBux:24, bux:24, didox:72, didoxAdmin:120, login:24};
+const SLA_LABELS = [
+  ['ariza',      'Admin arizani ko‘rib chiqishi',           'Admin'],
+  ['tuzatish',   'Hamkor arizani tuzatishi',                 'Hamkor va admin'],
+  ['noBux',      'Qabul qilingan arizaga shartnoma yuborish', 'Admin'],
+  ['bux',        'Buxgalter shartnomani Didox’ga yuborishi', 'Buxgalter'],
+  ['didox',      'Hamkor imzosini kutish',                   'Buxgalter'],
+  ['didoxAdmin', 'Imzo bo‘lmasa — adminga xabar',             'Admin'],
+  ['login',      'Imzodan keyin login berish',               'Admin'],
+];
+let SLA_CFG = {sla:Object.assign({}, SLA_DEFAULT), remindFrom:9, remindTo:19, sundayOff:true};
+function slaApply(){
+  const s = SLA_CFG.sla, by = {};
+  FLOW_STAGES.forEach(x=> by[x.k] = x);
+  by.keldi.sla = s.ariza; by.tekshiruv.sla = s.ariza; by.tuzatish.sla = s.tuzatish;
+  by.buxgalter.sla = s.bux; by.didox.sla = s.didox; by.imzo.sla = s.login;
+}
+async function slaLoad(){
+  try{
+    const r = await ST.get(META_COL, 'sla');
+    if(r){ SLA_CFG = {sla:Object.assign({}, SLA_DEFAULT, r.sla||{}), remindFrom:r.remindFrom??9, remindTo:r.remindTo??19, sundayOff:r.sundayOff!==false}; }
+  }catch(e){}
+  slaApply();
+}
+function slaCardMarkup(){
+  const s = SLA_CFG.sla;
+  const fmt = h=> (h % 24 === 0) ? {v:h/24, u:'kun'} : {v:h, u:'soat'};
+  return `<div class="card imp-card" id="slaCard"><h2>Muddatlar va eslatmalar</h2>
+    <p class="sub">Har bir bosqich uchun ruxsat etilgan vaqt. Muddat o‘tsa, «Hamkor yo‘li» panelida kartochka qizil bo‘ladi va mas’ul odamga Telegram orqali eslatma boradi.</p>
+    <div class="sla-grid">${SLA_LABELS.map(([k,l,who])=>{ const f = fmt(s[k]); return `<div class="sla-row"><div><b>${esc(l)}</b><div class="hk-sub">Eslatma: ${esc(who)}</div></div>
+      <div class="sla-in"><input type="number" min="1" step="1" id="sla_${k}" value="${f.v}"><select id="slaU_${k}"><option value="24" ${f.u==='kun'?'selected':''}>kun</option><option value="1" ${f.u==='soat'?'selected':''}>soat</option></select></div></div>`; }).join('')}</div>
+    <div class="sla-row sla-time"><div><b>Eslatma yuboriladigan vaqt</b><div class="hk-sub">Shu vaqt oralig‘idan tashqarida eslatma yuborilmaydi; ertalabki ro‘yxat boshlanish vaqtida keladi</div></div>
+      <div class="sla-in"><input type="number" min="0" max="23" id="slaFrom" value="${SLA_CFG.remindFrom}"> — <input type="number" min="1" max="24" id="slaTo" value="${SLA_CFG.remindTo}"> <span class="hk-sub">soat</span></div></div>
+    <label class="sla-chk"><input type="checkbox" id="slaSun" ${SLA_CFG.sundayOff?'checked':''}> Yakshanba kuni eslatma yuborilmasin</label>
+    <div class="hk-actions" style="margin-top:12px;"><button type="button" class="primary" id="slaSave">Saqlash</button><button type="button" class="secondary" id="slaReset">Standart qiymatlar</button></div>
+    <div class="status" id="slaStatus"></div></div>`;
+}
+function bindSlaCard(){
+  const sv = document.getElementById('slaSave'); if(!sv) return;
+  const st = document.getElementById('slaStatus');
+  sv.onclick = async ()=>{
+    const sla = {};
+    for(const [k,l] of SLA_LABELS){
+      const v = Number(document.getElementById('sla_'+k).value), u = Number(document.getElementById('slaU_'+k).value);
+      if(!(v > 0)){ st.className='status err'; st.textContent = `«${l}» uchun musbat son kiriting.`; return; }
+      sla[k] = Math.round(v * u);
+    }
+    if(sla.didoxAdmin <= sla.didox){ st.className='status err'; st.textContent = '«Imzo bo‘lmasa — adminga xabar» muddati «Hamkor imzosini kutish» muddatidan uzunroq bo‘lishi kerak.'; return; }
+    const from = Math.max(0, Math.min(23, Number(document.getElementById('slaFrom').value)||0));
+    const to = Math.max(from+1, Math.min(24, Number(document.getElementById('slaTo').value)||24));
+    const before = JSON.stringify(SLA_CFG);
+    SLA_CFG = {sla, remindFrom:from, remindTo:to, sundayOff:document.getElementById('slaSun').checked};
+    try{
+      await ST.set(META_COL, 'sla', Object.assign({updatedAt:new Date().toISOString()}, SLA_CFG));
+      slaApply();
+      if(before !== JSON.stringify(SLA_CFG)) logAct('sozlama.muddat', {type:'sozlama', name:'Muddatlar'}, SLA_LABELS.map(([k,l])=>`${l}: ${sla[k]} soat`).join('\n') + `\nEslatma vaqti: ${from}:00–${to}:00${SLA_CFG.sundayOff?', yakshanba dam':''}`);
+      st.className='status ok'; st.textContent = '✅ Saqlandi. Panel va eslatmalar yangi muddatlar bo‘yicha ishlaydi.';
+    }catch(e){ st.className='status err'; st.textContent = 'Saqlanmadi: '+(e.message||e); }
+  };
+  document.getElementById('slaReset').onclick = ()=>{
+    SLA_LABELS.forEach(([k])=>{ const h = SLA_DEFAULT[k]; document.getElementById('sla_'+k).value = h%24===0 ? h/24 : h; document.getElementById('slaU_'+k).value = h%24===0 ? '24' : '1'; });
+    document.getElementById('slaFrom').value = 9; document.getElementById('slaTo').value = 19; document.getElementById('slaSun').checked = true;
+    st.className='status'; st.textContent = 'Standart qiymatlar qo‘yildi — «Saqlash» ni bosing.';
+  };
+}
+
+/* ---------- Hisobotlar ---------- */
+const RP_REGIONS = [
+  ['Qoraqalpog‘iston', /qoraqalp|qoraqolp|nukus|karakalp|каракалп|нукус/i],
+  ['Xorazm',           /xorazm|horazm|xorezm|urganch|urgench|xiva|хорезм|ургенч/i],
+  ['Navoiy',           /navoi|navoiy|zarafshon|навои/i],
+  ['Buxoro',           /buxor|bukhar|бухар/i],
+  ['Samarqand',        /samarq|samark|самарк/i],
+  ['Qashqadaryo',      /qashqa|kashka|qarshi|karshi|shahrisabz|кашка|карши/i],
+  ['Surxondaryo',      /surxon|surkhan|termiz|termez|сурхан|термез/i],
+  ['Jizzax',           /jizza|jizak|джизак|жиззах/i],
+  ['Sirdaryo',         /sirdar|syrdar|guliston|сырдар|гулистан/i],
+  ['Andijon',          /andij|андиж/i],
+  ['Namangan',         /namang|наманг/i],
+  ['Farg‘ona',         /farg|fergan|qo.?qon|kokand|marg.?ilon|ферган|коканд|марг/i],
+  ['Toshkent',         /tosh?kent|tashkent|ташкент|chirchiq|olmaliq|angren|yangiyo/i],
+];
+function rpRegion(txt){ const s = String(txt||''); const r = RP_REGIONS.find(([,re])=>re.test(s)); return r ? r[0] : 'Aniqlanmagan'; }
+function rpMonthKey(iso){ return String(iso||'').slice(0,7); }
+function rpMonthLabel(k){ if(!k) return 'Butun davr'; const [y,m] = k.split('-'); return ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'][Number(m)-1] + ' ' + y; }
+function rpShortMonth(k){ const [y,m] = k.split('-'); return ['Yan','Fev','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'][Number(m)-1] + '<small> ' + y.slice(2) + '</small>'; }
+function rpPrevMonth(k){ const [y,m] = k.split('-').map(Number); const d = new Date(y, m-2, 1); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}`; }
+function rpInPeriod(iso, mk){ return !!iso && (!mk || rpMonthKey(iso) === mk); }
+function rpHours(a, b){ const x = Date.parse(a), y = Date.parse(b); return isFinite(x) && isFinite(y) && y >= x ? (y - x) / 36e5 : null; }
+function rpDur(h){ if(h == null) return '—'; if(h < 1) return Math.max(1, Math.round(h*60)) + ' daq'; if(h < 48) return (Math.round(h*10)/10).toString().replace('.', ',') + ' soat'; return (Math.round(h/24*10)/10).toString().replace('.', ',') + ' kun'; }
+function rpBoshDate(r){ const d = r.data||{}; const iso = normalizeDateString(d.shartnoma_sanasi||d.qoshimcha_sanasi||d.bonus_sanasi||''); return /^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso : (r.createdAt||''); }
+
+// Har bir ariza uchun voqealar va bosqichlar vaqti
+function rpEvents(a){
+  const h = a.history || [];
+  const first = s=> (h.find(x=>x.status===s)||{}).at || null;
+  const bx = flowBuxFor(a);
+  const bh = bx ? (bx.history||[]) : [];
+  const bFirst = s=> (bh.find(x=>x.status===s)||{}).at || null;
+  const ev = {
+    created: a.createdAt, qabul: first('qabul'), rad: first('rad'),
+    bux: first('bux') || (bx && bx.sentAt) || null,
+    didox: bFirst('didox') || first('didox'), imzo: bFirst('tasdiq') || first('imzo'), login: first('login'),
+    bekor: bFirst('bekor') || first('bekor'),
+  };
+  // bosqichlar: [nom, boshlanish, tugash]
+  const seg = [];
+  let pend = null, ret = null;
+  h.forEach(x=>{
+    if(x.status==='yangi' || x.status==='qayta'){ if(ret){ seg.push(['tuzatish', ret, x.at]); ret = null; } pend = x.at; }
+    else if(['qabul','qaytarildi','rad'].includes(x.status) && pend){ seg.push(['tekshiruv', pend, x.at]); pend = null; if(x.status==='qaytarildi') ret = x.at; }
+  });
+  if(ev.qabul && ev.bux) seg.push(['tayyorlash', ev.qabul, ev.bux]);
+  if(ev.bux && ev.didox) seg.push(['buxgalter', ev.bux, ev.didox]);
+  if(ev.didox && ev.imzo) seg.push(['imzo', ev.didox, ev.imzo]);
+  if(ev.imzo && ev.login) seg.push(['login', ev.imzo, ev.login]);
+  return {ev, seg};
+}
+const RP_SEGS = [
+  ['tekshiruv',  'Admin ko‘rib chiqishi',         'Admin'],
+  ['tuzatish',   'Hamkor tuzatishi',               'Hamkor'],
+  ['tayyorlash', 'Shartnoma tayyorlash',           'Admin'],
+  ['buxgalter',  'Didox’ga yuborish',              'Buxgalter'],
+  ['imzo',       'Hamkor imzosi (Didox)',          'Hamkor'],
+  ['login',      'Login berish',                   'Admin'],
+];
+function rpCompute(mk){
+  const ars = AR_CACHE.map(a=> Object.assign({a}, rpEvents(a)));
+  const kpi = mkx=>{
+    const inP = iso=> rpInPeriod(iso, mkx);
+    const tot = ars.filter(x=> inP(x.ev.login)).map(x=> rpHours(x.ev.created, x.ev.login)).filter(v=>v!=null);
+    return {
+      yangi: ars.filter(x=> inP(x.ev.created)).length,
+      qabul: ars.filter(x=> inP(x.ev.qabul)).length,
+      rad: ars.filter(x=> inP(x.ev.rad)).length,
+      imzo: ars.filter(x=> inP(x.ev.imzo)).length,
+      faol: ars.filter(x=> inP(x.ev.login)).length,
+      ortacha: tot.length ? tot.reduce((p,c)=>p+c,0)/tot.length : null,
+      bosh: (DB.bosh||[]).filter(r=> inP(rpBoshDate(r))).length,
+      qoshimcha: (DB.qoshimcha||[]).filter(r=> inP(rpBoshDate(r))).length,
+      bonus: (DB.bonus||[]).filter(r=> inP(rpBoshDate(r))).length,
+    };
+  };
+  const cur = kpi(mk), prev = mk ? kpi(rpPrevMonth(mk)) : null;
+  // voronka: shu davrda kelgan arizalar qayergacha yetdi
+  const coh = ars.filter(x=> rpInPeriod(x.ev.created, mk));
+  const funnel = [['Ariza keldi', coh.length], ['Qabul qilindi', coh.filter(x=>x.ev.qabul).length], ['Buxgalterga yuborildi', coh.filter(x=>x.ev.bux).length],
+    ['Didox’ga yuborildi', coh.filter(x=>x.ev.didox).length], ['Imzolandi', coh.filter(x=>x.ev.imzo).length], ['Faol hamkor', coh.filter(x=>x.ev.login).length]];
+  // bosqichlar davomiyligi (tugash vaqti shu davrda bo'lganlar)
+  const segs = RP_SEGS.map(([k,l,who])=>{
+    const v = []; ars.forEach(x=> x.seg.forEach(([sk, s, e])=>{ if(sk===k && rpInPeriod(e, mk)){ const hh = rpHours(s, e); if(hh!=null) v.push(hh); } }));
+    v.sort((p,q)=>p-q);
+    return {k, l, who, n:v.length, avg: v.length ? v.reduce((p,c)=>p+c,0)/v.length : null, med: v.length ? v[Math.floor(v.length/2)] : null, max: v.length ? v[v.length-1] : null};
+  });
+  // 12 oylik trend
+  const now = new Date(); const months = [];
+  for(let i = 11; i >= 0; i--){ const d = new Date(now.getFullYear(), now.getMonth()-i, 1); months.push(`${d.getFullYear()}-${pad2(d.getMonth()+1)}`); }
+  const trend = months.map(m=>({m, yangi: ars.filter(x=> rpMonthKey(x.ev.created)===m).length, faol: ars.filter(x=> rpMonthKey(x.ev.login)===m).length,
+    bosh: (DB.bosh||[]).filter(r=> rpMonthKey(rpBoshDate(r))===m).length}));
+  // filiallar: shu davrda tuzilgan Bosh shartnomalar va jami hamkorlar
+  const fil = {};
+  (DB.bosh||[]).forEach(r=>{ const f = String((r.data||{}).filial||'').trim() || 'Ko‘rsatilmagan'; fil[f] = fil[f] || {bosh:0, hamkor:0}; if(rpInPeriod(rpBoshDate(r), mk)) fil[f].bosh++; });
+  (DB.hamkor||[]).forEach(r=>{ const f = String((r.data||{}).filial||'').trim() || 'Ko‘rsatilmagan'; fil[f] = fil[f] || {bosh:0, hamkor:0}; fil[f].hamkor++; });
+  const filial = Object.entries(fil).map(([f,v])=>Object.assign({f}, v)).filter(x=>x.bosh||x.hamkor).sort((p,q)=> q.bosh-p.bosh || q.hamkor-p.hamkor);
+  // hududlar: shu davrdagi arizalar va jami hamkorlar (manzil bo'yicha)
+  const reg = {};
+  RP_REGIONS.forEach(([n])=> reg[n] = {ariza:0, faol:0, hamkor:0}); reg['Aniqlanmagan'] = {ariza:0, faol:0, hamkor:0};
+  ars.forEach(x=>{ const r = rpRegion((x.a.data||{}).manzil); if(rpInPeriod(x.ev.created, mk)) reg[r].ariza++; if(rpInPeriod(x.ev.login, mk)) reg[r].faol++; });
+  (DB.hamkor||[]).forEach(r=>{ const d = r.data||{}; let g = rpRegion(d.manzil); if(g==='Aniqlanmagan') g = rpRegion(d.filial); reg[g].hamkor++; });
+  const hudud = Object.entries(reg).map(([n,v])=>Object.assign({n}, v)).filter(x=>x.ariza||x.hamkor||x.faol).sort((p,q)=> q.ariza-p.ariza || q.hamkor-p.hamkor);
+  // hozirgi holat (davrdan qat'i nazar)
+  const live = AR_CACHE.map(a=>flowStage(a));
+  const nowS = {jarayonda: live.filter(s=> s.k!=='faol' && s.k!=='bekor').length, kechikkan: live.filter(s=>s.late).length};
+  return {mk, cur, prev, funnel, segs, trend, filial, hudud, nowS, coh};
+}
+
+let rpMonth = '';
+function reportsMarkup(){
+  if(rpMonth === '') { const d = new Date(); rpMonth = `${d.getFullYear()}-${pad2(d.getMonth()+1)}`; }
+  return `<div class="rp-wrap">
+    <div class="card rp-top">
+      <div class="rp-head">
+        <div class="rp-period"><label>Davr</label><input type="month" id="rpMonth" value="${esc(rpMonth==='all'?'':rpMonth)}"><button type="button" class="hk-tool ${rpMonth==='all'?'on':''}" id="rpAll">Butun davr</button></div>
+        <div class="hk-tools"><button type="button" class="hk-tool" id="rpReload">↻ Yangilash</button><button type="button" class="hk-tool" id="rpXlsx">⬇ Excel</button></div>
+      </div>
+    </div>
+    <div id="rpBody"><div class="card"><div class="hk-empty">Yuklanmoqda…</div></div></div>
+  </div>`;
+}
+function rpDelta(cur, prev, invert){
+  if(prev == null) return '';
+  const d = cur - prev; if(!d) return `<span class="rp-d">o‘tgan oy bilan teng</span>`;
+  const good = invert ? d < 0 : d > 0;
+  return `<span class="rp-d ${good?'up':'down'}">${d>0?'▲':'▼'} ${Math.abs(d)} o‘tgan oyga nisbatan</span>`;
+}
+function renderReports(){
+  const host = document.getElementById('rpBody'); if(!host) return;
+  const mk = rpMonth === 'all' ? '' : rpMonth;
+  const R = rpCompute(mk); window.__rp = R;
+  const c = R.cur, p = R.prev;
+  const tiles = [
+    ['Yangi arizalar', c.yangi, p && rpDelta(c.yangi, p.yangi)],
+    ['Qabul qilingan', c.qabul, p && rpDelta(c.qabul, p.qabul)],
+    ['Shartnoma imzolangan', c.imzo, p && rpDelta(c.imzo, p.imzo)],
+    ['Faol hamkor bo‘ldi', c.faol, p && rpDelta(c.faol, p.faol)],
+    ['Arizadan faolgacha (o‘rtacha)', rpDur(c.ortacha), p && p.ortacha!=null && c.ortacha!=null ? (c.ortacha <= p.ortacha ? `<span class="rp-d up">▼ ${rpDur(p.ortacha - c.ortacha)} tezroq</span>` : `<span class="rp-d down">▲ ${rpDur(c.ortacha - p.ortacha)} sekinroq</span>`) : ''],
+    ['Rad etilgan', c.rad, p && rpDelta(c.rad, p.rad, true)],
+  ];
+  const fMax = Math.max(1, R.funnel[0][1]);
+  const sMax = Math.max(1, ...R.segs.map(s=>s.avg||0));
+  const slow = R.segs.filter(s=>s.avg!=null).sort((a,b)=>b.avg-a.avg)[0];
+  const tMax = Math.max(1, ...R.trend.map(t=>Math.max(t.yangi, t.faol, t.bosh)));
+  const filMax = Math.max(1, ...R.filial.map(f=>f.bosh));
+  host.innerHTML = `
+    <div class="rp-title"><h2>${esc(rpMonthLabel(mk))}</h2><span class="hk-sub">Hozir jarayonda: <b data-noi18n>${R.nowS.jarayonda}</b> ta hamkor${R.nowS.kechikkan?` · <b class="rp-late" data-noi18n>${R.nowS.kechikkan} ta muddati o‘tgan</b>`:''}</span></div>
+    <div class="rp-kpis">${tiles.map(([l,v,d])=>`<div class="card rp-kpi"><span>${esc(l)}</span><b data-noi18n>${esc(String(v))}</b>${d||''}</div>`).join('')}</div>
+    <div class="rp-cols">
+      <div class="card rp-card"><h3>Arizalar qayergacha yetdi</h3><p class="sub">${mk ? 'Shu oyda kelgan' : 'Barcha'} ${R.funnel[0][1]} ta ariza bo‘yicha</p>
+        <div class="rp-bars">${R.funnel.map(([l,n],i)=>`<div class="rp-bar-row"><span class="rp-bl">${esc(l)}</span><div class="rp-bar"><i style="width:${(n/fMax*100).toFixed(1)}%"></i></div><b data-noi18n>${n}</b><span class="rp-pct" data-noi18n>${i && R.funnel[0][1] ? Math.round(n/R.funnel[0][1]*100)+'%' : ''}</span></div>`).join('')}</div>
+        ${R.funnel[0][1] ? '' : '<p class="hk-sub">Bu davrda ariza kelmagan.</p>'}</div>
+      <div class="card rp-card"><h3>Qaysi bosqichda ko‘p kutilyapti</h3><p class="sub">Har bir bosqich o‘rtacha qancha vaqt olgani${slow ? ` · eng uzuni: <b>${esc(slow.l)}</b>` : ''}</p>
+        <div class="rp-bars">${R.segs.map(s=>`<div class="rp-bar-row ${slow && s.k===slow.k ? 'slow':''}"><span class="rp-bl">${esc(s.l)}<small>${esc(s.who)}${s.n?` · ${s.n} ta`:''}</small></span><div class="rp-bar"><i style="width:${s.avg!=null?(s.avg/sMax*100).toFixed(1):0}%"></i></div><b data-noi18n>${rpDur(s.avg)}</b><span class="rp-pct" data-noi18n>${s.max!=null?'eng ko‘pi '+rpDur(s.max):''}</span></div>`).join('')}</div></div>
+    </div>
+    <div class="card rp-card"><h3>Oxirgi 12 oy</h3><p class="sub">Oyma-oy: kelgan arizalar, faol bo‘lgan hamkorlar va tuzilgan Bosh shartnomalar</p>
+      <div class="rp-legend"><span><i class="k1"></i>Yangi arizalar</span><span><i class="k2"></i>Faol hamkor</span><span><i class="k3"></i>Bosh shartnomalar</span></div>
+      <div class="rp-trend">${R.trend.map(t=>`<div class="rp-tm ${t.m===mk?'cur':''}" title="${esc(rpMonthLabel(t.m))}: ${t.yangi} ariza, ${t.faol} faol, ${t.bosh} shartnoma">
+        <div class="rp-tb"><i class="k1" style="height:${(t.yangi/tMax*100).toFixed(1)}%"><em data-noi18n>${t.yangi||''}</em></i><i class="k2" style="height:${(t.faol/tMax*100).toFixed(1)}%"><em data-noi18n>${t.faol||''}</em></i><i class="k3" style="height:${(t.bosh/tMax*100).toFixed(1)}%"><em data-noi18n>${t.bosh||''}</em></i></div>
+        <span data-noi18n>${rpShortMonth(t.m)}</span></div>`).join('')}</div></div>
+    <div class="rp-cols">
+      <div class="card rp-card"><h3>Filiallar bo‘yicha</h3><p class="sub">${mk?'Shu oyda':'Jami'} tuzilgan Bosh shartnomalar va ro‘yxatdagi hamkorlar</p>
+        ${R.filial.length ? `<table class="srv-table"><thead><tr><th>Filial</th><th style="text-align:right">Shartnomalar</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${R.filial.map(f=>`<tr><td data-noi18n>${esc(f.f)}<div class="rp-mini"><i style="width:${(f.bosh/filMax*100).toFixed(1)}%"></i></div></td><td style="text-align:right" data-noi18n><b>${f.bosh}</b></td><td style="text-align:right" data-noi18n>${f.hamkor}</td></tr>`).join('')}</tbody></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+      <div class="card rp-card"><h3>Hududlar bo‘yicha</h3><p class="sub">Manzil bo‘yicha aniqlangan: ${mk?'shu oydagi':'barcha'} arizalar, faol bo‘lganlar va jami hamkorlar</p>
+        ${R.hudud.length ? `<table class="srv-table"><thead><tr><th>Hudud</th><th style="text-align:right">Arizalar</th><th style="text-align:right">Faol</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${R.hudud.map(h=>`<tr><td>${esc(h.n)}</td><td style="text-align:right" data-noi18n><b>${h.ariza}</b></td><td style="text-align:right" data-noi18n>${h.faol}</td><td style="text-align:right" data-noi18n>${h.hamkor}</td></tr>`).join('')}</tbody></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+    </div>
+    <div class="card rp-card"><h3>Tuzilgan hujjatlar</h3><div class="rp-docs">
+      <div><b data-noi18n>${c.bosh}</b><span>Bosh shartnoma</span>${p?rpDelta(c.bosh,p.bosh):''}</div>
+      <div><b data-noi18n>${c.qoshimcha}</b><span>Qo‘shimcha kelishuv</span>${p?rpDelta(c.qoshimcha,p.qoshimcha):''}</div>
+      <div><b data-noi18n>${c.bonus}</b><span>Bonus / bekor qilish</span>${p?rpDelta(c.bonus,p.bonus):''}</div></div></div>`;
+  i18nApply(host);
+}
+function rpExcel(){
+  const R = window.__rp; if(!R) return;
+  const wb = XLSX.utils.book_new();
+  const add = (name, rows, cols)=>{ const ws = XLSX.utils.json_to_sheet(rows); if(cols) ws['!cols'] = cols.map(w=>({wch:w})); XLSX.utils.book_append_sheet(wb, ws, name); };
+  const c = R.cur;
+  add('Umumiy', [
+    {'Ko‘rsatkich':'Davr', 'Qiymat':rpMonthLabel(R.mk)},
+    {'Ko‘rsatkich':'Yangi arizalar', 'Qiymat':c.yangi, 'O‘tgan oy':R.prev?R.prev.yangi:''},
+    {'Ko‘rsatkich':'Qabul qilingan', 'Qiymat':c.qabul, 'O‘tgan oy':R.prev?R.prev.qabul:''},
+    {'Ko‘rsatkich':'Rad etilgan', 'Qiymat':c.rad, 'O‘tgan oy':R.prev?R.prev.rad:''},
+    {'Ko‘rsatkich':'Shartnoma imzolangan', 'Qiymat':c.imzo, 'O‘tgan oy':R.prev?R.prev.imzo:''},
+    {'Ko‘rsatkich':'Faol hamkor bo‘ldi', 'Qiymat':c.faol, 'O‘tgan oy':R.prev?R.prev.faol:''},
+    {'Ko‘rsatkich':'Arizadan faolgacha o‘rtacha (kun)', 'Qiymat':c.ortacha!=null?+(c.ortacha/24).toFixed(1):'', 'O‘tgan oy':R.prev&&R.prev.ortacha!=null?+(R.prev.ortacha/24).toFixed(1):''},
+    {'Ko‘rsatkich':'Bosh shartnomalar', 'Qiymat':c.bosh, 'O‘tgan oy':R.prev?R.prev.bosh:''},
+    {'Ko‘rsatkich':'Qo‘shimcha kelishuvlar', 'Qiymat':c.qoshimcha, 'O‘tgan oy':R.prev?R.prev.qoshimcha:''},
+    {'Ko‘rsatkich':'Bonus / bekor qilish', 'Qiymat':c.bonus, 'O‘tgan oy':R.prev?R.prev.bonus:''},
+    {'Ko‘rsatkich':'Hozir jarayonda', 'Qiymat':R.nowS.jarayonda}, {'Ko‘rsatkich':'Muddati o‘tgan', 'Qiymat':R.nowS.kechikkan},
+  ], [36,16,12]);
+  add('Voronka', R.funnel.map(([l,n])=>({'Bosqich':l, 'Soni':n, 'Ulushi, %':R.funnel[0][1]?Math.round(n/R.funnel[0][1]*100):''})), [26,10,10]);
+  add('Bosqichlar vaqti', R.segs.map(s=>({'Bosqich':s.l, 'Mas’ul':s.who, 'Soni':s.n, 'O‘rtacha (soat)':s.avg!=null?+s.avg.toFixed(1):'', 'Mediana (soat)':s.med!=null?+s.med.toFixed(1):'', 'Eng ko‘pi (soat)':s.max!=null?+s.max.toFixed(1):''})), [28,12,8,14,14,14]);
+  add('12 oy', R.trend.map(t=>({'Oy':rpMonthLabel(t.m), 'Yangi arizalar':t.yangi, 'Faol hamkor':t.faol, 'Bosh shartnomalar':t.bosh})), [16,14,12,16]);
+  add('Filiallar', R.filial.map(f=>({'Filial':f.f, 'Shartnomalar':f.bosh, 'Hamkorlar':f.hamkor})), [28,14,12]);
+  add('Hududlar', R.hudud.map(h=>({'Hudud':h.n, 'Arizalar':h.ariza, 'Faol':h.faol, 'Hamkorlar':h.hamkor})), [20,10,8,12]);
+  add('Arizalar', R.coh.map(x=>({'Tashkilot':(x.a.data||{}).tashkilot_nomi||'', 'STIR':(x.a.data||{}).stir||'', 'Hudud':rpRegion((x.a.data||{}).manzil), 'Yuboruvchi':x.a.userIsm||'',
+    'Status':(AR_STATUS[x.a.status]||{}).admin||x.a.status, 'Kelgan':arFmtDT(x.ev.created), 'Qabul':x.ev.qabul?arFmtDT(x.ev.qabul):'', 'Imzo':x.ev.imzo?arFmtDT(x.ev.imzo):'', 'Faol':x.ev.login?arFmtDT(x.ev.login):'',
+    'Arizadan faolgacha (kun)':x.ev.login?+(rpHours(x.ev.created,x.ev.login)/24).toFixed(1):''})), [34,16,14,20,26,17,17,17,17,12]);
+  XLSX.writeFile(wb, `BirZum_hisobot_${R.mk || "butun_davr"}.xlsx`);
+}
+async function bindReports(){
+  const m = document.getElementById('rpMonth');
+  if(m) m.onchange = ()=>{ rpMonth = m.value || 'all'; document.getElementById('rpAll').classList.toggle('on', rpMonth==='all'); renderReports(); };
+  const al = document.getElementById('rpAll'); if(al) al.onclick = ()=>{ rpMonth = 'all'; if(m) m.value = ''; al.classList.add('on'); renderReports(); };
+  const rl = document.getElementById('rpReload'); if(rl) rl.onclick = async ()=>{ await flowLoad(); renderReports(); };
+  const xb = document.getElementById('rpXlsx'); if(xb) xb.onclick = rpExcel;
+  if(arLoaded) renderReports();
+  await flowLoad();
+  if(activeTab==='hisobot') renderReports();
+}
+
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){
     alert('Excel kutubxonasi yuklanmadi. Internet aloqasini tekshirib, sahifani qayta yuklang.');
@@ -7029,6 +7383,7 @@ function profilMarkup(){
     ${appearanceCardMarkup()}
     ${importsCardMarkup()}
     ${serverCardMarkup()}
+    ${slaCardMarkup()}
     ${tgCardMarkup()}
     ${logCardMarkup()}
     <div class="card">
@@ -7092,6 +7447,7 @@ function bindProfilEvents(){
   bindAppearanceEvents();
   bindImportsCard();
   bindServerCard();
+  bindSlaCard();
   bindTgCard();
   bindLogCard();
   const chooseFolderBtn = document.getElementById('chooseFolderBtn');
@@ -7733,6 +8089,7 @@ function renderHistory(key){
 
 function bindSectionEvents(key){
   if(key === 'panel'){ bindFlowPanel(); return; }
+  if(key === 'hisobot'){ bindReports(); return; }
   if(key === 'arizalar'){ bindArizalarEvents(); return; }
   if(key === 'users'){ bindUsersEvents(); return; }
   if(key === 'profil'){

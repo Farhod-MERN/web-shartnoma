@@ -1087,6 +1087,9 @@ input.auto-filled{box-shadow:0 0 0 3px var(--accent-soft);border-color:var(--acc
 .apv-pass{display:flex;gap:6px;} .apv-pass input{flex:1;min-width:0;font-family:var(--mono);letter-spacing:.03em;} .apv-pass button{min-width:0 !important;padding:0 12px;}
 #apvLogin{font-family:var(--mono);}
 .ar-back-mon{margin-right:4px;}
+/* v11.1 */
+.hk-tool.del{color:var(--danger);border-color:rgba(220,38,38,.35);}
+.u-dup{color:#b7791f;font-weight:700;font-size:11px;}
 </style>
 </head>
 <body>
@@ -4411,10 +4414,12 @@ function getUserSession(){ try{ const r = sessionStorage.getItem(USER_SESSION_KE
 function setUserSession(u){ try{ sessionStorage.setItem(USER_SESSION_KEY, JSON.stringify(u)); }catch(e){} }
 function clearUserSession(){ try{ sessionStorage.removeItem(USER_SESSION_KEY); }catch(e){} }
 
-async function arFindUser(login){
+async function arFindUsers(login){
   const list = await ST.where(AR_USERS, 'loginLower', String(login).trim().toLowerCase());
-  return list[0] || null;
+  // bir xil login bir nechta bo'lsa — oxirgi kirgani birinchi
+  return list.sort((a,b)=> String(b.lastLoginAt||b.createdAt||'').localeCompare(String(a.lastLoginAt||a.createdAt||'')));
 }
+async function arFindUser(login){ return (await arFindUsers(login))[0] || null; }
 async function arTryUserLogin(login, pass){
   const u = await arFindUser(login);
   if(!u) return null;
@@ -5537,7 +5542,7 @@ function renderUsersList(){
       const n = adminUnread[u.id]||0;
       const ac = AR_CACHE.filter(a=>a.userId===u.id).length;
       return `<tr data-id="${u.id}" class="${u.id===usersSelId?'sel':''}">
-        <td data-noi18n><div class="hk-name">${esc(u.ism||'—')}</div><div class="hk-sub">@${esc(u.login)}</div></td>
+        <td data-noi18n><div class="hk-name">${esc(u.ism||'—')}</div><div class="hk-sub">@${esc(u.login)}${USERS_CACHE.some(x=>x.id!==u.id && String(x.loginLower||x.login||'').toLowerCase()===String(u.loginLower||u.login||'').toLowerCase()) ? ' <span class="u-dup" title="Shu login bilan boshqa akkaunt ham bor">⚠️ takroriy · '+arFmtDT(u.createdAt).slice(0,10)+'</span>' : ''}</div></td>
         <td>${roleBadge(userRole(u))}</td>
         <td data-noi18n style="white-space:nowrap;">${esc(u.telefon||'—')}</td>
         <td data-noi18n>${userRole(u)==='user'?ac:'—'}</td>
@@ -5566,9 +5571,14 @@ async function renderUserDetail(keepScroll){
   if(req !== userDetailReq) return;
   const ar = AR_CACHE.filter(a=>a.userId===u.id);
   const cnt = s=> ar.filter(a=>a.status===s).length;
+  const isAdm = userRole(u)==='admin';
+  let meId = ''; try{ meId = sessionStorage.getItem(ADMIN_ID_KEY)||''; }catch(e){}
+  const isMe = !!meId && meId===u.id;
+  const dups = USERS_CACHE.filter(x=> x.id!==u.id && String(x.loginLower||x.login||'').toLowerCase()===String(u.loginLower||u.login||'').toLowerCase());
   host.innerHTML = `
-    <div class="hk-card-head"><h2>Foydalanuvchi</h2>${roleBadge(userRole(u))}<span class="st-badge ${u.blocked?'st-rej':'st-ok'}">${u.blocked?'Nofaol':'Faol'}</span>
-      <div class="hk-tools"><button type="button" class="hk-tool" id="uEditBtn">✏️ Tahrirlash</button></div></div>
+    <div class="hk-card-head"><h2>Foydalanuvchi</h2>${roleBadge(userRole(u))}<span class="st-badge ${u.blocked?'st-rej':'st-ok'}">${u.blocked?'Nofaol':'Faol'}</span>${isMe?'<span class="st-badge st-re">Siz shu akkauntdasiz</span>':''}
+      <div class="hk-tools">${isMe?'':'<button type="button" class="hk-tool del" id="uDelBtn">🗑 O‘chirish</button>'}<button type="button" class="hk-tool" id="uEditBtn">✏️ Tahrirlash</button></div></div>
+    ${dups.length ? `<div class="ar-note warn" style="margin:0 18px 0;">⚠️ Shu login bilan yana ${dups.length} ta akkaunt bor (ro‘yxatdan o‘tgan: <span data-noi18n>${dups.map(x=>arFmtDT(x.createdAt)).join(', ')}</span>). Ortiqchasini o‘chirib tashlang — ${isMe ? 'siz hozir shu akkauntdasiz, uni qoldiring' : (dups.some(x=>x.id===meId) ? 'siz hozir boshqasidasiz, shuning uchun aynan <b>shu akkauntni</b> o‘chirish mumkin' : 'oxirgi marta kirilganini qoldiring')}.</div>` : ''}
     <div class="hk-detail-body">
       <div class="ar-applicant" data-noi18n>
         <div class="ar-av">${esc(String(u.ism||'?').trim().charAt(0).toUpperCase())}</div>
@@ -5591,13 +5601,30 @@ async function renderUserDetail(keepScroll){
         <div><b data-noi18n>${cnt('rad')}</b><span>Rad etilgan</span></div>
       </div>
       ${ar.length ? `<div class="hk-section" style="margin-top:12px;"><h3>Arizalari</h3><table class="hk-docs" data-noi18n>${ar.map(a=>`<tr><td>${esc(a.data&&a.data.tashkilot_nomi||'—')}</td><td>${arFmtDT(a.createdAt)}</td><td>${arStatusBadge(a.status,'admin')}</td><td style="text-align:right;"><button type="button" class="link-btn" data-goar="${a.id}" style="margin:0;">Ochish →</button></td></tr>`).join('')}</table></div>` : ''}
-      <div class="hk-section"><h3>Yozishma</h3>${chatMarkup(thread, 'admin', u.ism||u.login, esc(u.telefon||'') + ' · @' + esc(u.login))}</div>
+      ${isAdm ? `<div class="hk-section"><h3>Yozishma</h3><p class="sub" style="margin:0;">Admin akkauntlari bilan yozishma yuritilmaydi — chat faqat hamkor va buxgalterlar uchun.</p></div>`
+              : `<div class="hk-section"><h3>Yozishma</h3>${chatMarkup(thread, 'admin', u.ism||u.login, esc(u.telefon||'') + ' · @' + esc(u.login))}</div>`}
     </div>`;
-  bindChat(async (txt, ex)=>{
+  if(!isAdm) bindChat(async (txt, ex)=>{
     await msgSend(u.id, 'admin', txt, Object.assign({userIsm:u.ism}, ex));
     renderUserDetail(true);
   }, {list:thread, side:'admin', rerender:()=>renderUserDetail(true)});
-  if(thread.some(m=>m.from==='user' && !m.readByAdmin)){
+  const delB = document.getElementById('uDelBtn');
+  if(delB) delB.onclick = async ()=>{
+    const admins = USERS_CACHE.filter(x=> userRole(x)==='admin' && !x.blocked);
+    if(isAdm && admins.length <= 1 && !u.blocked){ alert('Bu yagona faol admin — uni o‘chirib bo‘lmaydi.'); return; }
+    if(!confirm(`@${u.login} (${u.ism||''}, ro‘yxatdan o‘tgan: ${arFmtDT(u.createdAt)}) akkaunti butunlay o‘chirilsinmi?\n\nUning yozishmalari ham o‘chadi. Arizalari va shartnomalari saqlanib qoladi.`)) return;
+    delB.disabled = true;
+    try{
+      for(const m of thread){ try{ if(m.att) await arDeleteFile(m.att); await ST.del(MSG_COL, m.id); }catch(e){} }
+      try{ await ST.del('birzum_tg', u.id); }catch(e){}
+      await ST.del(AR_USERS, u.id);
+      logAct('user.ochirildi', {type:'user', id:u.id, name:u.ism||u.login}, `@${u.login} · ${ROLE_LABEL[userRole(u)]||''} · ro‘yxatdan o‘tgan ${arFmtDT(u.createdAt)}`);
+      USERS_CACHE = USERS_CACHE.filter(x=>x.id!==u.id); usersSelId = null;
+      renderUsersList(); renderUserDetail();
+      showToast({icon:'🗑', title:'Akkaunt o‘chirildi', body:'@'+u.login});
+    }catch(e){ delB.disabled = false; alert('O‘chirilmadi: '+(e.message||e)); }
+  };
+  if(!isAdm && thread.some(m=>m.from==='user' && !m.readByAdmin)){
     await msgMarkRead(thread, 'admin');
     delete adminUnread[u.id];
     setTitleBadge(adminUnreadTotal() + arPendingCount());
@@ -5692,11 +5719,14 @@ async function cloudAdminsExist(){
 }
 // Kirish: avval bulutdagi akkauntlar, keyin (faqat bulutda admin bo'lmasa) eski mahalliy admin
 async function doLogin(login, pass){
-  let u = null, cloudOk = true;
-  try{ u = await arFindUser(login); }catch(e){ cloudOk = false; console.error(e); }
-  if(u){
-    if(arHashPass(pass, u.salt) !== u.hash) return {err:'Login yoki parol noto‘g‘ri.'};
-    if(u.blocked) return {blocked:true};
+  let u = null, cloudOk = true, list = [];
+  try{ list = await arFindUsers(login); }catch(e){ cloudOk = false; console.error(e); }
+  if(list.length){
+    // bir xil logindagi akkauntlar ichidan paroli mos va faolini tanlaymiz
+    const ok = list.filter(x=> arHashPass(pass, x.salt) === x.hash);
+    if(!ok.length) return {err:'Login yoki parol noto‘g‘ri.'};
+    u = ok.find(x=>!x.blocked);
+    if(!u) return {blocked:true};
     try{ u.lastLoginAt = new Date().toISOString(); await ST.set(AR_USERS, u.id, u); }catch(e){}
     return {user:u, role:userRole(u)};
   }
@@ -6908,7 +6938,7 @@ const LOG_ACT = {
   'shartnoma.yaratildi':'Shartnoma yaratdi', 'shartnoma.ochirildi':'Shartnomani o‘chirdi', 'shartnoma.bux':'Shartnomani buxgalterga yubordi',
   'bux.didox':'Shartnomani Didoxdan yubordi', 'bux.tasdiq':'Shartnoma tasdiqlandi deb belgiladi', 'bux.bekor':'Shartnomani bekor qildi',
   'hamkor.qoshildi':'Hamkor qo‘shdi', 'hamkor.tahrir':'Hamkor ma’lumotlarini o‘zgartirdi', 'hamkor.ochirildi':'Hamkorni o‘chirdi',
-  'user.qoshildi':'Foydalanuvchi qo‘shdi', 'user.tahrir':'Foydalanuvchini tahrirladi', 'user.faol':'Foydalanuvchini faollashtirdi', 'user.nofaol':'Foydalanuvchini nofaol qildi',
+  'user.qoshildi':'Foydalanuvchi qo‘shdi', 'user.tahrir':'Foydalanuvchini tahrirladi', 'user.faol':'Foydalanuvchini faollashtirdi', 'user.ochirildi':'Foydalanuvchini o‘chirdi', 'user.nofaol':'Foydalanuvchini nofaol qildi',
   'import':'Import qildi', 'sozlama.muddat':'Muddatlarni o‘zgartirdi',
 };
 const LOG_SECT = {bosh:'Bosh shartnoma', qoshimcha:'Qo‘shimcha kelishuv', bonus:'Bonus shartnoma', hamkor:'Hamkor'};
@@ -9519,6 +9549,9 @@ Object.assign(I18N, {"eng ko‘pi":["максимум","max"],"Yuborilgan":["О�
 "Ma’lumotlarni tahrirlash":["Редактировать данные","Edit details"],"Tasdiqlash va buxgalterga yuborish":["Подтвердить и отправить бухгалтеру","Approve and send to accountant"],
 "Login va parollar hamkorga yuborildi":["Логин и пароль отправлены партнёру","Login and password sent to partner"],"To‘g‘ri":["Верно","Correct"],"Noto‘g‘ri":["Неверно","Wrong"],
 "Tuzatishga qaytarish":["Вернуть на доработку","Return for corrections"],"Rad etish":["Отклонить","Reject"],"Faqat qabul qilish":["Только принять","Accept only"]});
+Object.assign(I18N, {"Siz shu akkauntdasiz":["Вы в этом аккаунте","You are using this account"],"🗑 O‘chirish":["🗑 Удалить","🗑 Delete"],
+"Admin akkauntlari bilan yozishma yuritilmaydi — chat faqat hamkor va buxgalterlar uchun.":["С админскими аккаунтами переписка не ведётся — чат только для партнёров и бухгалтеров.","No chat with admin accounts — chat is only for partners and accountants."],
+"Akkaunt o‘chirildi":["Аккаунт удалён","Account deleted"],"Foydalanuvchini o‘chirdi":["Удалил пользователя","Deleted a user"]});
 
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){

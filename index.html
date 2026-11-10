@@ -6234,19 +6234,28 @@ function bindBuxDocDetail(x){
     const ns = b.dataset.bset; const u = getUserSession();
     const izoh = (document.getElementById('bxIzoh')||{}).value || '';
     if(!confirm(`Status «${BUX_STATUS[ns].l}» ga o‘zgartirilsinmi?`)) return;
+    if(window.__bxBusy) return; window.__bxBusy = true;
     document.querySelectorAll('[data-bset]').forEach(z=>z.disabled = true);
     try{
       const cur = await ST.get(BUX_COL, x.id) || x;
+      const allowed = {yuborildi:['didox'], didox:['tasdiq','bekor']}[cur.status] || [];
+      if(!allowed.includes(ns)){
+        Object.assign(x, cur); window.__bxBusy = false;
+        alert(cur.status===ns ? 'Bu status allaqachon qo‘yilgan.' : 'Shartnoma holati o‘zgargan. Sahifa yangilandi.');
+        renderBux(); return;
+      }
       const now = new Date().toISOString();
       cur.status = ns; cur.updatedAt = now;
       cur.history = (cur.history||[]).concat([{status:ns, at:now, by:'Buxgalter: '+(u.ism||u.login), izoh:izoh.trim()}]);
       await ST.set(BUX_COL, x.id, cur);
       Object.assign(x, cur);
+      { const bd = bDocs.find(d=>d.id===x.id); if(bd && bd!==x) Object.assign(bd, cur); }
       try{ await msgSend(u.id, 'user', `📄 «${x.tashkilot_nomi}» (№ ${x.raqam}) — ${BUX_STATUS[ns].l}${izoh.trim()?'\nIzoh: '+izoh.trim():''}`, {userIsm:u.ism, userLogin:u.login, system:true, buxDocId:x.id}); }catch(e){}
       await arSyncFromBux(x, ns, izoh.trim(), 'Buxgalter: '+(u.ism||u.login));
       logAct('bux.' + ns, {type:'shartnoma', id:x.id, name:x.tashkilot_nomi, stir:x.stir}, `№ ${x.raqam}${izoh.trim() ? ' · ' + izoh.trim() : ''}`);
+      window.__bxBusy = false;
       renderBux();
-    }catch(e){ alert('Saqlanmadi: '+(e.message||e)); document.querySelectorAll('[data-bset]').forEach(z=>z.disabled = false); }
+    }catch(e){ window.__bxBusy = false; alert('Saqlanmadi: '+(e.message||e)); document.querySelectorAll('[data-bset]').forEach(z=>z.disabled = false); }
   });
 }
 /* ---- Hamkorlar (faqat ko'rish) ---- */
@@ -6739,6 +6748,7 @@ async function arSyncFromBux(x, ns, izoh, who){
              .sort((p,q)=>String(q.updatedAt||q.createdAt).localeCompare(String(p.updatedAt||p.createdAt)))[0] || null;
     }
     if(!a || a.status==='login' || a.status==='rad') return;
+    if(a.status===st) return; // shu status allaqachon qo'yilgan — takror yozilmaydi
     const now = new Date().toISOString();
     const id = a.id; const upd = Object.assign({}, a); delete upd.id;
     upd.status = st; upd.updatedAt = now;
@@ -6746,7 +6756,7 @@ async function arSyncFromBux(x, ns, izoh, who){
     await ST.set(AR_COL, id, upd);
     const nm = (a.data && a.data.tashkilot_nomi) || 'arizangiz';
     const txt = {didox:`📨 «${nm}» bo‘yicha shartnoma Didox orqali sizga yuborildi. Iltimos, Didox tizimida tekshirib imzolang.`,
-                 imzo:`✅ «${nm}» bo‘yicha shartnoma imzolandi. Tizimga kirish login va paroli shartnomada ko‘rsatilgan telefon raqamingizga SMS orqali yuboriladi.`,
+                 imzo:`✅ «${nm}» bo‘yicha shartnoma imzolandi.`,
                  bekor:`✕ «${nm}» bo‘yicha shartnoma bekor qilindi.`}[st] + (izoh ? `\nIzoh: ${izoh}` : '');
     await msgSend(a.userId, 'admin', txt, {userIsm:a.userIsm, system:true, arizaId:id});
   }catch(e){ console.error('Ariza statusi yangilanmadi', e); }
@@ -9764,6 +9774,7 @@ Object.assign(I18N, {"Siz shu akkauntdasiz":["Вы в этом аккаунте"
 "Admin akkauntlari bilan yozishma yuritilmaydi — chat faqat hamkor va buxgalterlar uchun.":["С админскими аккаунтами переписка не ведётся — чат только для партнёров и бухгалтеров.","No chat with admin accounts — chat is only for partners and accountants."],
 "Akkaunt o‘chirildi":["Аккаунт удалён","Account deleted"],"Foydalanuvchini o‘chirdi":["Удалил пользователя","Deleted a user"]});
 Object.assign(I18N, {"Admin yuborgan sana": ["Дата отправки админом", "Date sent by admin"], "Barcha arizalar": ["Все заявки", "All applications"], "Bosqich": ["Этап", "Stage"], "Bosqichda": ["На этапе", "In stage"], "Chapdagi jadvaldan shartnomani bosing — PDF va ma’lumotlari shu yerda ochiladi. Ish jarayoniga qarab statusni o‘zgartiring: «{q}» → «{q}» yoki «{q}».": ["Нажмите на договор в таблице слева — PDF и данные откроются здесь. Меняйте статус по ходу работы: «{q}» → «{q}» или «{q}».", "Click a contract in the table on the left — its PDF and details open here. Change the status as you go: «{q}» → «{q}» or «{q}»."], "Eski kelganlar avval": ["Сначала старые", "Oldest first"], "Filtr bo‘yicha shartnoma topilmadi.": ["По фильтру договоры не найдены.", "No contracts match the filter."], "Hamkorni tanlang": ["Выберите партнёра", "Select a partner"], "Hammasi ({n} ta) jadvalda →": ["Все ({n}) в таблице →", "All ({n}) in table →"], "Jadval": ["Таблица", "Table"], "Kartochkalar": ["Карточки", "Cards"], "Kechikkanlar avval": ["Сначала просроченные", "Overdue first"], "Kelgan": ["Поступила", "Received"], "Login va parol SMS orqali yuboriladi": ["Логин и пароль будут отправлены по SMS", "Login and password will be sent by SMS"], "Login va parol SMS orqali yuborildi": ["Логин и пароль отправлены по SMS", "Login and password sent by SMS"], "🔑 Login va parol SMS orqali yuborildi": ["🔑 Логин и пароль отправлены по SMS", "🔑 Login and password sent by SMS"], "Nomi bo‘yicha (A–Z)": ["По названию (А–Я)", "By name (A–Z)"], "Oxirgi {n} kunda:": ["За последние {n} дней:", "Last {n} days:"], "ta": ["", ""], "Parol — shartnomadagi telefon raqami ({n} siz, masalan +{n} → {n}). Login va parol hamkor kartochkasida saqlanadi, buxgalter ularni ko‘rmaydi. Ularni hamkorga shartnomadagi telefon raqamiga": ["Пароль — номер телефона из договора (без {n}, например +{n} → {n}). Логин и пароль хранятся в карточке партнёра, бухгалтер их не видит. Отправьте их партнёру на номер из договора", "Password is the phone number from the contract (without {n}, e.g. +{n} → {n}). Login and password are stored in the partner card; the accountant cannot see them. Send them to the partner's contract phone number"], "SMS orqali o‘zingiz yuborasiz": ["сами по SMS", "yourself by SMS"], "— sayt ularni hamkorga yubormaydi.": ["— сайт их партнёру не отправляет.", "— the site does not send them to the partner."], "Ro‘yxatdan hamkorni bosing — rekvizitlari, rasmlari va hujjatlari shu yerda ochiladi. Ma’lumotlar faqat ko‘rish uchun.": ["Нажмите на партнёра в списке — реквизиты, фото и документы откроются здесь. Только просмотр.", "Click a partner in the list — details, photos and documents open here. View only."], "Saralash:": ["Сортировка:", "Sort:"], "Shartnomani tanlang": ["Выберите договор", "Select a contract"], "Tashkilot, STIR yoki shartnoma raqami": ["Организация, ИНН или номер договора", "Organization, TIN or contract number"], "Tasodifiy parol": ["Случайный пароль", "Random password"], "Telefon raqamidan ({n} siz)": ["Из номера телефона (без {n})", "From phone number (without {n})"], "Yakuniy holat:": ["Итоговый статус:", "Final status:"], "Yangi kelganlar avval": ["Сначала новые", "Newest first"], "Hammasi tayyor! BirZum Nasiya tizimiga kirish login va paroli shartnomada ko‘rsatilgan telefon raqamingizga SMS orqali yuboriladi.": ["Всё готово! Логин и пароль для входа в систему BirZum Nasiya будут отправлены по SMS на номер телефона, указанный в договоре.", "All set! Your BirZum Nasiya login and password will be sent by SMS to the phone number in the contract."], "Shartnoma imzolandi. Tez orada tizimga kirish login va paroli shartnomadagi telefon raqamingizga SMS orqali yuboriladi.": ["Договор подписан. Скоро логин и пароль будут отправлены по SMS на номер телефона из договора.", "The contract is signed. Your login and password will soon be sent by SMS to the contract phone number."]});
+Object.assign(I18N, {"Bu status allaqachon qo‘yilgan.": ["Этот статус уже установлен.", "This status is already set."], "Shartnoma holati o‘zgargan. Sahifa yangilandi.": ["Статус договора изменился. Страница обновлена.", "The contract status has changed. The page has been refreshed."]});
 
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){

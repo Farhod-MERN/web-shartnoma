@@ -1173,6 +1173,10 @@ select#f_tarif_turi{width:100%;}
 /* ===== v19 ===== */
 .imp-sync{display:flex;align-items:flex-start;gap:8px;margin:2px 0 6px;padding:8px 10px;border:1px dashed var(--line);border-radius:8px;font-size:12.5px;cursor:pointer;}
 .imp-sync input{margin-top:2px;}
+/* ===== v20 ===== */
+.tt-badge{white-space:nowrap;}
+.tt-chk{display:flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--muted);cursor:pointer;white-space:nowrap;}
+.tt-chk input{margin:0;}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -3648,7 +3652,9 @@ async function handleImportFile(key, file, forcedKind){
     toUpdate.forEach(u=>{ u.rec.data = Object.assign({}, u.rec.data, u.changes); u.rec.updatedAt = now; });
     toAdd.forEach(item=>{
       item.d.no = nextSequenceNumber(key);
-      DB[key].push({id:uid(), kind:item.kind, data:item.d, createdAt:now});
+      const nr = {id:uid(), kind:item.kind, data:item.d, createdAt:now};
+      if(key==='bosh'){ nr.boshHolat = 'faol'; if(!nr.data.tarif_turi) nr.data.tarif_turi = 'oddiy'; }   // import qilingan — amaldagi shartnoma
+      DB[key].push(nr);
     });
     persist(key);
     renderTabs();
@@ -3776,7 +3782,7 @@ function sectionMarkup(key,title,sub){
         <div class="hist-filters">
           <label>Sanadan<input type="date" id="histFrom_${key}"></label>
           <label>Sanagacha<input type="date" id="histTo_${key}"></label>
-          ${key==='bosh' ? `<label>Buxgalteriya holati<select id="histSt_${key}"><option value="">Hammasi</option><option value="none">Yuborilmagan</option><option value="yuborildi">Yangi — yuborildi</option><option value="didox">Didoxdan yuborildi</option><option value="tasdiq">Tasdiqlandi</option><option value="bekor">Bekor qilindi</option></select></label>` : ''}
+          ${key==='bosh' ? `<label>Holati<select id="histSt_${key}"><option value="">Hammasi</option><option value="faol">Faol hamkor</option><option value="none">Yuborilmagan</option><option value="yuborildi">Yangi — yuborildi</option><option value="didox">Didoxdan yuborildi</option><option value="tasdiq">Tasdiqlandi</option><option value="bekor">Bekor qilindi</option></select></label><label>Shartnoma turi<select id="histTt_${key}"><option value="">Hammasi</option><option value="oddiy">Oddiy</option><option value="yuqori">Yuqori ustamali</option></select></label>` : ''}
           <button type="button" class="link-btn" id="histClear_${key}" style="margin:0;align-self:flex-end;">✕ Tozalash</button>
         </div>
         <div class="hist-count" id="histCount_${key}"></div>
@@ -4025,12 +4031,11 @@ function renderHamkorList(){
   }else{
     wrap.innerHTML = `
     <table class="hk-table">
-      <thead><tr><th style="width:62px;"></th><th>Nomi</th><th>STIR</th><th>Qo‘shilgan sana</th><th style="width:44px;"></th></tr></thead>
+      <thead><tr><th style="width:62px;"></th><th>Nomi</th><th>STIR</th><th>Shartnoma sanasi</th><th style="width:44px;"></th></tr></thead>
       <tbody>
       ${rows.map(r=>{
         const d = r.data||{};
-        const dt = new Date(r.createdAt);
-        const dts = isNaN(dt) ? '—' : `${pad2(dt.getDate())}/${pad2(dt.getMonth()+1)}/${dt.getFullYear()}`;
+        const dts = hkContractDate(r) || '—';
         return `<tr data-id="${r.id}" class="${r.id===hamkorEditingId?'sel':''}">
           <td style="white-space:nowrap;">
             <button class="hk-ico" data-act="edit" title="Tahrirlash">${ICONS.edit}</button>
@@ -7651,22 +7656,53 @@ function bindSlaCard(){
 }
 
 /* ---------- Hisobotlar ---------- */
-const RP_REGIONS = [
-  ['Qoraqalpog‘iston', /qoraqalp|qoraqolp|nukus|karakalp|каракалп|нукус/i],
-  ['Xorazm',           /xorazm|horazm|xorezm|urganch|urgench|xiva|хорезм|ургенч/i],
-  ['Navoiy',           /navoi|navoiy|zarafshon|навои/i],
-  ['Buxoro',           /buxor|bukhar|бухар/i],
-  ['Samarqand',        /samarq|samark|самарк/i],
-  ['Qashqadaryo',      /qashqa|kashka|qarshi|karshi|shahrisabz|кашка|карши/i],
-  ['Surxondaryo',      /surxon|surkhan|termiz|termez|сурхан|термез/i],
-  ['Jizzax',           /jizza|jizak|джизак|жиззах/i],
-  ['Sirdaryo',         /sirdar|syrdar|guliston|сырдар|гулистан/i],
-  ['Andijon',          /andij|андиж/i],
-  ['Namangan',         /namang|наманг/i],
-  ['Farg‘ona',         /farg|fergan|qo.?qon|kokand|marg.?ilon|ферган|коканд|марг/i],
-  ['Toshkent',         /tosh?kent|tashkent|ташкент|chirchiq|olmaliq|angren|yangiyo/i],
+/* ---- Hududlar: 12 viloyat + Toshkent shahri + Qoraqalpog'iston Respublikasi ---- */
+const RP_REG_LIST = ['Andijon viloyati','Buxoro viloyati','Farg‘ona viloyati','Jizzax viloyati','Namangan viloyati','Navoiy viloyati','Qashqadaryo viloyati',
+  'Samarqand viloyati','Sirdaryo viloyati','Surxondaryo viloyati','Toshkent viloyati','Toshkent shahri','Xorazm viloyati','Qoraqalpog‘iston Respublikasi'];
+// viloyat nomi (o'zak) → hudud
+const RP_REG_ROOT = [
+  ['Andijon viloyati', /andij|андиж/], ['Buxoro viloyati', /bu[xh]or|bukhar|бухар/], ['Farg‘ona viloyati', /farg|fergan|ферган|фарғ/],
+  ['Jizzax viloyati', /ji[zj]+a[xkh]|jizak|джизак|жиззах/], ['Namangan viloyati', /namang|наманг/], ['Navoiy viloyati', /navo[iy]|навои|навоий/],
+  ['Qashqadaryo viloyati', /q[ao]shqa|kashka|кашка|қашқа/], ['Samarqand viloyati', /samar[qk]|самарк|самарқ/], ['Sirdaryo viloyati', /s[iy]rdar|сырдар|сирдар/],
+  ['Surxondaryo viloyati', /surxon|surkhan|сурхан|сурхон/], ['Toshkent viloyati', /tosh?kent|tashkent|ташкент|тошкент/], ['Xorazm viloyati', /[xh]orazm|xorezm|хорезм|хоразм/],
+  ['Qoraqalpog‘iston Respublikasi', /q[ao]r[ao]q[ao]lp|karakalp|каракалп|қорақалп/],
 ];
-function rpRegion(txt){ const s = String(txt||''); const r = RP_REGIONS.find(([,re])=>re.test(s)); return r ? r[0] : 'Aniqlanmagan'; }
+// shahar / tuman nomlari → hudud (manzilda viloyat yozilmagan bo'lsa)
+const RP_REG_PLACE = [
+  ['Qoraqalpog‘iston Respublikasi', /nukus|beruniy|to.?rtko.?l|xo.?jayli|chimboy|qo.?ng.?irot|ellikqal|amudaryo|kegeyli|taxiatosh|taxtako.?pir|mo.?ynoq|shumanay|qanliko.?l|нукус|беруни/],
+  ['Xorazm viloyati', /urganch|urgench|xiva|khiva|hazorasp|shovot|xonqa|gurlan|bog.?ot|yangiariq|qo.?shko.?pir|tuproqqal|pitnak|ургенч|урганч|хива/],
+  ['Navoiy viloyati', /zarafshon|karmana|xatirchi|qiziltepa|nurota|uchquduq|konimex|tomdi|navbahor/],
+  ['Buxoro viloyati', /g.?ijduvon|kogon|vobkent|romitan|jondor|peshku|qorako.?l|olot|shofirkon|qorovulbozor|g.?ijduvan|гиждуван|когон/],
+  ['Samarqand viloyati', /urgut|kattaqo.?rg|ishtixon|jomboy|bulung.?ur|pastdarg|payariq|narpay|oqdaryo|toyloq|nurobod|qo.?shrabot|past.?darg/],
+  ['Qashqadaryo viloyati', /qarshi|karshi|shahrisabz|kitob|g.?uzor|koson|muborak|yakkabog|chiroqchi|dehqonobod|kasbi|nishon|mirishkor|карши/],
+  ['Surxondaryo viloyati', /termiz|termez|denov|sherobod|sho.?rchi|qumqo.?rg|boysun|jarqo.?rg|angor|muzrabot|oltinsoy|uzun|термез/],
+  ['Sirdaryo viloyati', /guliston|yangiyer|shirin|boyovut|xovos|mirzaobod|oqoltin|sardoba|гулистан/],
+  ['Jizzax viloyati', /g.?allaorol|zomin|do.?stlik|baxmal|forish|zarbdor|arnasoy|zafarobod|mirzacho.?l|paxtakor|yangiobod|sharof rashidov/],
+  ['Andijon viloyati', /asaka|xonobod|shahrixon|izboskan|jalaquduq|oltinko.?l|xo.?jaobod|baliqchi|bo.?ston|buloqboshi|marhamat|paxtaobod|qo.?rg.?ontepa|ulug.?nor/],
+  ['Namangan viloyati', /chust|pop tuman|kosonsoy|chortoq|uchqo.?rg|to.?raqo.?rg|yangiqo.?rg|norin|mingbuloq|chortoq/],
+  ['Farg‘ona viloyati', /qo.?qon|kokand|marg.?ilon|margilan|quvasoy|\bquva\b|rishton|oltiariq|beshariq|buvayda|dang.?ara|furqat|toshloq|yozyovon|bag.?dod|uchko.?prik|so.?x|коканд|маргилан/],
+  ['Toshkent viloyati', /chirchiq|olmaliq|angren|yangiyo.?l|bekobod|nurafshon|ohangaron|zangiota|qibray|parkent|piskent|bo.?stonliq|g.?azalkent|keles|eshonguzar|to.?ytepa|chinoz|quyi ?chirchiq|o.?rta ?chirchiq|yuqori ?chirchiq|bo.?ka|oqqo.?rg|чирчик|алмалык|ангрен/],
+  ['Toshkent shahri', /yunusobod|chilonzor|mirzo ?ulug|yakkasaroy|shayxontohur|olmazor|uchtepa|sergeli|yashnobod|mirobod|bektemir|yangihayot|юнусабад|чиланзар/],
+];
+function rpRegion(txt){
+  const s = String(txt||'').toLowerCase().replace(/[ʻʼ’‘`´]/g, "'");
+  if(!s.trim()) return 'Aniqlanmagan';
+  // 1) «… viloyati» / «Respublikasi» deb aniq yozilgan bo'lsa — eng birinchisi olinadi
+  let best = null;
+  RP_REG_ROOT.forEach(([n, re])=>{
+    const m = new RegExp('(' + re.source + ")[\\p{L}']*\\s*(viloyat|vil\\.|vil\\b|вилоят|област|обл|respublika|республика|res\\.|r\\.)", 'u').exec(s);
+    if(m && (!best || m.index < best.i)) best = {n, i:m.index};
+  });
+  if(best) return best.n;
+  // 2) Toshkent shahri
+  if(/(tosh?kent|tashkent|ташкент|тошкент)[\p{L}']*\s*(shahri|shahar|shaxar|shaxri|sh\.|sh\b|city|ш\.|шаҳ|шах)|(г\.|город|gorod)\s*(ташкент|tashkent)/u.test(s)) return 'Toshkent shahri';
+  // 3) shahar / tuman nomlari — manzilda eng oldin uchragani
+  RP_REG_PLACE.forEach(([n, re])=>{ const m = re.exec(s); if(m && (!best || m.index < best.i)) best = {n, i:m.index}; });
+  // 4) viloyat o'zagi (masalan «Fargʻona shaxar») — eng oldin uchragani
+  RP_REG_ROOT.forEach(([n, re])=>{ const m = re.exec(s); if(m && (!best || m.index < best.i)) best = {n: n==='Toshkent viloyati' ? 'Toshkent shahri' : n, i:m.index}; });
+  return best ? best.n : 'Aniqlanmagan';
+}
+let rpHudSort = 'hamkor';
 function rpMonthKey(iso){ return String(iso||'').slice(0,7); }
 function rpMonthLabel(k){ if(!k) return 'Butun davr'; const [y,m] = k.split('-'); return ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'][Number(m)-1] + ' ' + y; }
 function rpShortMonth(k){ const [y,m] = k.split('-'); return ['Yan','Fev','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'][Number(m)-1] + '<small> ' + y.slice(2) + '</small>'; }
@@ -7749,7 +7785,7 @@ function rpCompute(mk){
   const filial = rpFilialRows(mk);
   // hududlar: shu davrdagi arizalar va jami hamkorlar (manzil bo'yicha)
   const reg = {};
-  RP_REGIONS.forEach(([n])=> reg[n] = {ariza:0, faol:0, hamkor:0}); reg['Aniqlanmagan'] = {ariza:0, faol:0, hamkor:0};
+  RP_REG_LIST.forEach(n=> reg[n] = {ariza:0, faol:0, hamkor:0}); reg['Aniqlanmagan'] = {ariza:0, faol:0, hamkor:0};
   ars.forEach(x=>{ const r = rpRegion((x.a.data||{}).manzil); if(rpInPeriod(x.ev.created, mk)) reg[r].ariza++; if(rpInPeriod(x.ev.login, mk)) reg[r].faol++; });
   (DB.hamkor||[]).forEach(r=>{ const d = r.data||{}; let g = rpRegion(d.manzil); if(g==='Aniqlanmagan') g = rpRegion(d.filial); reg[g].hamkor++; });
   const hudud = Object.entries(reg).map(([n,v])=>Object.assign({n}, v)).filter(x=>x.ariza||x.hamkor||x.faol).sort((p,q)=> q.ariza-p.ariza || q.hamkor-p.hamkor);
@@ -7770,6 +7806,13 @@ function rpHkDateMap(){
 function rpHkDate(r, map){
   const d = r.data||{}, s = String(d.stir||'').trim();
   return (s && map[s]) || String(r.createdAt||'').slice(0,10);
+}
+function rpHudRows(R){
+  const by = {}; R.hudud.forEach(h=> by[h.n] = h);
+  const rows = RP_REG_LIST.map(n=> by[n] || {n, hamkor:0, ariza:0, faol:0});
+  if(rpHudSort==='hamkor') rows.sort((a,b)=> b.hamkor-a.hamkor || RP_REG_LIST.indexOf(a.n)-RP_REG_LIST.indexOf(b.n));
+  if(by['Aniqlanmagan'] && by['Aniqlanmagan'].hamkor) rows.push(by['Aniqlanmagan']);
+  return rows;
 }
 function rpFilialRows(mk){
   const fil = {}, map = rpHkDateMap(), day = rpFilDate;
@@ -7880,9 +7923,11 @@ function renderReports(){
         <span data-noi18n>${rpShortMonth(t.m)}</span></div>`).join('')}</div></div>
     <div class="rp-cols">
       ${rpFilialCard(R, mk)}
-      <div class="card rp-card"><h3>Hududlar bo‘yicha</h3><p class="sub">Manzil bo‘yicha aniqlangan: ${mk?'shu oydagi':'barcha'} arizalar, faol bo‘lganlar va jami hamkorlar</p>
-        ${R.hudud.length ? `<table class="srv-table"><thead><tr><th style="width:36px">№</th><th>Hudud</th><th style="text-align:right">Arizalar</th><th style="text-align:right">Faol</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${R.hudud.map((h,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td>${esc(h.n)}</td><td style="text-align:right" data-noi18n><b>${h.ariza}</b></td><td style="text-align:right" data-noi18n>${h.faol}</td><td style="text-align:right" data-noi18n>${h.hamkor}</td></tr>`).join('')}</tbody>
-          <tfoot><tr class="rp-total"><td></td><td><b>Jami</b></td><td style="text-align:right" data-noi18n><b>${R.hudud.reduce((a,h)=>a+h.ariza,0)}</b></td><td style="text-align:right" data-noi18n><b>${R.hudud.reduce((a,h)=>a+h.faol,0)}</b></td><td style="text-align:right" data-noi18n><b>${R.hudud.reduce((a,h)=>a+h.hamkor,0)}</b></td></tr></tfoot></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+      ${(()=>{ const H = rpHudRows(R); const tot = H.reduce((a,h)=>a+h.hamkor,0);
+        return `<div class="card rp-card"><h3>Hududlar bo‘yicha</h3><p class="sub">12 ta viloyat, Toshkent shahri va Qoraqalpog‘iston Respublikasi — hamkor manzili bo‘yicha (manzildan aniqlanmasa — filiali bo‘yicha)</p>
+        <div class="rp-fil-tools"><label>Saralash <select id="rpHudSort"><option value="hamkor" ${rpHudSort==='hamkor'?'selected':''}>Hamkorlar soni (ko‘pi yuqorida)</option><option value="tartib" ${rpHudSort==='tartib'?'selected':''}>Viloyatlar tartibida</option></select></label></div>
+        ${H.length ? `<table class="srv-table"><thead><tr><th style="width:36px">№</th><th>Hudud</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${H.map((h,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td>${esc(h.n)}</td><td style="text-align:right" data-noi18n><b>${h.hamkor}</b></td></tr>`).join('')}</tbody>
+          <tfoot><tr class="rp-total"><td></td><td><b>Jami</b></td><td style="text-align:right" data-noi18n><b>${tot}</b></td></tr></tfoot></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>`; })()}
     </div>
     <div class="card rp-card"><h3>Tuzilgan hujjatlar</h3><div class="rp-docs">
       <div><b data-noi18n>${c.bosh}</b><span>Bosh shartnoma</span>${p?rpDelta(c.bosh,p.bosh):''}</div>
@@ -7893,6 +7938,7 @@ function renderReports(){
   const fs = document.getElementById('rpFilSort'); if(fs) fs.onchange = ()=>{ rpFilSort = fs.value==='soni' && !rpFilDate ? 'bosh' : fs.value; renderReports(); };
   host.querySelectorAll('[data-fsort]').forEach(h=> h.onclick = ()=>{ const k = h.dataset.fsort; rpFilSort = k; renderReports(); });
   const fx = document.getElementById('rpFilXlsx'); if(fx) fx.onclick = rpFilialExcel;
+  const hs = document.getElementById('rpHudSort'); if(hs) hs.onchange = ()=>{ rpHudSort = hs.value; renderReports(); };
   i18nApply(host);
 }
 function rpExcel(){
@@ -7918,8 +7964,8 @@ function rpExcel(){
   add('12 oy', R.trend.map(t=>({'Oy':rpMonthLabel(t.m), 'Yangi arizalar':t.yangi, 'Faol hamkor':t.faol, 'Bosh shartnomalar':t.bosh})), [16,14,12,16]);
   add('Filiallar', R.filial.map((f,i)=>Object.assign({'№':i+1, 'Filial':f.f, 'Shartnomalar':f.bosh}, rpFilDate ? {['Yangi ('+boshPlainDate(rpFilDate)+')']:f.soni} : {}, {'Hamkorlar':f.hamkor}))
     .concat([Object.assign({'№':'', 'Filial':'Jami', 'Shartnomalar':R.filial.reduce((a,f)=>a+f.bosh,0)}, rpFilDate ? {['Yangi ('+boshPlainDate(rpFilDate)+')']:R.filial.reduce((a,f)=>a+f.soni,0)} : {}, {'Hamkorlar':R.filial.reduce((a,f)=>a+f.hamkor,0)})]), [5,28,14,14,12]);
-  add('Hududlar', R.hudud.map((h,i)=>({'№':i+1, 'Hudud':h.n, 'Arizalar':h.ariza, 'Faol':h.faol, 'Hamkorlar':h.hamkor}))
-    .concat([{'№':'', 'Hudud':'Jami', 'Arizalar':R.hudud.reduce((a,h)=>a+h.ariza,0), 'Faol':R.hudud.reduce((a,h)=>a+h.faol,0), 'Hamkorlar':R.hudud.reduce((a,h)=>a+h.hamkor,0)}]), [5,20,10,8,12]);
+  { const H = rpHudRows(R);
+    add('Hududlar', H.map((h,i)=>({'№':i+1, 'Hudud':h.n, 'Hamkorlar':h.hamkor})).concat([{'№':'', 'Hudud':'Jami', 'Hamkorlar':H.reduce((a,h)=>a+h.hamkor,0)}]), [5,24,12]); }
   add('Arizalar', R.coh.map(x=>({'Tashkilot':(x.a.data||{}).tashkilot_nomi||'', 'STIR':(x.a.data||{}).stir||'', 'Hudud':rpRegion((x.a.data||{}).manzil), 'Yuboruvchi':x.a.userIsm||'',
     'Status':(AR_STATUS[x.a.status]||{}).admin||x.a.status, 'Kelgan':arFmtDT(x.ev.created), 'Qabul':x.ev.qabul?arFmtDT(x.ev.qabul):'', 'Imzo':x.ev.imzo?arFmtDT(x.ev.imzo):'', 'Faol':x.ev.login?arFmtDT(x.ev.login):'',
     'Arizadan faolgacha (kun)':x.ev.login?+(rpHours(x.ev.created,x.ev.login)/24).toFixed(1):''})), [34,16,14,20,26,17,17,17,17,12]);
@@ -10049,6 +10095,8 @@ Object.assign(I18N, {"Filiali ko‘rsatilmagan hamkorlar:": ["Партнёры �
 Object.assign(I18N, {"🔁 Bir xil STIR bilan ikki va undan ko‘p yozilgan hamkorlar:": ["🔁 Партнёры, записанные дважды и более с одним ИНН:", "🔁 Partners recorded more than once with the same TIN:"], "ta STIR.": ["ИНН.", "TINs."], "Takroriy STIR yo‘q.": ["Повторяющихся ИНН нет.", "No duplicate TINs."], "Ko‘rish": ["Просмотр", "View"], "📊 Excel bilan solishtirish": ["📊 Сравнить с Excel", "📊 Compare with Excel"], "Excel fayldagi ro‘yxatni saytdagi hamkorlar bilan solishtirish": ["Сравнить список в Excel с партнёрами на сайте", "Compare the Excel list with the partners on the site"], "Takroriy STIR’li hamkorlar": ["Партнёры с повторяющимся ИНН", "Partners with duplicate TINs"], "Fayllar": ["Файлы", "Files"], "Qo‘shilgan": ["Добавлен", "Added"], "ko‘rsatilmagan": ["не указан", "not set"], "Excel bilan solishtirish": ["Сравнение с Excel", "Compare with Excel"], "Sayt": ["Сайт", "Site"], "Jami qatorlar (hamkorlar)": ["Всего строк (партнёров)", "Total rows (partners)"], "Filiali ko‘rsatilgan": ["С филиалом", "With branch"], "Filiali ko‘rsatilmagan": ["Без филиала", "Without branch"], "Har xil STIR": ["Уникальных ИНН", "Unique TINs"], "✅ Excel va saytdagi hamkorlar to‘liq mos.": ["✅ Партнёры в Excel и на сайте полностью совпадают.", "✅ The Excel and site partners match fully."], "Excel’da bor, saytda yo‘q": ["Есть в Excel, нет на сайте", "In Excel, not on the site"], "Saytda bor, Excel’da yo‘q": ["Есть на сайте, нет в Excel", "On the site, not in Excel"], "Yozuvlar soni farq qiladi (Excel → sayt)": ["Разное число записей (Excel → сайт)", "Different record count (Excel → site)"], "Filial farq qiladi": ["Отличается филиал", "Branch differs"]});
 Object.assign(I18N, {"Quyidagi farqlar faqat filiali ko‘rsatilgan Excel qatorlari bo‘yicha (filialsiz qatorlar saytga olinmaydi).": ["Различия ниже — только по строкам Excel с указанным филиалом (строки без филиала на сайт не загружаются).", "The differences below cover only Excel rows with a branch (rows without a branch are not imported)."]});
 Object.assign(I18N, {"Fayl — to‘liq ro‘yxat (Hamkorlar): faylda yo‘q yozuvlar saytdan o‘chirilsin": ["Файл — полный список (Партнёры): удалить с сайта записи, которых нет в файле", "File is the full list (Partners): delete site records missing from the file"], "Fayl — to‘liq ro‘yxat (Bosh shartnoma): faylda yo‘q yozuvlar saytdan o‘chirilsin": ["Файл — полный список (Основной договор): удалить с сайта записи, которых нет в файле", "File is the full list (Main contract): delete site records missing from the file"], "Filiali ko‘rsatilmagan qatorlar (Hamkorlar, Bosh shartnoma) olinmaydi.": ["Строки без филиала (Партнёры, Основной договор) не загружаются.", "Rows without a branch (Partners, Main contract) are not imported."], "Bir xil STIR’li bir nechta qator bo‘lsa (qayta shartnoma), ular alohida yozuvlar sifatida, filial bo‘yicha juftlanadi.": ["Несколько строк с одним ИНН (повторный договор) сохраняются как отдельные записи и сопоставляются по филиалу.", "Several rows with the same TIN (repeat contracts) are kept as separate records and matched by branch."]});
+Object.assign(I18N, {"Shartnoma sanasi": ["Дата договора", "Contract date"], "Turi": ["Тип", "Type"], "Holati": ["Статус", "Status"], "Oddiy": ["Обычный", "Standard"], "Yuqori ustamali": ["С повышенной наценкой", "High markup"], "Belgilansa — yuqori ustamali shartnoma": ["Если отмечено — договор с повышенной наценкой", "If checked — high-markup contract"], "Faol hamkor": ["Активный партнёр", "Active partner"], "Manzil bo‘yicha aniqlangan jami hamkorlar": ["Всего партнёров по адресу", "Total partners by address"]});
+Object.assign(I18N, {"12 ta viloyat, Toshkent shahri va Qoraqalpog‘iston Respublikasi — hamkor manzili bo‘yicha (manzildan aniqlanmasa — filiali bo‘yicha)": ["12 областей, город Ташкент и Республика Каракалпакстан — по адресу партнёра (если не определено — по филиалу)", "12 regions, Tashkent city and the Republic of Karakalpakstan — by partner address (or by branch if the address is unclear)"], "Viloyatlar tartibida": ["По порядку областей", "In region order"], "Andijon viloyati": ["Андижанская область", "Andijan region"], "Buxoro viloyati": ["Бухарская область", "Bukhara region"], "Farg‘ona viloyati": ["Ферганская область", "Fergana region"], "Jizzax viloyati": ["Джизакская область", "Jizzakh region"], "Namangan viloyati": ["Наманганская область", "Namangan region"], "Navoiy viloyati": ["Навоийская область", "Navoi region"], "Qashqadaryo viloyati": ["Кашкадарьинская область", "Kashkadarya region"], "Samarqand viloyati": ["Самаркандская область", "Samarkand region"], "Sirdaryo viloyati": ["Сырдарьинская область", "Syrdarya region"], "Surxondaryo viloyati": ["Сурхандарьинская область", "Surkhandarya region"], "Toshkent viloyati": ["Ташкентская область", "Tashkent region"], "Toshkent shahri": ["город Ташкент", "Tashkent city"], "Xorazm viloyati": ["Хорезмская область", "Khorezm region"], "Qoraqalpog‘iston Respublikasi": ["Республика Каракалпакстан", "Republic of Karakalpakstan"], "Aniqlanmagan": ["Не определено", "Unknown"]});
 
 /* ======================================================================================
    v14 · Tariflar (oddiy / yuqori ustamali), Word-aniq Qo'shimcha va Bonus hujjatlari,
@@ -10292,7 +10340,7 @@ async function exportSectionExcel(which, btn, group){
     const d = r.data||{}, o = {};
     fields.forEach(f=>{ o[f[0]==='no' ? '№' : f[1]] = fmt(f, f[0]==='tarif_turi' && !d.tarif_turi ? (key==='qoshimcha'?'yuqori':'oddiy') : d[f[0]]); });
     if(key==='bosh' || key==='qoshimcha') o['Foizlar (3.1-band)'] = tarifRows(d.tarif_turi || (key==='qoshimcha'?'yuqori':'oddiy'), d.tarif_snap).map(([m,p])=>`${m} oy — ${p}%`).join('; ');
-    if(key==='bosh' && typeof buxStatusFor==='function'){ const b = buxStatusFor(d); o['Buxgalteriya holati'] = b ? (BUX_STATUS[b.status]||{}).l||b.status : 'Yuborilmagan'; }
+    if(key==='bosh' && typeof buxStatusFor==='function'){ const b = buxStatusFor(d); o['Holati'] = b ? (BUX_STATUS[b.status]||{}).l||b.status : (r.boshHolat==='faol' ? 'Faol hamkor' : 'Yuborilmagan'); }
     if(key==='bonus'){ o['Turi'] = r.kind==='cancel' ? 'Bekor qilish' : 'Bonus'; if(r.kind!=='cancel') o['Holati'] = bonusHolatOf(r)==='bekor' ? 'Bekor qilingan' : 'Faol'; }
     o['Yaratilgan sana'] = r.createdAt ? new Date(r.createdAt).toLocaleString('uz-UZ') : '';
     return o;
@@ -10765,6 +10813,83 @@ function importBackup(key){
   const ts = new Date(); const p = n=> String(n).padStart(2,'0');
   XLSX.writeFile(wb, `Zaxira_${key}_${todayISO()}_${p(ts.getHours())}-${p(ts.getMinutes())}.xlsx`);
 }
+
+/* ======================================================================================
+   v20 · Jadvallarda shartnoma sanasi, Bosh shartnoma turi (oddiy / yuqori ustamali) belgisi
+         va filtri, eski (import qilingan) shartnomalar — «Faol hamkor» holati
+   ====================================================================================== */
+function nfStir(v){ return String(v||"").replace(/\D/g,""); }
+function v20Date(v){ const s = normalizeDateString(v); return /^\d{4}-\d{2}-\d{2}/.test(String(s||'')) ? boshPlainDate(s) : ''; }
+// Hamkor → uning Bosh shartnoma sanasi (bir xil STIR'li bir nechta hamkor bo'lsa — filial, keyin tartib bo'yicha)
+let HK_DATE_MAP = null, HK_DATE_SIG = '';
+function hkContractDate(r){
+  const sig = (DB.hamkor||[]).length + '|' + (DB.bosh||[]).length + '|' + ((DB.bosh||[])[0]||{}).id;
+  if(!HK_DATE_MAP || sig !== HK_DATE_SIG){
+    HK_DATE_MAP = new Map(); HK_DATE_SIG = sig;
+    const bs = {};
+    (DB.bosh||[]).forEach(b=>{ const d = b.data||{}, s = nfStir(d.stir); if(!s) return; (bs[s] = bs[s] || []).push({f:fKey(d.filial), dt:normalizeDateString(d.shartnoma_sanasi)||'', used:false}); });
+    Object.values(bs).forEach(a=> a.sort((x,y)=> String(x.dt).localeCompare(String(y.dt))));
+    const hs = {};
+    (DB.hamkor||[]).forEach(h=>{ const s = nfStir((h.data||{}).stir); if(s) (hs[s] = hs[s] || []).push(h); });
+    Object.entries(hs).forEach(([s, list])=>{
+      const b = bs[s] || [];
+      list.sort((x,y)=> (Number((x.data||{}).no)||1e9) - (Number((y.data||{}).no)||1e9));
+      list.forEach(h=>{ const m = b.find(x=> !x.used && x.f && x.f===fKey((h.data||{}).filial)); if(m){ m.used = true; HK_DATE_MAP.set(h.id, m.dt); } });
+      list.forEach(h=>{ if(HK_DATE_MAP.has(h.id)) return; const m = b.find(x=> !x.used); if(m){ m.used = true; HK_DATE_MAP.set(h.id, m.dt); } });
+    });
+  }
+  return v20Date(HK_DATE_MAP.get(r.id));
+}
+// Saqlangan hujjatlar jadvalidagi «Sana»: hujjatning o'z sanasi (qo'shilgan vaqt emas)
+function histDateCell(key, r){
+  const d = r.data||{};
+  const own = v20Date(key==='bosh' ? d.shartnoma_sanasi : (d.qoshimcha_sanasi || d.shartnoma_sanasi));
+  return own ? `<span data-noi18n>${esc(own)}</span>` : `<span class="muted" data-noi18n>${esc(new Date(r.createdAt).toLocaleDateString('uz-UZ'))}</span>`;
+}
+/* ---- Bosh shartnoma turi ---- */
+function boshTur(r){ return tarifType((r.data||{}).tarif_turi); }
+function boshTurCell(r){
+  const y = boshTur(r)==='yuqori';
+  return `<span class="badge ${y?'cancel':'bonus'} tt-badge">${y?'Yuqori ustamali':'Oddiy'}</span>
+    <label class="tt-chk" title="Belgilansa — yuqori ustamali shartnoma"><input type="checkbox" data-ttchk="${r.id}" ${y?'checked':''}> <span>Yuqori ustamali</span></label>`;
+}
+function bindBoshTur(){
+  document.querySelectorAll('#hist_bosh [data-ttchk]').forEach(c=> c.onchange = ()=>{
+    const rec = DB.bosh.find(r=>r.id===c.dataset.ttchk); if(!rec){ return; }
+    const to = c.checked ? 'yuqori' : 'oddiy', nm = (rec.data||{}).tashkilot_nomi || '';
+    if(!confirm(`Ishonchingiz komilmi?\n\n«${nm}» (№ ${(rec.data||{}).shartnoma_raqami||'—'}) «${TARIF_LABEL[to]}» deb belgilanadi. Shartnoma PDF/Word’dagi 3.1-band foizlari ham shu turga o‘zgaradi.`)){ c.checked = !c.checked; return; }
+    rec.data = Object.assign({}, rec.data, {tarif_turi: to, tarif_snap: JSON.stringify(tarifRows(to))});
+    rec.updatedAt = new Date().toISOString();
+    persist('bosh');
+    logAct('hujjat.tahrir', {type:'shartnoma', id:rec.id, name:nm, stir:(rec.data||{}).stir}, `Bosh shartnoma № ${(rec.data||{}).shartnoma_raqami||''}: turi → ${TARIF_LABEL[to]}`);
+    renderHistory('bosh');
+  });
+}
+/* ---- «Faol hamkor» holati: buxgalteriyaga yuborilmagan eski (import qilingan) shartnomalar ---- */
+const V20_CUTOFF = '2026-11-13';
+function v20Migrate(){
+  let n = 0;
+  (DB.bosh||[]).forEach(r=>{
+    const d = r.data||{};
+    if(!r.boshHolat && String(r.createdAt||'') < V20_CUTOFF && !buxStatusFor(d)){ r.boshHolat = 'faol'; n++; }
+    if(!d.tarif_turi && String(r.createdAt||'') < V20_CUTOFF){ r.data = Object.assign({}, d, {tarif_turi:'oddiy'}); n++; }
+  });
+  if(n) persist('bosh');
+  return n;
+}
+function boshHolatCell(r){
+  const b = buxStatusFor(r.data);
+  if(b){ const last = (b.history||[]).slice(-1)[0]||{}; return buxBadge(b.status) + `<div class="hk-sub" style="margin-top:3px;">${arFmtDT(last.at)}</div>`; }
+  if(r.boshHolat==='faol') return '<span class="badge bonus">Faol hamkor</span>';
+  return BUX_LOADED ? '<span class="muted" style="font-size:11px;">Yuborilmagan</span>' : '';
+}
+let v20Migrated = false;
+const _renderHistory20 = renderHistory;
+renderHistory = function(key){
+  if(key==='bosh' && !v20Migrated && BUX_LOADED && (DB.bosh||[]).length){ v20Migrated = true; v20Migrate(); }
+  _renderHistory20(key);
+  if(key==='bosh') bindBoshTur();
+};
 
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){
@@ -11502,26 +11627,28 @@ function renderHistory(key){
     });
   }
   if(key==='bosh' && fSt){
-    list = list.filter(r=>{ const b = buxStatusFor(r.data); return fSt==='none' ? !b : (b && b.status===fSt); });
+    list = list.filter(r=>{ const b = buxStatusFor(r.data); return fSt==='none' ? (!b && r.boshHolat!=='faol') : fSt==='faol' ? (!b && r.boshHolat==='faol') : (b && b.status===fSt); });
   }
+  const fTt = (document.getElementById('histTt_'+key)||{}).value || '';
+  if(key==='bosh' && fTt) list = list.filter(r=> boshTur(r)===fTt);
   const hc = document.getElementById('histCount_'+key);
-  if(hc) hc.textContent = (q||fFrom||fTo||fSt) ? `Topildi: ${list.length} ta (jami ${DB[key].length} ta)` : `Jami: ${DB[key].length} ta`;
+  if(hc) hc.textContent = (q||fFrom||fTo||fSt||fTt) ? `Topildi: ${list.length} ta (jami ${DB[key].length} ta)` : `Jami: ${DB[key].length} ta`;
   if(!list.length){
-    host.innerHTML = (q||fFrom||fTo||fSt)
+    host.innerHTML = (q||fFrom||fTo||fSt||fTt)
       ? '<div class="empty-hist">Tanlangan filtr bo‘yicha hech qanday hujjat topilmadi.</div>'
       : '<div class="empty-hist">Hozircha saqlangan hujjatlar yo‘q.</div>';
     return;
   }
   host.innerHTML = `
     <table class="history">
-      <tr><th>Tashkilot</th><th>STIR</th><th>Sana</th>${key==='bonus'?'<th>Holati</th>':''}${key==='bosh'?'<th>Buxgalteriya</th>':''}<th></th></tr>
+      <tr><th>Tashkilot</th><th>STIR</th><th>${key==='bosh'?'Shartnoma sanasi':'Sana'}</th>${key==='bonus'?'<th>Holati</th>':''}${key==='bosh'?'<th>Turi</th><th>Holati</th>':''}<th></th></tr>
       ${list.map(r=>`
         <tr>
           <td>${esc(labelFor(key,r.data,r.kind))}</td>
           <td>${esc((r.data && r.data.stir) ? r.data.stir : '—')}</td>
-          <td>${esc(new Date(r.createdAt).toLocaleString('uz-UZ'))}</td>
+          <td>${histDateCell(key, r)}</td>
           ${key==='bonus'?`<td>${bonusStatusCell(r)}</td>`:''}
-          ${key==='bosh'?`<td>${(()=>{ const b = buxStatusFor(r.data); if(!b) return BUX_LOADED ? '<span class="muted" style="font-size:11px;">Yuborilmagan</span>' : ''; const last = (b.history||[]).slice(-1)[0]||{}; return buxBadge(b.status) + `<div class="hk-sub" style="margin-top:3px;">${arFmtDT(last.at)}</div>`; })()}</td>`:''}
+          ${key==='bosh'?`<td>${boshTurCell(r)}</td><td>${boshHolatCell(r)}</td>`:''}
           <td>
             <button class="link-btn" data-act="dl" data-id="${r.id}">PDF yuklab olish</button>
             <button class="link-btn" data-act="dlword" data-id="${r.id}">Word yuklab olish</button>
@@ -11643,9 +11770,9 @@ function bindSectionEvents(key){
   }
   // Saqlangan hujjatlar ro'yxatini STIR yoki tashkilot nomi bo'yicha qidirish —
   // teriladigan har bir harfda ro'yxat jonli (live) filtrlanadi.
-  ['histFrom_','histTo_','histSt_'].forEach(pf=>{ const el = document.getElementById(pf+key); if(el) el.onchange = ()=> renderHistory(key); });
+  ['histFrom_','histTo_','histSt_','histTt_'].forEach(pf=>{ const el = document.getElementById(pf+key); if(el) el.onchange = ()=> renderHistory(key); });
   const hcl = document.getElementById('histClear_'+key);
-  if(hcl) hcl.onclick = ()=>{ ['histSearch_','histFrom_','histTo_','histSt_'].forEach(pf=>{ const el = document.getElementById(pf+key); if(el) el.value = ''; }); renderHistory(key); };
+  if(hcl) hcl.onclick = ()=>{ ['histSearch_','histFrom_','histTo_','histSt_','histTt_'].forEach(pf=>{ const el = document.getElementById(pf+key); if(el) el.value = ''; }); renderHistory(key); };
   const histSearchEl = document.getElementById('histSearch_'+key);
   if(histSearchEl){
     histSearchEl.oninput = ()=> renderHistory(key);

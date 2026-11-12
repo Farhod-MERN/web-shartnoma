@@ -1164,6 +1164,10 @@ select#f_tarif_turi{width:100%;}
 .rp-total td{border-top:2px solid var(--line);background:var(--accent-soft);}
 .uhk-grid .hk-card-head{flex-wrap:wrap;}
 #suFilial{width:100%;}
+/* ===== v17 ===== */
+.nf-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0 4px;}
+.nf-del{background:var(--danger,#dc2626) !important;border-color:var(--danger,#dc2626) !important;}
+.nf-table td{vertical-align:top;}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -3946,6 +3950,7 @@ function hamkorMarkup(){
         </div>
       </div>
       <div class="status" id="status_hamkor" style="margin:0;padding:0 16px;"></div>
+      <div id="hkNoFil" style="padding:0 16px;"></div>
       <div class="hk-table-wrap" id="hamkorTableWrap"></div>
       <div class="hk-pager" id="hkPager"></div>
     </div>
@@ -3957,6 +3962,7 @@ function renderHamkorList(){
   const wrap = document.getElementById('hamkorTableWrap');
   if(!wrap) return;
   const cntEl = document.getElementById('hkCount'); if(cntEl) cntEl.textContent = DB.hamkor.length;
+  renderNoFilialBar();
   const list = hamkorFiltered();
   const pages = Math.max(1, Math.ceil(list.length / hamkorPageSize));
   if(hamkorPage > pages) hamkorPage = pages;
@@ -7740,7 +7746,8 @@ function rpFilialCard(R, mk){
     ${rows.length ? `<table class="srv-table rp-fil-table"><thead><tr><th style="width:36px">№</th><th style="cursor:pointer;" data-fsort="nomi" class="${rpFilSort==='nomi'?'rp-sorted':''}">Filial${rpFilSort==='nomi'?' ▲':''}</th>
       ${th(col, day ? 'Yangi (shu sanada)' : 'Shartnomalar')}${th('hamkor', day ? 'Jami (shu sana holatiga)' : 'Hamkorlar')}</tr></thead>
       <tbody>${rows.map((f,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td data-noi18n>${esc(f.f)}<div class="rp-mini"><i style="width:${(f.hamkor/max*100).toFixed(1)}%"></i></div></td><td style="text-align:right" data-noi18n><b>${f[col] || (day ? '' : 0)}</b></td><td style="text-align:right" data-noi18n>${f.hamkor}</td></tr>`).join('')}</tbody>
-      <tfoot><tr class="rp-total"><td></td><td><b>Jami</b></td><td style="text-align:right" data-noi18n><b>${tot[col]}</b></td><td style="text-align:right" data-noi18n><b>${tot.hamkor}</b></td></tr></tfoot></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>`;
+      <tfoot><tr class="rp-total"><td></td><td><b>Jami</b></td><td style="text-align:right" data-noi18n><b>${tot[col]}</b></td><td style="text-align:right" data-noi18n><b>${tot.hamkor}</b></td></tr></tfoot></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}
+    ${(()=>{ const nf = noFilialHamkor().length; return nf ? `<div class="hint" style="margin-top:8px;">⚠️ Hamkorlar bo‘limida jami <b data-noi18n>${(DB.hamkor||[]).length}</b> ta hamkor bor, shundan <b data-noi18n>${nf}</b> tasining filiali ko‘rsatilmagan — ular bu jadvalga kirmagan.</div>` : ''; })()}</div>`;
 }
 function rpFilialExcel(){
   const day = rpFilDate || todayISO();
@@ -9986,6 +9993,7 @@ Object.assign(I18N, {"Fayl o‘qilmoqda…": ["Чтение файла…", "Rea
 Object.assign(I18N, {"⚠️ Bu STIR bo‘yicha aktiv shartnoma mavjud:": ["⚠️ По этому ИНН есть действующий договор:", "⚠️ There is an active contract for this TIN:"], "⚠️ Bu STIR bo‘yicha {n} ta aktiv shartnoma mavjud:": ["⚠️ По этому ИНН есть действующих договоров: {n}", "⚠️ There are {n} active contracts for this TIN:"], "Ushbu sanada shu raqam bilan shartnoma tuzilgan. Agar bu sizning tashkilotingiz bo‘lsa, ariza yuborishdan oldin «{q}» bo‘limi orqali admin bilan bog‘laning.": ["В эту дату заключён договор с этим номером. Если это ваша организация, перед отправкой заявки свяжитесь с администратором через раздел «{q}».", "A contract with this number was signed on this date. If this is your organization, contact the admin via «{q}» before submitting."], "Faol shartnomalar ro‘yxatida (Google Sheets) shu STIR bilan shartnoma bor. Takroriy shartnoma tuzilmasligini tekshiring.": ["В списке действующих договоров (Google Sheets) есть договор с этим ИНН. Проверьте, чтобы не заключить повторный договор.", "The active contracts list (Google Sheets) already has a contract with this TIN. Make sure a duplicate contract isn't made."], "⚠️ Aktiv shartnoma bor": ["⚠️ Есть действующий договор", "⚠️ Active contract exists"], "📋 Faol shartnomalar jadvali (STIR tekshiruvi):": ["📋 Таблица действующих договоров (проверка ИНН):", "📋 Active contracts sheet (TIN check):"], "ta yozuv · yangilangan:": ["записей · обновлено:", "records · updated:"], "📋 STIR tekshiruvi ishlamayapti — serverni yangilang (yangi server.js).": ["📋 Проверка ИНН не работает — обновите сервер (новый server.js).", "📋 TIN check isn't working — update the server (new server.js)."], "Shartnoma turi": ["Тип договора", "Contract type"], "Standart foizlar": ["Стандартные проценты", "Standard rates"], "Oshirilgan foizlar": ["Повышенные проценты", "Increased rates"], "{n}-band foizlari:": ["Проценты п. {n}:", "Clause {n} rates:"], "Excelga yuklab olish": ["Скачать в Excel", "Download Excel"], "📊 Excelga yuklab olish:": ["📊 Скачать в Excel:", "📊 Download Excel:"], "Tanlangan bo‘limdagi bonus shartnomalarini Excelga yuklab olish": ["Скачать бонусные договоры выбранного раздела в Excel", "Download the selected section's bonus agreements to Excel"]});
 Object.assign(I18N, {"📋 STIR tekshiruvi (Apps Script):": ["📋 Проверка ИНН (Apps Script):", "📋 TIN check (Apps Script):"], "📋 STIR tekshiruvi Apps Script orqali ishlayapti · oxirgi javob:": ["📋 Проверка ИНН работает через Apps Script · последний ответ:", "📋 TIN check is working via Apps Script · last response:"]});
 Object.assign(I18N, {"Hodim": ["Сотрудник", "Employee"], "Hodimlar": ["Сотрудники", "Employees"], "Hodim kabineti": ["Кабинет сотрудника", "Employee portal"], "BirZum hodimimisiz va akkauntingiz yo‘qmi?": ["Вы сотрудник BirZum и у вас нет аккаунта?", "Are you a BirZum employee without an account?"], "Hamkorlar bilan shartnoma tuzish uchun ariza yuboradigan hodim akkauntini yarating": ["Создайте аккаунт сотрудника, который отправляет заявки на договоры с партнёрами", "Create an employee account to submit partner contract applications"], "Filial": ["Филиал", "Branch"], "— filialni tanlang —": ["— выберите филиал —", "— choose a branch —"], "Siz ishlaydigan filialni tanlang.": ["Выберите филиал, в котором вы работаете.", "Choose the branch you work at."], "Hodim ishlaydigan filialni tanlang.": ["Выберите филиал сотрудника.", "Choose the employee's branch."], "Siz ishlaydigan filial avtomatik tanlangan.": ["Ваш филиал выбран автоматически.", "Your branch was selected automatically."], "Siz ishlaydigan filialni tanlang": ["Выберите филиал, в котором вы работаете", "Choose the branch you work at"], "Filial arizalarga avtomatik yoziladi va «{q}» bo‘limida shu filial hamkorlari ko‘rinadi. Keyin uni faqat admin o‘zgartira oladi.": ["Филиал автоматически записывается в заявки, а в разделе «{q}» видны партнёры этого филиала. Потом изменить его может только администратор.", "The branch is added to applications automatically, and «{q}» shows that branch's partners. After that only the admin can change it."], "Filial tanlanmagan": ["Филиал не выбран", "No branch selected"], "Hodim (filial xodimi — ariza yuboradi)": ["Сотрудник (сотрудник филиала — отправляет заявки)", "Employee (branch staff — submits applications)"], "Hodim kabineti: hamkorlar uchun ariza yuborish, arizalar holati, o‘z filiali hamkorlarini ko‘rish (faqat ko‘rish) va admin bilan yozishma.": ["Кабинет сотрудника: отправка заявок по партнёрам, статусы заявок, просмотр партнёров своего филиала (только просмотр) и переписка с админом.", "Employee portal: submit partner applications, track statuses, view own branch's partners (read-only) and chat with the admin."], "Filiallar ro‘yxati": ["Список филиалов", "Branch list"], "Hodimlar ro‘yxatdan o‘tayotganda va ariza yuborayotganda shu ro‘yxatdan filial tanlaydi. Har bir filial — alohida qatorda.": ["Сотрудники выбирают филиал из этого списка при регистрации и отправке заявок. Каждый филиал — с новой строки.", "Employees pick their branch from this list when signing up and submitting applications. One branch per line."], "ta filial": ["филиалов", "branches"], "Standart ro‘yxat": ["Стандартный список", "Default list"], "Kamida bitta filial yozing.": ["Укажите хотя бы один филиал.", "Enter at least one branch."], "Standart ro‘yxat qo‘yildi — «{q}» ni bosing.": ["Установлен стандартный список — нажмите «{q}».", "Default list restored — click «{q}»."], "Filiallar ro‘yxatini o‘zgartirdi": ["Изменил список филиалов", "Changed the branch list"], "Faqat ko‘rish": ["Только просмотр", "View only"], "faqat shu filialga tegishli hamkorlar": ["только партнёры этого филиала", "only this branch's partners"], "Bu filialda hozircha hamkor yo‘q.": ["В этом филиале пока нет партнёров.", "This branch has no partners yet."], "Hamkorni tanlang": ["Выберите партнёра", "Select a partner"], "Ro‘yxatdan hamkorni bosing — shartnoma va rekvizit ma’lumotlari shu yerda ochiladi. Ma’lumotlar faqat ko‘rish uchun.": ["Нажмите на партнёра в списке — здесь откроются данные договора и реквизиты. Только для просмотра.", "Click a partner in the list — contract and bank details open here. View only."], "Bosh shartnoma raqami": ["Номер основного договора", "Main contract number"], "Bosh shartnoma sanasi": ["Дата основного договора", "Main contract date"], "Shartnoma": ["Договор", "Contract"], "Telefon": ["Телефон", "Phone"], "Yangi hamkor (do‘kon) bilan BirZum Nasiya shartnomasi tuzish uchun ariza yuboring. Chap tomondagi ro‘yxatdagi hujjatlarni hamkordan olib, rasmga olib yoki skaner qilib yuklang.": ["Отправьте заявку на заключение договора BirZum Nasiya с новым партнёром (магазином). Возьмите у партнёра документы из списка слева и загрузите фото или скан.", "Submit an application for a BirZum Nasiya contract with a new partner (shop). Collect the documents listed on the left from the partner and upload photos or scans."], "hamkor tashkilot ma’lumotlari va hujjatlari.": ["данные и документы организации-партнёра.", "the partner organization's details and documents."], "Ariza qabul qilindi. Tez orada shartnoma tayyorlanadi.": ["Заявка принята. Скоро договор будет подготовлен.", "Application accepted. The contract will be prepared soon."], "Shartnoma Didox orqali hamkorga yuborildi. Hamkor Didox tizimida tekshirib imzolashi kerak.": ["Договор отправлен партнёру через Didox. Партнёр должен проверить и подписать его в Didox.", "The contract was sent to the partner via Didox. The partner must review and sign it in Didox."], "Shartnoma imzolandi. Tez orada hamkorning tizimga kirish login va paroli shartnomadagi telefon raqamiga SMS orqali yuboriladi.": ["Договор подписан. Скоро логин и пароль партнёра будут отправлены SMS на телефон из договора.", "The contract is signed. The partner's login and password will soon be sent by SMS to the phone in the contract."], "Hammasi tayyor! Hamkorning BirZum Nasiya tizimiga kirish login va paroli shartnomada ko‘rsatilgan telefon raqamiga SMS orqali yuboriladi.": ["Всё готово! Логин и пароль партнёра для BirZum Nasiya будут отправлены SMS на телефон из договора.", "All done! The partner's BirZum Nasiya login and password will be sent by SMS to the phone in the contract."], "Ushbu sanada shu raqam bilan shartnoma tuzilgan — bu hamkor bilan shartnoma allaqachon bor. Ariza yuborishdan oldin «{q}» bo‘limi orqali admin bilan bog‘laning.": ["В эту дату заключён договор с этим номером — с этим партнёром договор уже есть. Перед отправкой заявки свяжитесь с админом через раздел «{q}».", "A contract with this number was made on this date — this partner already has a contract. Contact the admin via «{q}» before submitting."], "Sana": ["Дата", "Date"], "Saralash": ["Сортировка", "Sort"], "Hamkorlar soni (ko‘pi yuqorida)": ["Число партнёров (больше — выше)", "Partner count (most first)"], "Shu sanadagi yangilar": ["Новые за эту дату", "New on this date"], "Filial nomi (A–Z)": ["Название филиала (А–Я)", "Branch name (A–Z)"], "✕ Sanani tozalash": ["✕ Сбросить дату", "✕ Clear date"], "⬇ Excel (bugungi sana)": ["⬇ Excel (сегодня)", "⬇ Excel (today)"], "Yangi (shu sanada)": ["Новые (за дату)", "New (on date)"], "Jami (shu sana holatiga)": ["Всего (на дату)", "Total (as of date)"], "sanada qo‘shilgan yangi hamkorlar va shu sana holatiga jami hamkorlar": ["— новые партнёры за эту дату и всего партнёров на эту дату", "— new partners added on this date and total partners as of this date"], "Shu ustun bo‘yicha saralash": ["Сортировать по этому столбцу", "Sort by this column"], "Shu sanada qaysi filial nechta yangi hamkor qo‘shgani": ["Сколько новых партнёров добавил каждый филиал в эту дату", "How many new partners each branch added on this date"], "Jadvalni rasmdagidek Excel faylga yuklab olish": ["Скачать таблицу в Excel", "Download the table to Excel"]});
+Object.assign(I18N, {"Filiali ko‘rsatilmagan hamkorlar:": ["Партнёры без филиала:", "Partners without a branch:"], "ta. Ular hisobotdagi filiallar jadvaliga kirmaydi.": ["шт. Они не попадают в таблицу филиалов в отчёте.", "They are not included in the report's branch table."], "Ko‘rish va o‘chirish": ["Просмотреть и удалить", "View and delete"], "Filiali ko‘rsatilmagan hamkorlar": ["Партнёры без филиала", "Partners without a branch"], "Takroriy: shu STIR filiali bilan ham bor": ["Дубликат: этот ИНН есть и с филиалом", "Duplicate: this TIN also exists with a branch"], "Boshqa yozuvi yo‘q": ["Других записей нет", "No other record"], "⬇ Avval Excelga saqlash": ["⬇ Сначала сохранить в Excel", "⬇ Save to Excel first"], "Yopish": ["Закрыть", "Close"], "hamkor": ["партнёр(ов)", "partner(s)"], "shartnoma": ["договор(ов)", "contract(s)"], "Filiali ko‘rsatilmagan hamkor yo‘q.": ["Партнёров без филиала нет.", "No partners without a branch."], "Hamkorlar bo‘limida jami": ["Всего в разделе Партнёры:", "Total in Partners:"]});
 
 /* ======================================================================================
    v14 · Tariflar (oddiy / yuqori ustamali), Word-aniq Qo'shimcha va Bonus hujjatlari,
@@ -10609,6 +10617,81 @@ async function uHkFiles(rec){
     return `<div class="hk-file"><div class="hk-thumb" data-uview="${i}">${thumb}</div><div class="hk-fmeta" data-noi18n><div class="hk-fname">${esc(f.name)}</div><div class="hk-fsub"><span>${hfSize(f.size)}</span></div></div></div>`;
   }).join('');
   box.querySelectorAll('[data-uview]').forEach(b=> b.onclick = ()=> openViewer(files[Number(b.dataset.uview)]));
+}
+
+/* ======================================================================================
+   v17 · Filiali ko'rsatilmagan hamkorlarni (va ularning Bosh shartnomalarini) ko'rish va o'chirish
+   ====================================================================================== */
+function nfStir(v){ return String(v||'').replace(/\D/g,''); }
+function noFilialHamkor(){ return (DB.hamkor||[]).filter(r=> !normFilial((r.data||{}).filial)); }
+function noFilialPlan(){
+  const hk = noFilialHamkor();
+  const withFil = new Set((DB.hamkor||[]).filter(r=> normFilial((r.data||{}).filial)).map(r=> nfStir((r.data||{}).stir)).filter(Boolean));
+  const stirs = new Set(hk.map(r=> nfStir((r.data||{}).stir)).filter(Boolean));
+  const bosh = (DB.bosh||[]).filter(r=>{ const d = r.data||{}; return stirs.has(nfStir(d.stir)) && !normFilial(d.filial); });
+  return {hk, bosh, withFil};
+}
+function renderNoFilialBar(){
+  const box = document.getElementById('hkNoFil'); if(!box) return;
+  const n = noFilialHamkor().length;
+  box.innerHTML = n ? `<div class="ar-note warn nf-bar"><span>⚠️ Filiali ko‘rsatilmagan hamkorlar: <b data-noi18n>${n}</b> ta. Ular hisobotdagi filiallar jadvaliga kirmaydi.</span><button type="button" class="hk-tool" id="nfOpen">Ko‘rish va o‘chirish</button></div>` : '';
+  const b = document.getElementById('nfOpen'); if(b) b.onclick = openNoFilialModal;
+  i18nApply(box);
+}
+function openNoFilialModal(){
+  closeHamkorModal();
+  const P = noFilialPlan();
+  const boshBy = {}; P.bosh.forEach(r=>{ const s = nfStir((r.data||{}).stir); (boshBy[s] = boshBy[s] || []).push(r); });
+  const m = document.createElement('div'); m.className = 'modal-back'; m.id = 'hkModal';
+  m.innerHTML = `<div class="modal" style="max-width:860px;">
+    <div class="modal-head"><h3>Filiali ko‘rsatilmagan hamkorlar</h3><button type="button" class="modal-x" id="nfX">✕</button></div>
+    <div class="modal-body">
+      <p class="sub" style="margin-top:0;">Belgilangan hamkorlar <b>Hamkorlar</b> bo‘limidan, ularning filiali yozilmagan Bosh shartnomalari esa <b>Bosh shartnoma</b> bo‘limidan o‘chiriladi. Buni qaytarib bo‘lmaydi — avval Excelga saqlab oling.</p>
+      ${P.hk.length ? `<div class="hk-table-wrap" style="max-height:52vh;"><table class="hk-table nf-table"><thead><tr><th style="width:34px;"><input type="checkbox" id="nfAll" checked></th><th>Tashkilot</th><th>STIR</th><th>Bosh shartnoma</th><th>Izoh</th></tr></thead><tbody>
+        ${P.hk.map(r=>{ const d = r.data||{}, s = nfStir(d.stir), bs = boshBy[s]||[];
+          return `<tr><td><input type="checkbox" data-nf="${r.id}" checked></td>
+            <td data-noi18n><div class="hk-name">${esc(d.tashkilot_nomi||'—')}</div>${d.brend?`<div class="hk-sub">${esc(d.brend)}</div>`:''}</td>
+            <td data-noi18n>${esc(d.stir||'—')}</td>
+            <td data-noi18n>${bs.length ? bs.map(b=>`№ ${esc((b.data||{}).shartnoma_raqami||'—')} <span class="hk-sub">${esc(boshPlainDate((b.data||{}).shartnoma_sanasi))}</span>`).join('<br>') : '—'}</td>
+            <td>${P.withFil.has(s) ? '<span class="st-badge st-ok">Takroriy: shu STIR filiali bilan ham bor</span>' : '<span class="st-badge st-ret">Boshqa yozuvi yo‘q</span>'}</td></tr>`; }).join('')}
+      </tbody></table></div>` : '<div class="hk-empty">Filiali ko‘rsatilmagan hamkor yo‘q.</div>'}
+      <div class="status" id="nfStatus"></div>
+    </div>
+    <div class="modal-foot">${P.hk.length ? `<button type="button" class="primary nf-del" id="nfDel"></button><button type="button" class="secondary" id="nfXlsx">⬇ Avval Excelga saqlash</button>` : ''}<button type="button" class="secondary" id="nfCancel">Yopish</button></div></div>`;
+  document.body.appendChild(m);
+  const close = ()=> m.remove();
+  document.getElementById('nfX').onclick = close; document.getElementById('nfCancel').onclick = close;
+  if(!P.hk.length){ i18nApply(m); return; }
+  const sel = ()=> new Set([...m.querySelectorAll('[data-nf]:checked')].map(x=>x.dataset.nf));
+  const plan = ()=>{ const ids = sel(); const hk = P.hk.filter(r=>ids.has(r.id)); const st = new Set(hk.map(r=>nfStir((r.data||{}).stir)));
+    return {hk, bosh: P.bosh.filter(b=> st.has(nfStir((b.data||{}).stir)))}; };
+  const del = document.getElementById('nfDel');
+  const upd = ()=>{ const p = plan(); del.disabled = !p.hk.length; del.innerHTML = `🗑 ${esc(t('O‘chirish'))}: <span data-noi18n>${p.hk.length}</span> ${esc(t('hamkor'))} + <span data-noi18n>${p.bosh.length}</span> ${esc(t('shartnoma'))}`; };
+  m.querySelectorAll('[data-nf]').forEach(c=> c.onchange = upd);
+  document.getElementById('nfAll').onchange = e=>{ m.querySelectorAll('[data-nf]').forEach(c=> c.checked = e.target.checked); upd(); };
+  upd();
+  document.getElementById('nfXlsx').onclick = ()=>{
+    const p = plan(); const wb = XLSX.utils.book_new();
+    const sheet = (key, list)=> XLSX.utils.json_to_sheet(list.map(r=>{ const o = {}; FIELDS[key].forEach(f=>{ o[f[0]==='no'?'№':f[1]] = (r.data||{})[f[0]] ?? ''; }); return o; }));
+    XLSX.utils.book_append_sheet(wb, sheet('hamkor', p.hk), 'Hamkorlar');
+    if(p.bosh.length) XLSX.utils.book_append_sheet(wb, sheet('bosh', p.bosh), 'Bosh shartnomalar');
+    XLSX.writeFile(wb, `Filialsiz_hamkorlar_${todayISO()}.xlsx`);
+  };
+  del.onclick = async ()=>{
+    const p = plan(); if(!p.hk.length) return;
+    if(!confirm(`Ishonchingiz komilmi?\n\n${p.hk.length} ta hamkor va ${p.bosh.length} ta Bosh shartnoma butunlay o‘chiriladi. Hamkorlarning yuklangan fayllari ham o‘chadi. Buni qaytarib bo‘lmaydi.`)) return;
+    del.disabled = true;
+    const hkIds = new Set(p.hk.map(r=>r.id)), bIds = new Set(p.bosh.map(r=>r.id));
+    DB.hamkor = DB.hamkor.filter(r=> !hkIds.has(r.id));
+    DB.bosh = DB.bosh.filter(r=> !bIds.has(r.id));
+    persist('hamkor'); persist('bosh');
+    p.hk.forEach(r=>{ logAct('hamkor.ochirildi', {type:'hamkor', id:r.id, name:(r.data||{}).tashkilot_nomi, stir:(r.data||{}).stir}, 'Filiali ko‘rsatilmagan'); hfDeleteAllFor(r.id); });
+    p.bosh.forEach(r=> logAct('shartnoma.ochirildi', {type:'shartnoma', id:r.id, name:(r.data||{}).tashkilot_nomi, stir:(r.data||{}).stir}, `Bosh shartnoma № ${(r.data||{}).shartnoma_raqami||''} · filiali ko‘rsatilmagan`));
+    if(hamkorEditingId && hkIds.has(hamkorEditingId)) hamkorEditingId = null;
+    close(); renderTabs(); renderHamkorList(); renderHamkorDetail();
+    const st = document.getElementById('status_hamkor'); if(st){ st.className = 'status ok'; st.textContent = `✅ ${p.hk.length} ta hamkor va ${p.bosh.length} ta Bosh shartnoma o‘chirildi. Hozir hamkorlar: ${DB.hamkor.length} ta.`; }
+  };
+  i18nApply(m);
 }
 
 async function exportHamkorExcel(){

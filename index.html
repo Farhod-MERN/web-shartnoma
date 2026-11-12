@@ -1168,6 +1168,8 @@ select#f_tarif_turi{width:100%;}
 .nf-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0 4px;}
 .nf-del{background:var(--danger,#dc2626) !important;border-color:var(--danger,#dc2626) !important;}
 .nf-table td{vertical-align:top;}
+.dup-bar{background:var(--accent-soft);border-color:var(--line);}
+.nf-table tr.dp-first td{border-top:2px solid var(--line);}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -3547,14 +3549,19 @@ async function handleImportFile(key, file, forcedKind){
     if(!rows.length){ say('err','Faylda ma’lumot topilmadi.'); return; }
 
     // Saytdagi mavjud yozuvlar indeksi
+    // Bir xil kalitli (masalan, bir xil STIR'li) yozuvlar bir nechta bo'lishi mumkin — ular tartib bo'yicha juftlanadi:
+    // fayldagi 1-chi ↔ saytdagi 1-chi, 2-chi ↔ 2-chi… (avval ular bitta yozuvga qo'shilib, filiallar aralashib ketardi)
     const index = new Map();
-    DB[key].forEach(r=>{ const k = importMergeKey(key, r.data||{}, r.kind); if(!index.has(k)) index.set(k, r); });
+    const ordered = DB[key].slice().sort((a,b)=> (Number((a.data||{}).no)||1e9) - (Number((b.data||{}).no)||1e9) || String(a.createdAt||'').localeCompare(String(b.createdAt||'')));
+    ordered.forEach(r=>{ const k = importMergeKey(key, r.data||{}, r.kind); if(!index.has(k)) index.set(k, []); index.get(k).push(r); });
+    const noFilSkip = {n:0};
 
     const plan = new Map();   // kalit -> {d, kind}  (faylda takrorlansa oxirgisi olinadi)
     let skipped = 0; const missingCounts = {};
     rows.forEach(row=>{
       const d = importRowToData(key, row, matchers);
-      const missing = validate(key, d);
+      const noFil = (key==='hamkor' || key==='bosh') && !normFilial(d.filial);   // filiali ko'rsatilmagan qatorlar olinmaydi
+      const missing = noFil ? [] : validate(key, d);
       if(missing.length){ skipped++; missing.forEach(l=>{ missingCounts[l] = (missingCounts[l]||0)+1; }); return; }
       let kind = 'main';
       if(key==='bonus'){
@@ -3565,12 +3572,22 @@ async function handleImportFile(key, file, forcedKind){
           kind = tv.indexOf('bekor') !== -1 ? 'cancel' : 'main';
         }
       }
-      plan.set(importMergeKey(key, d, kind), {d, kind});
+      const pk = importMergeKey(key, d, kind);
+      if(!plan.has(pk)) plan.set(pk, []);
+      plan.get(pk).push({d, kind, skip:noFil});
+      if(noFil) noFilSkip.n++;
     });
 
     const toAdd = [], toUpdate = []; let unchanged = 0;
-    plan.forEach((item, k)=>{
-      const ex = index.get(k);
+    plan.forEach((items, k)=>{
+      // juftlash: avval bir xil filialli yozuv bilan, keyin qolganlari tartib bo'yicha
+      const exs = (index.get(k) || []).slice(), pair = new Map();
+      items.forEach((it, i)=>{ if(it.skip || !normFilial(it.d.filial)) return; const j = exs.findIndex(r=> r && fKey((r.data||{}).filial) === fKey(it.d.filial)); if(j >= 0){ pair.set(i, exs[j]); exs[j] = null; } });
+      const rest = exs.filter(Boolean);
+      items.forEach((it, i)=>{ if(!pair.has(i)) pair.set(i, rest.shift() || null); });
+      items.forEach((item, i)=>{
+      if(item.skip) return;
+      const ex = pair.get(i);
       if(item.d.tarif_turi) item.d.tarif_turi = tarifType(item.d.tarif_turi);
       if(!ex){ toAdd.push(item); return; }
       const changes = {};
@@ -3583,18 +3600,21 @@ async function handleImportFile(key, file, forcedKind){
         if(nv !== ov && !(normalizeDateString(nv) && normalizeDateString(nv)===normalizeDateString(ov))) changes[f] = item.d[f];
       });
       if(Object.keys(changes).length) toUpdate.push({rec:ex, changes}); else unchanged++;
+      });
     });
+    const nfNote = noFilSkip.n ? ` Filiali ko‘rsatilmagan ${noFilSkip.n} ta qator olinmadi.` : '';
 
     if(!toAdd.length && !toUpdate.length){
       say(skipped && !unchanged ? 'err' : 'ok',
-        unchanged ? `O‘zgarish topilmadi: fayldagi ${unchanged} ta yozuv saytdagi bilan bir xil. Hech narsa o‘zgartirilmadi.` + (skipped ? ` (${skipped} ta qator majburiy maydonlar to‘liq bo‘lmagani uchun o‘tkazib yuborildi.)` : '')
+        unchanged ? `O‘zgarish topilmadi: fayldagi ${unchanged} ta yozuv saytdagi bilan bir xil. Hech narsa o‘zgartirilmadi.` + nfNote + (skipped ? ` (${skipped} ta qator majburiy maydonlar to‘liq bo‘lmagani uchun o‘tkazib yuborildi.)` : '')
                   : `Hech qanday yozuv olinmadi — ${skipped} ta qatorda majburiy maydonlar to‘liq emas` + (Object.keys(missingCounts).length ? ': «' + Object.keys(missingCounts).join('», «') + '».' : '.'));
       return;
     }
     const msg = `Fayl tahlili («${file.name}»):\n\n` +
       `• Yangi qo‘shiladi: ${toAdd.length} ta\n• Ma’lumoti yangilanadi: ${toUpdate.length} ta\n• O‘zgarishsiz qoladi: ${unchanged} ta\n` +
       (skipped ? `• O‘tkazib yuboriladi (to‘liq emas): ${skipped} ta\n` : '') +
-      `\nSaytdagi boshqa yozuvlar o‘chirilmaydi va o‘zgarmaydi. Davom etasizmi?`;
+      (noFilSkip.n ? `• Filiali ko‘rsatilmagani uchun olinmaydi: ${noFilSkip.n} ta\n` : '') +
+      `\nExcel’da bo‘sh qoldirilgan katak saytdagi qiymatni o‘chirmaydi. Saytdagi boshqa yozuvlar o‘chirilmaydi va o‘zgarmaydi. Davom etasizmi?`;
     if(!confirm(msg)){ say('', 'Import bekor qilindi — ma’lumotlar o‘zgartirilmadi.'); return; }
 
     const now = new Date().toISOString();
@@ -3611,7 +3631,7 @@ async function handleImportFile(key, file, forcedKind){
     logAct('import', {type:'import', name:LOG_SECT[key]||key}, `${toAdd.length} ta yangi, ${toUpdate.length} ta yangilandi, ${unchanged} ta o‘zgarishsiz`);
     say('ok', `Tayyor: ${toAdd.length} ta yangi qo‘shildi, ${toUpdate.length} ta yangilandi, ${unchanged} ta o‘zgarishsiz qoldi.` +
       (names.length ? ` Yangilanganlar: ${names.join('; ')}${toUpdate.length>5?' va boshqalar':''}.` : '') +
-      (skipped ? ` ${skipped} ta qator to‘liq bo‘lmagani uchun o‘tkazib yuborildi.` : ''));
+      (skipped ? ` ${skipped} ta qator to‘liq bo‘lmagani uchun o‘tkazib yuborildi.` : '') + nfNote);
   }catch(e){
     console.error(e);
     say('err', 'Import qilishda xatolik: ' + (e && e.message ? e.message : e));
@@ -3951,6 +3971,7 @@ function hamkorMarkup(){
       </div>
       <div class="status" id="status_hamkor" style="margin:0;padding:0 16px;"></div>
       <div id="hkNoFil" style="padding:0 16px;"></div>
+      <div id="hkDupBar" style="padding:0 16px;"></div>
       <div class="hk-table-wrap" id="hamkorTableWrap"></div>
       <div class="hk-pager" id="hkPager"></div>
     </div>
@@ -3962,7 +3983,7 @@ function renderHamkorList(){
   const wrap = document.getElementById('hamkorTableWrap');
   if(!wrap) return;
   const cntEl = document.getElementById('hkCount'); if(cntEl) cntEl.textContent = DB.hamkor.length;
-  renderNoFilialBar();
+  renderNoFilialBar(); renderDupBar();
   const list = hamkorFiltered();
   const pages = Math.max(1, Math.ceil(list.length / hamkorPageSize));
   if(hamkorPage > pages) hamkorPage = pages;
@@ -9994,6 +10015,8 @@ Object.assign(I18N, {"⚠️ Bu STIR bo‘yicha aktiv shartnoma mavjud:": ["⚠�
 Object.assign(I18N, {"📋 STIR tekshiruvi (Apps Script):": ["📋 Проверка ИНН (Apps Script):", "📋 TIN check (Apps Script):"], "📋 STIR tekshiruvi Apps Script orqali ishlayapti · oxirgi javob:": ["📋 Проверка ИНН работает через Apps Script · последний ответ:", "📋 TIN check is working via Apps Script · last response:"]});
 Object.assign(I18N, {"Hodim": ["Сотрудник", "Employee"], "Hodimlar": ["Сотрудники", "Employees"], "Hodim kabineti": ["Кабинет сотрудника", "Employee portal"], "BirZum hodimimisiz va akkauntingiz yo‘qmi?": ["Вы сотрудник BirZum и у вас нет аккаунта?", "Are you a BirZum employee without an account?"], "Hamkorlar bilan shartnoma tuzish uchun ariza yuboradigan hodim akkauntini yarating": ["Создайте аккаунт сотрудника, который отправляет заявки на договоры с партнёрами", "Create an employee account to submit partner contract applications"], "Filial": ["Филиал", "Branch"], "— filialni tanlang —": ["— выберите филиал —", "— choose a branch —"], "Siz ishlaydigan filialni tanlang.": ["Выберите филиал, в котором вы работаете.", "Choose the branch you work at."], "Hodim ishlaydigan filialni tanlang.": ["Выберите филиал сотрудника.", "Choose the employee's branch."], "Siz ishlaydigan filial avtomatik tanlangan.": ["Ваш филиал выбран автоматически.", "Your branch was selected automatically."], "Siz ishlaydigan filialni tanlang": ["Выберите филиал, в котором вы работаете", "Choose the branch you work at"], "Filial arizalarga avtomatik yoziladi va «{q}» bo‘limida shu filial hamkorlari ko‘rinadi. Keyin uni faqat admin o‘zgartira oladi.": ["Филиал автоматически записывается в заявки, а в разделе «{q}» видны партнёры этого филиала. Потом изменить его может только администратор.", "The branch is added to applications automatically, and «{q}» shows that branch's partners. After that only the admin can change it."], "Filial tanlanmagan": ["Филиал не выбран", "No branch selected"], "Hodim (filial xodimi — ariza yuboradi)": ["Сотрудник (сотрудник филиала — отправляет заявки)", "Employee (branch staff — submits applications)"], "Hodim kabineti: hamkorlar uchun ariza yuborish, arizalar holati, o‘z filiali hamkorlarini ko‘rish (faqat ko‘rish) va admin bilan yozishma.": ["Кабинет сотрудника: отправка заявок по партнёрам, статусы заявок, просмотр партнёров своего филиала (только просмотр) и переписка с админом.", "Employee portal: submit partner applications, track statuses, view own branch's partners (read-only) and chat with the admin."], "Filiallar ro‘yxati": ["Список филиалов", "Branch list"], "Hodimlar ro‘yxatdan o‘tayotganda va ariza yuborayotganda shu ro‘yxatdan filial tanlaydi. Har bir filial — alohida qatorda.": ["Сотрудники выбирают филиал из этого списка при регистрации и отправке заявок. Каждый филиал — с новой строки.", "Employees pick their branch from this list when signing up and submitting applications. One branch per line."], "ta filial": ["филиалов", "branches"], "Standart ro‘yxat": ["Стандартный список", "Default list"], "Kamida bitta filial yozing.": ["Укажите хотя бы один филиал.", "Enter at least one branch."], "Standart ro‘yxat qo‘yildi — «{q}» ni bosing.": ["Установлен стандартный список — нажмите «{q}».", "Default list restored — click «{q}»."], "Filiallar ro‘yxatini o‘zgartirdi": ["Изменил список филиалов", "Changed the branch list"], "Faqat ko‘rish": ["Только просмотр", "View only"], "faqat shu filialga tegishli hamkorlar": ["только партнёры этого филиала", "only this branch's partners"], "Bu filialda hozircha hamkor yo‘q.": ["В этом филиале пока нет партнёров.", "This branch has no partners yet."], "Hamkorni tanlang": ["Выберите партнёра", "Select a partner"], "Ro‘yxatdan hamkorni bosing — shartnoma va rekvizit ma’lumotlari shu yerda ochiladi. Ma’lumotlar faqat ko‘rish uchun.": ["Нажмите на партнёра в списке — здесь откроются данные договора и реквизиты. Только для просмотра.", "Click a partner in the list — contract and bank details open here. View only."], "Bosh shartnoma raqami": ["Номер основного договора", "Main contract number"], "Bosh shartnoma sanasi": ["Дата основного договора", "Main contract date"], "Shartnoma": ["Договор", "Contract"], "Telefon": ["Телефон", "Phone"], "Yangi hamkor (do‘kon) bilan BirZum Nasiya shartnomasi tuzish uchun ariza yuboring. Chap tomondagi ro‘yxatdagi hujjatlarni hamkordan olib, rasmga olib yoki skaner qilib yuklang.": ["Отправьте заявку на заключение договора BirZum Nasiya с новым партнёром (магазином). Возьмите у партнёра документы из списка слева и загрузите фото или скан.", "Submit an application for a BirZum Nasiya contract with a new partner (shop). Collect the documents listed on the left from the partner and upload photos or scans."], "hamkor tashkilot ma’lumotlari va hujjatlari.": ["данные и документы организации-партнёра.", "the partner organization's details and documents."], "Ariza qabul qilindi. Tez orada shartnoma tayyorlanadi.": ["Заявка принята. Скоро договор будет подготовлен.", "Application accepted. The contract will be prepared soon."], "Shartnoma Didox orqali hamkorga yuborildi. Hamkor Didox tizimida tekshirib imzolashi kerak.": ["Договор отправлен партнёру через Didox. Партнёр должен проверить и подписать его в Didox.", "The contract was sent to the partner via Didox. The partner must review and sign it in Didox."], "Shartnoma imzolandi. Tez orada hamkorning tizimga kirish login va paroli shartnomadagi telefon raqamiga SMS orqali yuboriladi.": ["Договор подписан. Скоро логин и пароль партнёра будут отправлены SMS на телефон из договора.", "The contract is signed. The partner's login and password will soon be sent by SMS to the phone in the contract."], "Hammasi tayyor! Hamkorning BirZum Nasiya tizimiga kirish login va paroli shartnomada ko‘rsatilgan telefon raqamiga SMS orqali yuboriladi.": ["Всё готово! Логин и пароль партнёра для BirZum Nasiya будут отправлены SMS на телефон из договора.", "All done! The partner's BirZum Nasiya login and password will be sent by SMS to the phone in the contract."], "Ushbu sanada shu raqam bilan shartnoma tuzilgan — bu hamkor bilan shartnoma allaqachon bor. Ariza yuborishdan oldin «{q}» bo‘limi orqali admin bilan bog‘laning.": ["В эту дату заключён договор с этим номером — с этим партнёром договор уже есть. Перед отправкой заявки свяжитесь с админом через раздел «{q}».", "A contract with this number was made on this date — this partner already has a contract. Contact the admin via «{q}» before submitting."], "Sana": ["Дата", "Date"], "Saralash": ["Сортировка", "Sort"], "Hamkorlar soni (ko‘pi yuqorida)": ["Число партнёров (больше — выше)", "Partner count (most first)"], "Shu sanadagi yangilar": ["Новые за эту дату", "New on this date"], "Filial nomi (A–Z)": ["Название филиала (А–Я)", "Branch name (A–Z)"], "✕ Sanani tozalash": ["✕ Сбросить дату", "✕ Clear date"], "⬇ Excel (bugungi sana)": ["⬇ Excel (сегодня)", "⬇ Excel (today)"], "Yangi (shu sanada)": ["Новые (за дату)", "New (on date)"], "Jami (shu sana holatiga)": ["Всего (на дату)", "Total (as of date)"], "sanada qo‘shilgan yangi hamkorlar va shu sana holatiga jami hamkorlar": ["— новые партнёры за эту дату и всего партнёров на эту дату", "— new partners added on this date and total partners as of this date"], "Shu ustun bo‘yicha saralash": ["Сортировать по этому столбцу", "Sort by this column"], "Shu sanada qaysi filial nechta yangi hamkor qo‘shgani": ["Сколько новых партнёров добавил каждый филиал в эту дату", "How many new partners each branch added on this date"], "Jadvalni rasmdagidek Excel faylga yuklab olish": ["Скачать таблицу в Excel", "Download the table to Excel"]});
 Object.assign(I18N, {"Filiali ko‘rsatilmagan hamkorlar:": ["Партнёры без филиала:", "Partners without a branch:"], "ta. Ular hisobotdagi filiallar jadvaliga kirmaydi.": ["шт. Они не попадают в таблицу филиалов в отчёте.", "They are not included in the report's branch table."], "Ko‘rish va o‘chirish": ["Просмотреть и удалить", "View and delete"], "Filiali ko‘rsatilmagan hamkorlar": ["Партнёры без филиала", "Partners without a branch"], "Takroriy: shu STIR filiali bilan ham bor": ["Дубликат: этот ИНН есть и с филиалом", "Duplicate: this TIN also exists with a branch"], "Boshqa yozuvi yo‘q": ["Других записей нет", "No other record"], "⬇ Avval Excelga saqlash": ["⬇ Сначала сохранить в Excel", "⬇ Save to Excel first"], "Yopish": ["Закрыть", "Close"], "hamkor": ["партнёр(ов)", "partner(s)"], "shartnoma": ["договор(ов)", "contract(s)"], "Filiali ko‘rsatilmagan hamkor yo‘q.": ["Партнёров без филиала нет.", "No partners without a branch."], "Hamkorlar bo‘limida jami": ["Всего в разделе Партнёры:", "Total in Partners:"]});
+Object.assign(I18N, {"🔁 Bir xil STIR bilan ikki va undan ko‘p yozilgan hamkorlar:": ["🔁 Партнёры, записанные дважды и более с одним ИНН:", "🔁 Partners recorded more than once with the same TIN:"], "ta STIR.": ["ИНН.", "TINs."], "Takroriy STIR yo‘q.": ["Повторяющихся ИНН нет.", "No duplicate TINs."], "Ko‘rish": ["Просмотр", "View"], "📊 Excel bilan solishtirish": ["📊 Сравнить с Excel", "📊 Compare with Excel"], "Excel fayldagi ro‘yxatni saytdagi hamkorlar bilan solishtirish": ["Сравнить список в Excel с партнёрами на сайте", "Compare the Excel list with the partners on the site"], "Takroriy STIR’li hamkorlar": ["Партнёры с повторяющимся ИНН", "Partners with duplicate TINs"], "Fayllar": ["Файлы", "Files"], "Qo‘shilgan": ["Добавлен", "Added"], "ko‘rsatilmagan": ["не указан", "not set"], "Excel bilan solishtirish": ["Сравнение с Excel", "Compare with Excel"], "Sayt": ["Сайт", "Site"], "Jami qatorlar (hamkorlar)": ["Всего строк (партнёров)", "Total rows (partners)"], "Filiali ko‘rsatilgan": ["С филиалом", "With branch"], "Filiali ko‘rsatilmagan": ["Без филиала", "Without branch"], "Har xil STIR": ["Уникальных ИНН", "Unique TINs"], "✅ Excel va saytdagi hamkorlar to‘liq mos.": ["✅ Партнёры в Excel и на сайте полностью совпадают.", "✅ The Excel and site partners match fully."], "Excel’da bor, saytda yo‘q": ["Есть в Excel, нет на сайте", "In Excel, not on the site"], "Saytda bor, Excel’da yo‘q": ["Есть на сайте, нет в Excel", "On the site, not in Excel"], "Yozuvlar soni farq qiladi (Excel → sayt)": ["Разное число записей (Excel → сайт)", "Different record count (Excel → site)"], "Filial farq qiladi": ["Отличается филиал", "Branch differs"]});
+Object.assign(I18N, {"Quyidagi farqlar faqat filiali ko‘rsatilgan Excel qatorlari bo‘yicha (filialsiz qatorlar saytga olinmaydi).": ["Различия ниже — только по строкам Excel с указанным филиалом (строки без филиала на сайт не загружаются).", "The differences below cover only Excel rows with a branch (rows without a branch are not imported)."]});
 
 /* ======================================================================================
    v14 · Tariflar (oddiy / yuqori ustamali), Word-aniq Qo'shimcha va Bonus hujjatlari,
@@ -10691,6 +10714,115 @@ function openNoFilialModal(){
     close(); renderTabs(); renderHamkorList(); renderHamkorDetail();
     const st = document.getElementById('status_hamkor'); if(st){ st.className = 'status ok'; st.textContent = `✅ ${p.hk.length} ta hamkor va ${p.bosh.length} ta Bosh shartnoma o‘chirildi. Hozir hamkorlar: ${DB.hamkor.length} ta.`; }
   };
+  i18nApply(m);
+}
+
+/* ======================================================================================
+   v18 · Takroriy STIR'li hamkorlar (bittasini tanlab o'chirish) va Excel bilan solishtirish
+   ====================================================================================== */
+function dupStirGroups(){
+  const g = {};
+  (DB.hamkor||[]).forEach(r=>{ const s = nfStir((r.data||{}).stir); if(s) (g[s] = g[s] || []).push(r); });
+  return Object.entries(g).filter(([,a])=> a.length > 1);
+}
+function renderDupBar(){
+  const box = document.getElementById('hkDupBar'); if(!box) return;
+  const n = dupStirGroups().length;
+  box.innerHTML = `<div class="ar-note nf-bar dup-bar"><span>${n ? `🔁 Bir xil STIR bilan ikki va undan ko‘p yozilgan hamkorlar: <b data-noi18n>${n}</b> ta STIR.` : 'Takroriy STIR yo‘q.'}</span>
+    <span style="display:flex;gap:6px;flex-wrap:wrap;">${n ? '<button type="button" class="hk-tool" id="dupOpen">Ko‘rish</button>' : ''}<button type="button" class="hk-tool" id="cmpOpen" title="Excel fayldagi ro‘yxatni saytdagi hamkorlar bilan solishtirish">📊 Excel bilan solishtirish</button><input type="file" id="cmpFile" accept=".xlsx,.xls,.csv" style="display:none;"></span></div>`;
+  const d = document.getElementById('dupOpen'); if(d) d.onclick = openDupModal;
+  const c = document.getElementById('cmpOpen'), f = document.getElementById('cmpFile');
+  c.onclick = ()=> f.click();
+  f.onchange = ()=>{ if(f.files[0]) compareWithExcel(f.files[0]); f.value = ''; };
+  i18nApply(box);
+}
+function openDupModal(){
+  closeHamkorModal();
+  const groups = dupStirGroups();
+  const m = document.createElement('div'); m.className = 'modal-back'; m.id = 'hkModal';
+  m.innerHTML = `<div class="modal" style="max-width:880px;">
+    <div class="modal-head"><h3>Takroriy STIR’li hamkorlar</h3><button type="button" class="modal-x" id="dpX">✕</button></div>
+    <div class="modal-body">
+      <p class="sub" style="margin-top:0;">Har bir STIR bo‘yicha saytda bir nechta hamkor yozuvi bor. <b>O‘chiriladigan</b> yozuvni belgilang — qolgani saqlanadi. Bosh shartnomalarga tegilmaydi (bitta hamkor bilan ikkita shartnoma bo‘lishi mumkin).</p>
+      <div class="hk-table-wrap" style="max-height:56vh;"><table class="hk-table nf-table"><thead><tr><th style="width:34px;"></th><th>Tashkilot</th><th>STIR</th><th>Filial</th><th>Fayllar</th><th>Qo‘shilgan</th></tr></thead><tbody>
+      ${groups.map(([s,a])=> a.map((r,i)=>{ const d = r.data||{}; return `<tr class="${i===0?'dp-first':''}"><td><input type="checkbox" data-dp="${r.id}"></td>
+        <td data-noi18n><div class="hk-name">${esc(d.tashkilot_nomi||'—')}</div>${d.brend?`<div class="hk-sub">${esc(d.brend)}</div>`:''}</td>
+        <td data-noi18n>${esc(d.stir||'—')}</td><td data-noi18n>${normFilial(d.filial) ? esc(d.filial) : '<span class="st-badge st-ret">ko‘rsatilmagan</span>'}</td>
+        <td data-noi18n>${r.fileCount||0}</td><td data-noi18n>${esc(arFmtDT(r.createdAt))}</td></tr>`; }).join('')).join('')}
+      </tbody></table></div>
+      <div class="status" id="dpStatus"></div>
+    </div>
+    <div class="modal-foot"><button type="button" class="primary nf-del" id="dpDel" disabled></button><button type="button" class="secondary" id="dpCancel">Yopish</button></div></div>`;
+  document.body.appendChild(m);
+  const close = ()=> m.remove();
+  document.getElementById('dpX').onclick = close; document.getElementById('dpCancel').onclick = close;
+  const del = document.getElementById('dpDel');
+  const sel = ()=> [...m.querySelectorAll('[data-dp]:checked')].map(x=>x.dataset.dp);
+  const upd = ()=>{ const n = sel().length; del.disabled = !n; del.innerHTML = `🗑 ${esc(t('O‘chirish'))}: <span data-noi18n>${n}</span> ${esc(t('hamkor'))}`; };
+  m.querySelectorAll('[data-dp]').forEach(c=> c.onchange = upd); upd();
+  del.onclick = ()=>{
+    const ids = new Set(sel()); if(!ids.size) return;
+    // har bir STIR'dan kamida bitta yozuv qolishi shart
+    const bad = groups.filter(([,a])=> a.every(r=> ids.has(r.id)));
+    if(bad.length){ const st = document.getElementById('dpStatus'); st.className = 'status err'; st.textContent = `Har bir STIR’dan kamida bitta yozuv qolishi kerak: ${bad.map(([s])=>s).join(', ')}`; return; }
+    const list = DB.hamkor.filter(r=> ids.has(r.id));
+    if(!confirm(`Ishonchingiz komilmi?\n\n${list.length} ta takroriy hamkor yozuvi o‘chiriladi (yuklangan fayllari bilan). Buni qaytarib bo‘lmaydi.\n\n${list.map(r=>'• '+((r.data||{}).tashkilot_nomi||'')+' — '+((r.data||{}).filial||'filialsiz')).join('\n')}`)) return;
+    DB.hamkor = DB.hamkor.filter(r=> !ids.has(r.id)); persist('hamkor');
+    list.forEach(r=>{ logAct('hamkor.ochirildi', {type:'hamkor', id:r.id, name:(r.data||{}).tashkilot_nomi, stir:(r.data||{}).stir}, 'Takroriy STIR'); hfDeleteAllFor(r.id); });
+    if(hamkorEditingId && ids.has(hamkorEditingId)) hamkorEditingId = null;
+    close(); renderTabs(); renderHamkorList(); renderHamkorDetail();
+    const st = document.getElementById('status_hamkor'); if(st){ st.className = 'status ok'; st.textContent = `✅ ${list.length} ta takroriy yozuv o‘chirildi. Hozir hamkorlar: ${DB.hamkor.length} ta.`; }
+  };
+  i18nApply(m);
+}
+async function compareWithExcel(file){
+  let wb; try{ wb = XLSX.read(await file.arrayBuffer(), {type:'array'}); }catch(e){ alert('Faylni o‘qib bo‘lmadi: '+(e.message||e)); return; }
+  // STIR va Filial ustunlari bor varaqni topamiz
+  let rows = null, si = -1, fi = -1, ni = -1, sheet = '';
+  for(const sn of wb.SheetNames){
+    const a = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:'', raw:false});
+    for(let h = 0; h < Math.min(6, a.length); h++){
+      const H = a[h].map(x=> String(x).toLowerCase());
+      const s = H.findIndex(x=> /стир|stir|инн/.test(x)), f = H.findIndex(x=> /filial|филиал/.test(x));
+      if(s >= 0 && f >= 0){ rows = a.slice(h+1).filter(r=> r.some(c=> String(c).trim())); si = s; fi = f; ni = H.findIndex(x=> /ташкилот|tashkilot|номи|nomi/.test(x)); sheet = sn; break; }
+    }
+    if(rows) break;
+  }
+  if(!rows){ alert('Faylda «СТИР» va «Filial» ustunlari topilmadi.'); return; }
+  // filiali ko'rsatilmagan Excel qatorlari saytga olinmaydi — solishtirishda ham hisobga olinmaydi
+  const ex = {}; rows.forEach(r=>{ const s = nfStir(r[si]); if(!s || !normFilial(r[fi])) return; (ex[s] = ex[s] || []).push({f: normFilial(r[fi]), n: ni>=0 ? String(r[ni]).trim() : ''}); });
+  const st = {}; (DB.hamkor||[]).forEach(r=>{ const s = nfStir((r.data||{}).stir); if(!s) return; (st[s] = st[s] || []).push({f: normFilial((r.data||{}).filial), n: (r.data||{}).tashkilot_nomi||''}); });
+  const exFil = rows.filter(r=> normFilial(r[fi])).length;
+  const siteFil = (DB.hamkor||[]).filter(r=> normFilial((r.data||{}).filial)).length;
+  const onlyEx = Object.keys(ex).filter(s=> !st[s]), onlySite = Object.keys(st).filter(s=> !ex[s]);
+  const cntDiff = Object.keys(ex).filter(s=> st[s] && st[s].length !== ex[s].length);
+  const key = a=> a.map(x=> fKey(x.f) || '—').sort().join(' + ');
+  const filDiff = Object.keys(ex).filter(s=> st[s] && st[s].length === ex[s].length && key(st[s]) !== key(ex[s]));
+  const show = a=> a.map(x=> x.f || '<i>filialsiz</i>').join(' + ');
+  const nm = s=> esc((ex[s]||st[s]||[{}])[0].n || '');
+  const sec = (title, list, fn)=> list.length ? `<div class="hk-section"><h3>${esc(title)} <span class="nav-cnt" data-noi18n>${list.length}</span></h3><table class="hk-table nf-table"><tbody>${list.slice(0,300).map(fn).join('')}</tbody></table></div>` : '';
+  closeHamkorModal();
+  const m = document.createElement('div'); m.className = 'modal-back'; m.id = 'hkModal';
+  m.innerHTML = `<div class="modal" style="max-width:900px;">
+    <div class="modal-head"><h3>Excel bilan solishtirish</h3><button type="button" class="modal-x" id="cmX">✕</button></div>
+    <div class="modal-body" style="max-height:70vh;overflow:auto;">
+      <table class="srv-table"><thead><tr><th></th><th style="text-align:right">Excel (<span data-noi18n>${esc(sheet)}</span>)</th><th style="text-align:right">Sayt</th></tr></thead><tbody>
+        <tr><td>Jami qatorlar (hamkorlar)</td><td style="text-align:right" data-noi18n><b>${rows.length}</b></td><td style="text-align:right" data-noi18n><b>${DB.hamkor.length}</b></td></tr>
+        <tr><td>Filiali ko‘rsatilgan</td><td style="text-align:right" data-noi18n>${exFil}</td><td style="text-align:right" data-noi18n>${siteFil}</td></tr>
+        <tr><td>Filiali ko‘rsatilmagan</td><td style="text-align:right" data-noi18n>${rows.length-exFil}</td><td style="text-align:right" data-noi18n>${DB.hamkor.length-siteFil}</td></tr>
+        <tr><td>Har xil STIR</td><td style="text-align:right" data-noi18n>${Object.keys(ex).length}</td><td style="text-align:right" data-noi18n>${Object.keys(st).length}</td></tr>
+      </tbody></table>
+      <div class="hint" style="margin-top:8px;">Quyidagi farqlar faqat filiali ko‘rsatilgan Excel qatorlari bo‘yicha (filialsiz qatorlar saytga olinmaydi).</div>
+      ${!onlyEx.length && !onlySite.length && !cntDiff.length && !filDiff.length ? '<div class="ar-note good" style="margin-top:12px;">✅ Excel va saytdagi hamkorlar to‘liq mos.</div>' : ''}
+      ${sec('Excel’da bor, saytda yo‘q', onlyEx, s=>`<tr><td data-noi18n>${nm(s)}</td><td data-noi18n>${s}</td><td data-noi18n>${show(ex[s])}</td></tr>`)}
+      ${sec('Saytda bor, Excel’da yo‘q', onlySite, s=>`<tr><td data-noi18n>${nm(s)}</td><td data-noi18n>${s}</td><td data-noi18n>${show(st[s])}</td></tr>`)}
+      ${sec('Yozuvlar soni farq qiladi (Excel → sayt)', cntDiff, s=>`<tr><td data-noi18n>${nm(s)}</td><td data-noi18n>${s}</td><td data-noi18n>Excel: ${ex[s].length} (${show(ex[s])})<br>Sayt: ${st[s].length} (${show(st[s])})</td></tr>`)}
+      ${sec('Filial farq qiladi', filDiff, s=>`<tr><td data-noi18n>${nm(s)}</td><td data-noi18n>${s}</td><td data-noi18n>Excel: ${show(ex[s])}<br>Sayt: ${show(st[s])}</td></tr>`)}
+      <div class="hint" style="margin-top:12px;">Eslatma: Excel’da katakni bo‘shatib qayta import qilish saytdagi qiymatni o‘chirmaydi — import faqat to‘ldirilgan kataklarni yozadi. Saytdagi ortiqcha yozuvni Hamkorlar ro‘yxatidan (🗑) yoki «Takroriy STIR» oynasidan o‘chiring.</div>
+    </div>
+    <div class="modal-foot"><button type="button" class="secondary" id="cmCancel">Yopish</button></div></div>`;
+  document.body.appendChild(m);
+  document.getElementById('cmX').onclick = document.getElementById('cmCancel').onclick = ()=> m.remove();
   i18nApply(m);
 }
 

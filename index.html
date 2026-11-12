@@ -1155,6 +1155,15 @@ select#f_tarif_turi{width:100%;}
 .bonus-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between;}
 .bonus-bar .bonus-xls{width:auto;margin:0;padding:8px 12px;font-size:12.5px;}
 @media (max-width:560px){ .tt-seg{grid-template-columns:1fr;} .bonus-bar .bonus-xls{width:100%;} }
+/* ===== v16 ===== */
+.rp-fil-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin:0 0 10px;}
+.rp-fil-tools label{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--muted);}
+.rp-fil-tools input,.rp-fil-tools select{padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--text);font:inherit;font-size:12.5px;}
+.rp-fil-table th[data-fsort]:hover{color:var(--accent-2);}
+.rp-sorted{color:var(--accent-2);}
+.rp-total td{border-top:2px solid var(--line);background:var(--accent-soft);}
+.uhk-grid .hk-card-head{flex-wrap:wrap;}
+#suFilial{width:100%;}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -1174,17 +1183,19 @@ select#f_tarif_turi{width:100%;}
       <button type="submit" class="primary" style="width:100%;margin-top:16px;">Kirish</button>
       <div class="status err" id="loginError" style="text-align:center;margin-top:10px;"></div>
     </form>
-    <div class="login-alt">Hamkormisiz va akkauntingiz yo‘qmi? <a href="#" id="toSignup">Ro‘yxatdan o‘tish</a></div>
+    <div class="login-alt">BirZum hodimimisiz va akkauntingiz yo‘qmi? <a href="#" id="toSignup">Ro‘yxatdan o‘tish</a></div>
   </div>
   <div class="login-card" id="signupCard" style="display:none;max-width:400px;">
     <img class="login-logo logo-light" alt="BirZum">
     <h2>Ro‘yxatdan o‘tish</h2>
-    <p class="login-sub">Hamkorlik shartnomasi uchun ariza yuborish maqsadida akkaunt yarating</p>
+    <p class="login-sub">Hamkorlar bilan shartnoma tuzish uchun ariza yuboradigan hodim akkauntini yarating</p>
     <form id="signupForm" autocomplete="off">
       <label>Ism va familiya</label>
       <input type="text" id="suName" placeholder="Masalan: Karimov Sardor" required>
       <label>Telefon raqami</label>
       <input type="tel" id="suPhone" placeholder="+998 90 123 45 67" value="+998 " required>
+      <label>Filial</label>
+      <select id="suFilial" required><option value="">— filialni tanlang —</option></select>
       <label>Login</label>
       <input type="text" id="suLogin" placeholder="lotin harflari va raqamlar" autocomplete="username" required>
       <label>Parol</label>
@@ -1202,8 +1213,9 @@ select#f_tarif_turi{width:100%;}
 <div id="userApp" style="display:none;">
   <div class="ua-top">
     <img class="logo-auto" alt="BirZum">
-    <span class="ua-title">Hamkor kabineti</span>
+    <span class="ua-title">Hodim kabineti</span>
     <nav class="ua-tabs"><button type="button" class="ua-tab" data-utab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span>Arizalar</span><span class="ua-badge" data-ubadge="home" style="display:none;"></span></button>
+      <button type="button" class="ua-tab" data-utab="hamkor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg><span>Hamkorlar</span></button>
       <button type="button" class="ua-tab" data-utab="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg><span>Xabarlar</span><span class="ua-badge" data-ubadge="chat" style="display:none;"></span></button>
       <button type="button" class="ua-tab" data-utab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6 8-6s7.2 2 8 6"/></svg><span>Profil</span></button></nav>
     <div class="ua-right">
@@ -1214,6 +1226,7 @@ select#f_tarif_turi{width:100%;}
   </div>
   <div class="ua-wrap" id="uaContent"></div>
   <nav class="ua-bottom"><button type="button" class="ua-tab" data-utab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span>Arizalar</span><span class="ua-badge" data-ubadge="home" style="display:none;"></span></button>
+      <button type="button" class="ua-tab" data-utab="hamkor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg><span>Hamkorlar</span></button>
       <button type="button" class="ua-tab" data-utab="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg><span>Xabarlar</span><span class="ua-badge" data-ubadge="chat" style="display:none;"></span></button>
       <button type="button" class="ua-tab" data-utab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6 8-6s7.2 2 8 6"/></svg><span>Profil</span></button></nav>
 </div>
@@ -1337,7 +1350,7 @@ function showApp(){
     arAdminLoad(true);
     startArAdminPolling();
     mfoSyncMeta();
-    tarifLoad();
+    tarifLoad(); filialLoad();
     slaLoad().then(()=>flowLoad()).then(()=>{ renderTabs(); if(activeTab==='panel') renderFlowPanel(); });
     usersLoad();
     startAdminMsgPolling();
@@ -2546,6 +2559,7 @@ function subscribeCloudRealtime(){
       renderTabs();
       if(key==='hamkor' && activeTab==='hamkor') renderHamkorTable();
       else if(activeTab===key) renderHistory(key);
+      if(activeTab==='hisobot') rpAutoRefresh();
     }, err=>{
       console.error('Bulut tinglashda xatolik ('+key+'):', err);
     });
@@ -4337,6 +4351,7 @@ const AR_FIELDS = [
   ['hisob_raqami','Bank hisob raqami','text',true,'20 xonali hisob raqam', 20],
   ['mfo','Bank MFO','text',true,'5 xonali', 5],
   ['bank_nomi','Bank nomi','text',false,'masalan: Hamkorbank'],
+  ['filial','Filial','select',true,[]],
   ['izoh','Qo‘shimcha izoh','textarea',false,''],
 ];
 const AR_REQUIREMENTS = [
@@ -4519,6 +4534,7 @@ async function arTryUserLogin(login, pass){
 function showAuthCard(which){
   document.getElementById('loginCard').style.display = which==='signup' ? 'none' : '';
   document.getElementById('signupCard').style.display = which==='signup' ? '' : 'none';
+  if(which==='signup') fillSignupFilial();
   const e1 = document.getElementById('loginError'); if(e1) e1.textContent = '';
   const e2 = document.getElementById('signupStatus'); if(e2){ e2.textContent = ''; e2.className = 'status'; }
 }
@@ -4540,11 +4556,13 @@ function showAuthCard(which){
     const st = document.getElementById('signupStatus');
     const ism = document.getElementById('suName').value.trim();
     const phone = document.getElementById('suPhone').value.trim();
+    const filial = (document.getElementById('suFilial')||{}).value || '';
     const login = document.getElementById('suLogin').value.trim();
     const p1 = document.getElementById('suPass').value, p2 = document.getElementById('suPass2').value;
     const err = (m)=>{ st.className = 'status err'; st.textContent = m; };
     if(ism.length < 3) return err('Ism va familiyangizni to‘liq kiriting.');
     if(phone.replace(/\D/g,'').length < 12) return err('Telefon raqamini to‘liq kiriting: +998 __ ___ __ __');
+    if(!filial) return err('Siz ishlaydigan filialni tanlang.');
     if(!/^[a-zA-Z0-9_.]{3,32}$/.test(login)) return err('Login 3–32 ta lotin harfi, raqam, «_» yoki «.» dan iborat bo‘lsin.');
     if(p1.length < 6) return err('Parol kamida 6 ta belgidan iborat bo‘lsin.');
     if(p1 !== p2) return err('Parollar bir-biriga mos emas.');
@@ -4553,10 +4571,10 @@ function showAuthCard(which){
     try{
       if(login.toLowerCase() === String(getCreds().login).toLowerCase() || await arFindUser(login)) { btn.disabled = false; return err('Bu login band. Boshqa login tanlang.'); }
       const salt = uid() + uid();
-      const u = {id: 'u' + uid(), role: 'user', ism, telefon: phone, login, loginLower: login.toLowerCase(), salt, hash: arHashPass(p1, salt),
+      const u = {id: 'u' + uid(), role: 'user', ism, telefon: phone, filial, login, loginLower: login.toLowerCase(), salt, hash: arHashPass(p1, salt),
                  createdAt: new Date().toISOString(), blocked: false};
       await ST.set(AR_USERS, u.id, u);
-      setUserSession({id:u.id, ism:u.ism, telefon:u.telefon, login:u.login});
+      setUserSession({id:u.id, ism:u.ism, telefon:u.telefon, login:u.login, filial:u.filial});
       f.reset(); btn.disabled = false;
       showUserApp();
     }catch(ex){
@@ -4614,6 +4632,7 @@ function showUserApp(){
   renderUserApp();
   uRefresh();
   uPollMessages();
+  filialLoad().then(()=>{ if(uView!=='form') renderUserApp(); });
   clearInterval(uTimer); uTimer = setInterval(()=>{ if(uView!=='form') uRefresh(); }, 60000);
   clearInterval(uMsgTimer); uMsgTimer = setInterval(uPollMessages, 20000);
 }
@@ -4629,6 +4648,7 @@ async function uPollMessages(){
   // akkaunt nofaol qilingan bo'lsa — chiqarib yuboramiz
   try{
     const me = await ST.get(AR_USERS, u.id);
+    if(me && (me.filial||'') !== (u.filial||'')){ u.filial = me.filial||''; setUserSession(u); if(uTab==='hamkor' || uView!=='form') renderUserApp(); }
     if(me && me.blocked){ clearUserSession(); clearInterval(uTimer); clearInterval(uMsgTimer); document.getElementById('userApp').style.display='none'; document.getElementById('uaContent').innerHTML=''; showLogin(); showBlockedNotice(); return; }
   }catch(e){}
   try{ uMsgs = await msgThread(u.id); }catch(e){ return; }
@@ -4668,6 +4688,7 @@ function renderUserApp(){
   uUpdateBadges();
   if(uTab==='chat'){ renderUserChat(host); return; }
   if(uTab==='profile'){ renderUserProfile(host); return; }
+  if(uTab==='hamkor'){ renderUserHamkor(host); return; }
   const cloudWarn = '';
   const mobile = window.innerWidth <= 760;
   const reqs = `<details class="card ua-req" ${mobile && (uView!=='list' || uArizalar.length) ? '' : 'open'}>
@@ -4696,10 +4717,10 @@ function renderUserApp(){
   let main = '';
   if(uView==='form') main = uFormMarkup();
   else if(uView==='view' && uCurrentId) main = uViewMarkup(uArizalar.find(a=>a.id===uCurrentId));
-  else main = `<div class="card ua-welcome">
+  else main = `${uFilialAsk()}<div class="card ua-welcome">
       <h2>Xush kelibsiz!</h2>
-      <p class="sub">BirZum Nasiya bilan hamkorlik shartnomasi tuzish uchun ariza yuboring. Chap tomondagi ro‘yxatdagi hujjatlarni tayyorlab qo‘ying — rasmga olib yoki skaner qilib yuklashingiz mumkin.</p>
-      <ol class="ua-steps"><li><b>Ariza to‘ldiring</b> — tashkilot ma’lumotlari va hujjatlar.</li><li><b>Yuboring</b> — ariza adminga boradi.</li><li><b>Holatini kuzating</b> — qabul qilinsa, shartnoma tayyorlanadi; kamchilik bo‘lsa, izoh bilan qaytariladi.</li></ol>
+      <p class="sub">Yangi hamkor (do‘kon) bilan BirZum Nasiya shartnomasi tuzish uchun ariza yuboring. Chap tomondagi ro‘yxatdagi hujjatlarni hamkordan olib, rasmga olib yoki skaner qilib yuklang.</p>
+      <ol class="ua-steps"><li><b>Ariza to‘ldiring</b> — hamkor tashkilot ma’lumotlari va hujjatlari.</li><li><b>Yuboring</b> — ariza adminga boradi.</li><li><b>Holatini kuzating</b> — qabul qilinsa, shartnoma tayyorlanadi; kamchilik bo‘lsa, izoh bilan qaytariladi.</li></ol>
       <button type="button" class="primary" id="uNewBtn2" style="margin-top:8px;">＋ Yangi ariza yuborish</button>
     </div>`;
   host.innerHTML = mobile && uView!=='list'
@@ -4716,12 +4737,14 @@ function renderUserApp(){
   const fsc = document.getElementById('uFltClear'); if(fsc) fsc.onclick = ()=>{ uFlt = {st:'',from:'',to:''}; renderUserApp(); };
   if(uView==='form') bindUForm();
   if(uView==='view') bindUView();
+  bindUFilialAsk();
   i18nApply(host);
 }
 
 function arFieldMarkup(f, val){
   const [k,label,type,req,ph] = f;
   const lab = `<label>${esc(label)}${req?' <span style="color:var(--danger)">*</span>':' <span class="opt">(ixtiyoriy)</span>'}</label>`;
+  if(k==='filial') return `<div>${lab}<select id="ar_filial">${filialOptionsMarkup(val || (getUserSession()||{}).filial || '')}</select><div class="hint">Siz ishlaydigan filial avtomatik tanlangan.</div></div>`;
   if(type==='select') return `<div>${lab}<select id="ar_${k}"><option value="">— tanlang —</option>${ph.map(o=>`<option ${val===o?'selected':''}>${esc(o)}</option>`).join('')}</select></div>`;
   if(type==='textarea') return `<div class="full">${lab}<textarea id="ar_${k}" rows="3">${esc(val||'')}</textarea></div>`;
   if(k==='lokatsiya') return `<div class="full">${lab}<div class="loc-row"><input type="text" id="ar_${k}" value="${esc(val||'')}" placeholder="${esc(ph)}" style="flex:1;"><button type="button" class="secondary" id="arGeo" style="white-space:nowrap;padding:8px 10px;">📍 Joylashuvimni aniqlash</button></div><div class="hint">Do‘kon ichida turib bosing — xarita havolasi avtomatik yoziladi.</div></div>`;
@@ -4946,11 +4969,11 @@ function uViewMarkup(a){
     yangi:'Arizangiz qabul qilindi va ko‘rib chiqilmoqda. Natija shu yerda ko‘rinadi.',
     qayta:'Tuzatilgan ariza ko‘rib chiqilmoqda.',
     qaytarildi:'Arizada kamchiliklar bor. Izohni o‘qib, «Tuzatish va qayta yuborish» tugmasini bosing.',
-    qabul:'Tabriklaymiz! Arizangiz qabul qilindi. Tez orada shartnoma bo‘yicha siz bilan bog‘lanamiz.',
-    didox:'Shartnoma Didox orqali sizga yuborildi. Didox tizimida tekshirib, imzolang.',
-    imzo:'Shartnoma imzolandi. Tez orada tizimga kirish login va paroli shartnomadagi telefon raqamingizga SMS orqali yuboriladi.',
+    qabul:'Ariza qabul qilindi. Tez orada shartnoma tayyorlanadi.',
+    didox:'Shartnoma Didox orqali hamkorga yuborildi. Hamkor Didox tizimida tekshirib imzolashi kerak.',
+    imzo:'Shartnoma imzolandi. Tez orada hamkorning tizimga kirish login va paroli shartnomadagi telefon raqamiga SMS orqali yuboriladi.',
     bekor:'Shartnoma bekor qilindi. Savollar bo‘lsa, «Xabarlar» bo‘limida yozing.',
-    login:'Hammasi tayyor! BirZum Nasiya tizimiga kirish login va paroli shartnomada ko‘rsatilgan telefon raqamingizga SMS orqali yuboriladi.',
+    login:'Hammasi tayyor! Hamkorning BirZum Nasiya tizimiga kirish login va paroli shartnomada ko‘rsatilgan telefon raqamiga SMS orqali yuboriladi.',
     rad:'Afsuski, arizangiz rad etildi.',
   }[a.status] || '';
   return `<div class="card">
@@ -5009,6 +5032,7 @@ async function arAdminLoad(silent){
   }catch(e){ console.error('Arizalarni o‘qishda xatolik', e); if(!silent){ const s = document.getElementById('arAdminStatus'); if(s){ s.className='status err'; s.textContent='Arizalarni yuklab bo‘lmadi: '+(e.message||e); } } }
   renderTabs();
   if(activeTab==='arizalar'){ renderArList(); if(arSelId) renderArDetail(); }
+  if(activeTab==='hisobot') rpAutoRefresh();
 }
 function arizalarMarkup(){
   const chips = [['faol','Ko‘rib chiqilishi kerak'],['qaytarildi','Qaytarilgan'],['qabul','Qabul qilingan'],['rad','Rad etilgan'],['hammasi','Hammasi']];
@@ -5180,11 +5204,11 @@ async function arDecide(a, status, opts){
     Object.assign(a, upd);
     try{
       const nm = a.data && a.data.tashkilot_nomi || 'arizangiz';
-      const txt = {qabul:`✅ «${nm}» bo‘yicha arizangiz qabul qilindi. Tez orada shartnoma bo‘yicha siz bilan bog‘lanamiz.`,
+      const txt = {qabul:`✅ «${nm}» bo‘yicha arizangiz qabul qilindi. Tez orada shartnoma tayyorlanadi.`,
                    qaytarildi:`↩ «${nm}» bo‘yicha arizangiz tuzatish uchun qaytarildi.`,
                    rad:`✕ «${nm}» bo‘yicha arizangiz rad etildi.`,
-                   didox:`📨 «${nm}» bo‘yicha shartnoma Didox orqali sizga yuborildi. Iltimos, Didox tizimida tekshirib imzolang.`,
-                   login:`🔑 «${nm}» bo‘yicha BirZum Nasiya tizimiga kirish login va paroli shartnomada ko‘rsatilgan telefon raqamingizga SMS orqali yuboriladi.`}[status] + (izoh ? `\nIzoh: ${izoh}` : '');
+                   didox:`📨 «${nm}» bo‘yicha shartnoma Didox orqali hamkorga yuborildi. Hamkor Didox tizimida tekshirib imzolashi kerak.`,
+                   login:`🔑 «${nm}» bo‘yicha hamkorning BirZum Nasiya tizimiga kirish login va paroli shartnomada ko‘rsatilgan telefon raqamiga SMS orqali yuboriladi.`}[status] + (izoh ? `\nIzoh: ${izoh}` : '');
       await msgSend(a.userId, 'admin', txt, {userIsm:a.userIsm, system:true, arizaId:a.id});
     }catch(e){ console.error('Xabar yuborilmadi', e); }
     st.className='status ok';
@@ -5205,7 +5229,7 @@ async function arDecide(a, status, opts){
 async function arCreateHamkor(a, progress){
   const d = a.data || {};
   const map = {tashkilot_nomi:d.tashkilot_nomi, stir:d.stir, brend:d.brend, rahbar_fish:d.rahbar_fish, pinfl:d.pinfl, rahbar:d.rahbar_fish ? shortFio(d.rahbar_fish) : '', telefon_raqami:d.telefon_raqami,
-               manzil:d.manzil, lokatsiya:d.lokatsiya, hisob_raqami:d.hisob_raqami, mfo:d.mfo, bank_nomi:d.bank_nomi};
+               manzil:d.manzil, lokatsiya:d.lokatsiya, hisob_raqami:d.hisob_raqami, mfo:d.mfo, bank_nomi:d.bank_nomi, filial:d.filial};
   let rec = DB.hamkor.find(r=> String((r.data&&r.data.stir)||'').trim() === String(d.stir||'').trim() && d.stir);
   if(rec){
     Object.keys(map).forEach(k=>{ if(map[k] && !String(rec.data[k]||'').trim()) rec.data[k] = map[k]; });
@@ -5328,7 +5352,7 @@ async function renderUserProfile(host){
       me.ism = ism; me.telefon = telefon; me.login = login; me.loginLower = login.toLowerCase();
       if(p1){ me.salt = uid()+uid(); me.hash = arHashPass(p1, me.salt); me.passChangedAt = new Date().toISOString(); }
       await ST.set(AR_USERS, me.id, me);
-      setUserSession({id:me.id, ism, telefon, login});
+      setUserSession({id:me.id, ism, telefon, login, filial:me.filial});
       document.getElementById('uaName').textContent = ism;
       renderUserProfile(host);
       const s2 = document.getElementById('upStatus'); s2.className='status ok'; s2.textContent = 'Profil ma’lumotlari saqlandi.' + (p1 ? ' Parol o‘zgartirildi.' : '');
@@ -5643,7 +5667,7 @@ async function usersLoad(){
   if(activeTab==='users'){ renderUsersList(); renderUserDetail(); }
 }
 function usersMarkup(){
-  const chips = [['all','Hammasi'],['user','Hamkorlar'],['buxgalter','Buxgalterlar'],['admin','Adminlar'],['active','Faol'],['blocked','Nofaol'],['unread','Yangi xabar']];
+  const chips = [['all','Hammasi'],['user','Hodimlar'],['buxgalter','Buxgalterlar'],['admin','Adminlar'],['active','Faol'],['blocked','Nofaol'],['unread','Yangi xabar']];
   return `<div class="hk-grid">
     <div class="hk-card">
       <div class="hk-card-head">
@@ -5683,7 +5707,7 @@ function renderUsersList(){
       const n = adminUnread[u.id]||0;
       const ac = AR_CACHE.filter(a=>a.userId===u.id).length;
       return `<tr data-id="${u.id}" class="${u.id===usersSelId?'sel':''}">
-        <td data-noi18n><div class="hk-name">${esc(u.ism||'—')}</div><div class="hk-sub">@${esc(u.login)}${USERS_CACHE.some(x=>x.id!==u.id && String(x.loginLower||x.login||'').toLowerCase()===String(u.loginLower||u.login||'').toLowerCase()) ? ' <span class="u-dup" title="Shu login bilan boshqa akkaunt ham bor">⚠️ takroriy · '+arFmtDT(u.createdAt).slice(0,10)+'</span>' : ''}</div></td>
+        <td data-noi18n><div class="hk-name">${esc(u.ism||'—')}</div><div class="hk-sub">@${esc(u.login)}${userRole(u)==='user' && u.filial ? ' · '+esc(u.filial) : ''}${USERS_CACHE.some(x=>x.id!==u.id && String(x.loginLower||x.login||'').toLowerCase()===String(u.loginLower||u.login||'').toLowerCase()) ? ' <span class="u-dup" title="Shu login bilan boshqa akkaunt ham bor">⚠️ takroriy · '+arFmtDT(u.createdAt).slice(0,10)+'</span>' : ''}</div></td>
         <td>${roleBadge(userRole(u))}</td>
         <td data-noi18n style="white-space:nowrap;">${esc(u.telefon||'—')}</td>
         <td data-noi18n>${userRole(u)==='user'?ac:'—'}</td>
@@ -5723,7 +5747,7 @@ async function renderUserDetail(keepScroll){
     <div class="hk-detail-body">
       <div class="ar-applicant" data-noi18n>
         <div class="ar-av">${esc(String(u.ism||'?').trim().charAt(0).toUpperCase())}</div>
-        <div><b>${esc(u.ism||'—')}</b><div class="hk-sub">@${esc(u.login)}</div></div>
+        <div><b>${esc(u.ism||'—')}</b><div class="hk-sub">@${esc(u.login)}${userRole(u)==='user' ? ' · 🏢 ' + esc(u.filial || t('Filial tanlanmagan')) : ''}</div></div>
         <label class="hk-toggle" style="margin:0 0 0 auto;" title="Nofaol foydalanuvchi tizimga kira olmaydi"><span class="switch"><input type="checkbox" id="uActiveSw" ${u.blocked?'':'checked'}><span></span></span><span>${esc(t('Faol'))}</span></label>
       </div>
       <div class="hk-form hk-ro" style="margin-top:6px;">
@@ -5790,6 +5814,7 @@ function openUserEditModal(u){
     <div class="modal-head"><h3>Foydalanuvchini tahrirlash</h3><button type="button" class="modal-x" id="umX">✕</button></div>
     <form id="umForm" autocomplete="off"><div class="modal-body">
       <label>Rol</label><select id="umRole">${['user','buxgalter','admin'].map(r=>`<option value="${r}" ${userRole(u)===r?'selected':''}>${ROLE_LABEL[r]}</option>`).join('')}</select>
+      <div id="umFilialRow"><label>Filial</label><select id="umFilial">${filialOptionsMarkup(u.filial||'')}</select></div>
       <label>Ism va familiya</label><input type="text" id="umIsm" value="${esc(u.ism||'')}">
       <label>Telefon raqami</label><input type="tel" id="umTel" value="${esc(u.telefon||'')}">
       <label>Login</label><input type="text" id="umLogin" value="${esc(u.login||'')}">
@@ -5803,6 +5828,8 @@ function openUserEditModal(u){
   const close = ()=> m.remove();
   document.getElementById('umX').onclick = close; document.getElementById('umCancel').onclick = close;
   const tel = document.getElementById('umTel'); tel.addEventListener('input', ()=>{ tel.value = formatUzPhone(tel.value); });
+  const umR = document.getElementById('umRole'), umF = ()=>{ document.getElementById('umFilialRow').style.display = umR.value==='user' ? '' : 'none'; };
+  umR.addEventListener('change', umF); umF();
   document.getElementById('umForm').onsubmit = async (e)=>{
     e.preventDefault();
     const st = document.getElementById('umStatus');
@@ -5819,6 +5846,7 @@ function openUserEditModal(u){
       const ex = await arFindUser(login); if(ex && ex.id!==u.id) return err('Bu login band.');
     }
     u.ism = ism; u.telefon = telefon; u.login = login; u.loginLower = login.toLowerCase(); u.role = document.getElementById('umRole').value;
+    if(u.role==='user'){ const nf = document.getElementById('umFilial').value; if(!nf) return err('Hodim ishlaydigan filialni tanlang.'); u.filial = nf; }
     if(pass){ u.salt = uid()+uid(); u.hash = arHashPass(pass, u.salt); u.passChangedAt = new Date().toISOString(); }
     try{ await ST.set(AR_USERS, u.id, u); }catch(ex){ return err('Saqlanmadi: '+(ex.message||ex)); }
     logAct('user.tahrir', {type:'user', id:u.id, name:u.ism||u.login}, '@'+u.login);
@@ -5850,7 +5878,7 @@ function bindUsersEvents(){
    • Bulutda hali admin akkaunti bo'lmasa (birinchi marta), eski (shu brauzerdagi)
      admin login/paroli bilan kirilganda u avtomatik bulutga ko'chiriladi.
    ====================================================================================== */
-const ROLE_LABEL = {admin:'Admin', buxgalter:'Buxgalter', user:'Hamkor'};
+const ROLE_LABEL = {admin:'Admin', buxgalter:'Buxgalter', user:'Hodim'};
 const ADMIN_ID_KEY = STORAGE_PREFIX + 'admin_id';
 function userRole(u){ return (u && u.role) || 'user'; }
 function roleBadge(r){ const cls = {admin:'st-re', buxgalter:'st-new', user:'st-ok'}[r] || ''; return `<span class="st-badge ${cls}">${esc(ROLE_LABEL[r]||r)}</span>`; }
@@ -5896,7 +5924,7 @@ function enterAs(res, pass){
     setAuthed();
     showApp();
   }else{
-    setUserSession({id:u.id, ism:u.ism, telefon:u.telefon, login:u.login, role:res.role});
+    setUserSession({id:u.id, ism:u.ism, telefon:u.telefon, login:u.login, role:res.role, filial:u.filial||''});
     logAct('kirish', {}, ROLE_LABEL[res.role] || res.role);
     if(res.role==='buxgalter') showBuxApp(); else showUserApp();
   }
@@ -5930,8 +5958,9 @@ function openUserCreateModal(){
     <div class="modal-head"><h3>Yangi foydalanuvchi qo‘shish</h3><button type="button" class="modal-x" id="ucX">✕</button></div>
     <form id="ucForm" autocomplete="off"><div class="modal-body">
       <label>Rol</label>
-      <select id="ucRole"><option value="buxgalter">Buxgalter</option><option value="user">Hamkor (ariza yuboruvchi)</option><option value="admin">Admin</option></select>
+      <select id="ucRole"><option value="buxgalter">Buxgalter</option><option value="user">Hodim (filial xodimi — ariza yuboradi)</option><option value="admin">Admin</option></select>
       <div class="hint" id="ucRoleHint"></div>
+      <div id="ucFilialRow"><label>Filial</label><select id="ucFilial">${filialOptionsMarkup('')}</select></div>
       <label>Ism va familiya</label><input type="text" id="ucIsm" placeholder="Masalan: Aliyeva Dilnoza">
       <label>Telefon raqami</label><input type="tel" id="ucTel" value="+998 ">
       <label>Login</label><input type="text" id="ucLogin" placeholder="lotin harflari va raqamlar">
@@ -5941,10 +5970,10 @@ function openUserCreateModal(){
     <div class="modal-foot"><button type="submit" class="primary">Qo‘shish</button><button type="button" class="secondary" id="ucCancel">Bekor qilish</button></div></form></div>`;
   document.body.appendChild(m);
   const hints = {buxgalter:'Hamkorlarni faqat ko‘radi (tahrirlay olmaydi, login/parollarni ko‘rmaydi), admin yuborgan shartnomalar statusini yuritadi, admin bilan yozishadi.',
-                 user:'Hamkor kabineti: hujjatlar ro‘yxati, ariza yuborish, arizalar holati va admin bilan yozishma.',
+                 user:'Hodim kabineti: hamkorlar uchun ariza yuborish, arizalar holati, o‘z filiali hamkorlarini ko‘rish (faqat ko‘rish) va admin bilan yozishma.',
                  admin:'To‘liq huquq: barcha bo‘limlar, import/eksport, foydalanuvchilarni boshqarish.'};
   const rs = document.getElementById('ucRole');
-  const sh = ()=>{ document.getElementById('ucRoleHint').textContent = hints[rs.value]; };
+  const sh = ()=>{ document.getElementById('ucRoleHint').textContent = hints[rs.value]; document.getElementById('ucFilialRow').style.display = rs.value==='user' ? '' : 'none'; };
   rs.onchange = sh; sh();
   const close = ()=> m.remove();
   document.getElementById('ucX').onclick = close; document.getElementById('ucCancel').onclick = close;
@@ -5957,11 +5986,13 @@ function openUserCreateModal(){
     if(ism.length<3) return err('Ism va familiyani to‘liq kiriting.');
     if(!/^[a-zA-Z0-9_.]{3,32}$/.test(login)) return err('Login 3–32 ta lotin harfi, raqam, «_» yoki «.» dan iborat bo‘lsin.');
     if(pass.length<6) return err('Parol kamida 6 ta belgidan iborat bo‘lsin.');
+    const filial = role==='user' ? document.getElementById('ucFilial').value : '';
+    if(role==='user' && !filial) return err('Hodim ishlaydigan filialni tanlang.');
     st.className='status'; st.textContent='Saqlanmoqda…';
     try{
       if(login.toLowerCase()===String(getCreds().login).toLowerCase() || await arFindUser(login)) return err('Bu login band.');
       const salt = uid()+uid();
-      const u = {id:(role==='admin'?'admin_':'u')+uid(), role, ism, telefon, login, loginLower:login.toLowerCase(), salt, hash:arHashPass(pass, salt),
+      const u = {id:(role==='admin'?'admin_':'u')+uid(), role, ism, telefon, filial, login, loginLower:login.toLowerCase(), salt, hash:arHashPass(pass, salt),
                  createdAt:new Date().toISOString(), createdBy:'admin', blocked:false};
       await ST.set(AR_USERS, u.id, u);
       logAct('user.qoshildi', {type:'user', id:u.id, name:ism}, `${ROLE_LABEL[role]} · @${login}`);
@@ -6744,6 +6775,7 @@ function shortFio(fish){
 }
 function filialList(){
   const m = {};
+  (typeof FILIAL_CFG!=='undefined' ? FILIAL_CFG : []).forEach(x=>{ const f = normFilial(x); if(f) m[f.toLowerCase()] = f; });
   [].concat(DB.hamkor||[], DB.bosh||[]).forEach(r=>{ const f = normFilial((r.data||{}).filial); if(f) m[f.toLowerCase()] = m[f.toLowerCase()] || f; });
   return Object.values(m).sort((a,b)=>a.localeCompare(b));
 }
@@ -6815,7 +6847,7 @@ function boshDataFromAriza(a){
     tashkilot_nomi:d.tashkilot_nomi||hd.tashkilot_nomi||'', stir:d.stir||hd.stir||'', rahbar_fish:d.rahbar_fish||hd.rahbar_fish||'',
     manzil:d.manzil||hd.manzil||'', hisob_raqami:d.hisob_raqami||hd.hisob_raqami||'', bank_nomi:d.bank_nomi||hd.bank_nomi||'', mfo:d.mfo||hd.mfo||'',
     telefon_raqami:d.telefon_raqami||hd.telefon_raqami||'', telegram_user:hd.telegram_user||'', brend:d.brend||hd.brend||'',
-    filial:hd.filial||'', pinfl:d.pinfl||hd.pinfl||'', rahbar:hd.rahbar||shortFio(d.rahbar_fish||hd.rahbar_fish||''), login:hd.login||'', parol:hd.parol||'',
+    filial:hd.filial||d.filial||'', pinfl:d.pinfl||hd.pinfl||'', rahbar:hd.rahbar||shortFio(d.rahbar_fish||hd.rahbar_fish||''), login:hd.login||'', parol:hd.parol||'',
   };
 }
 
@@ -6860,7 +6892,7 @@ async function arSyncFromBux(x, ns, izoh, who){
     upd.history = (a.history||[]).concat([{at:now, by:'bux', name: who || 'Buxgalter', status:st, izoh: izoh||''}]);
     await ST.set(AR_COL, id, upd);
     const nm = (a.data && a.data.tashkilot_nomi) || 'arizangiz';
-    const txt = {didox:`📨 «${nm}» bo‘yicha shartnoma Didox orqali sizga yuborildi. Iltimos, Didox tizimida tekshirib imzolang.`,
+    const txt = {didox:`📨 «${nm}» bo‘yicha shartnoma Didox orqali hamkorga yuborildi. Hamkor Didox tizimida tekshirib imzolashi kerak.`,
                  imzo:`✅ «${nm}» bo‘yicha shartnoma imzolandi.`,
                  bekor:`✕ «${nm}» bo‘yicha shartnoma bekor qilindi.`}[st] + (izoh ? `\nIzoh: ${izoh}` : '');
     await msgSend(a.userId, 'admin', txt, {userIsm:a.userIsm, system:true, arizaId:id});
@@ -7265,7 +7297,7 @@ const LOG_ACT = {
   'bux.didox':'Shartnomani Didoxdan yubordi', 'bux.tasdiq':'Shartnoma tasdiqlandi deb belgiladi', 'bux.bekor':'Shartnomani bekor qildi',
   'hamkor.qoshildi':'Hamkor qo‘shdi', 'hamkor.tahrir':'Hamkor ma’lumotlarini o‘zgartirdi', 'hamkor.ochirildi':'Hamkorni o‘chirdi',
   'user.qoshildi':'Foydalanuvchi qo‘shdi', 'user.tahrir':'Foydalanuvchini tahrirladi', 'user.faol':'Foydalanuvchini faollashtirdi', 'user.ochirildi':'Foydalanuvchini o‘chirdi', 'user.nofaol':'Foydalanuvchini nofaol qildi',
-  'import':'Import qildi', 'sozlama.muddat':'Muddatlarni o‘zgartirdi', 'sozlama.tarif':'Tariflarni o‘zgartirdi', 'bonus.holat':'Bonus holatini o‘zgartirdi',
+  'import':'Import qildi', 'sozlama.muddat':'Muddatlarni o‘zgartirdi', 'sozlama.tarif':'Tariflarni o‘zgartirdi', 'sozlama.filial':'Filiallar ro‘yxatini o‘zgartirdi', 'bonus.holat':'Bonus holatini o‘zgartirdi',
 };
 const LOG_SECT = {bosh:'Bosh shartnoma', qoshimcha:'Qo‘shimcha kelishuv', bonus:'Bonus shartnoma', hamkor:'Hamkor'};
 function logActor(){
@@ -7656,11 +7688,7 @@ function rpCompute(mk){
     bosh: (DB.bosh||[]).filter(r=> rpMonthKey(rpBoshDate(r))===m).length}));
   // filiallar: shu davrda tuzilgan Bosh shartnomalar va jami hamkorlar
   // filial nomlari bir xil yoziladi: «Hazorasp Filiali» = «Hazorasp filiali»; bo'sh va «0» qatorlar olinmaydi
-  const fil = {};
-  const fadd = (raw, kind, inc)=>{ const f = normFilial(raw); if(!f) return; const k = f.toLowerCase(); fil[k] = fil[k] || {f, bosh:0, hamkor:0}; if(inc) fil[k][kind]++; };
-  (DB.bosh||[]).forEach(r=> fadd((r.data||{}).filial, 'bosh', rpInPeriod(rpBoshDate(r), mk)));
-  (DB.hamkor||[]).forEach(r=> fadd((r.data||{}).filial, 'hamkor', true));
-  const filial = Object.values(fil).filter(x=>x.bosh||x.hamkor).sort((p,q)=> q.bosh-p.bosh || q.hamkor-p.hamkor);
+  const filial = rpFilialRows(mk);
   // hududlar: shu davrdagi arizalar va jami hamkorlar (manzil bo'yicha)
   const reg = {};
   RP_REGIONS.forEach(([n])=> reg[n] = {ariza:0, faol:0, hamkor:0}); reg['Aniqlanmagan'] = {ariza:0, faol:0, hamkor:0};
@@ -7674,6 +7702,73 @@ function rpCompute(mk){
 }
 
 let rpMonth = '';
+/* ---- Filiallar bo'yicha: saralash, sana bo'yicha yangi hamkorlar, Excel ---- */
+let rpFilDate = '', rpFilSort = 'hamkor';
+function rpHkDateMap(){
+  const m = {};
+  (DB.bosh||[]).forEach(r=>{ const d = r.data||{}, s = String(d.stir||'').trim(), dt = normalizeDateString(d.shartnoma_sanasi)||''; if(!s || !/^\d{4}-\d{2}-\d{2}$/.test(dt)) return; if(!m[s] || dt < m[s]) m[s] = dt; });
+  return m;
+}
+function rpHkDate(r, map){
+  const d = r.data||{}, s = String(d.stir||'').trim();
+  return (s && map[s]) || String(r.createdAt||'').slice(0,10);
+}
+function rpFilialRows(mk){
+  const fil = {}, map = rpHkDateMap(), day = rpFilDate;
+  const get = raw=>{ const f = normFilial(raw); if(!f) return null; const k = fKey(f); return fil[k] = fil[k] || {f: FILIAL_CFG.find(x=> fKey(x)===k) || f, bosh:0, hamkor:0, soni:0}; };
+  (DB.bosh||[]).forEach(r=>{ const x = get((r.data||{}).filial); if(x && rpInPeriod(rpBoshDate(r), mk)) x.bosh++; });
+  (DB.hamkor||[]).forEach(r=>{ const x = get((r.data||{}).filial); if(!x) return; const dt = rpHkDate(r, map);
+    if(day){ if(!dt || dt <= day) x.hamkor++; if(dt === day) x.soni++; } else x.hamkor++; });
+  const rows = Object.values(fil).filter(x=> day ? (x.hamkor || x.soni) : (x.bosh || x.hamkor));
+  const by = {hamkor:(p,q)=> q.hamkor-p.hamkor || q.soni-p.soni, soni:(p,q)=> q.soni-p.soni || q.hamkor-p.hamkor, bosh:(p,q)=> q.bosh-p.bosh || q.hamkor-p.hamkor, nomi:(p,q)=> p.f.localeCompare(q.f)}[rpFilSort] || ((p,q)=> q.hamkor-p.hamkor);
+  return rows.sort((p,q)=> by(p,q) || p.f.localeCompare(q.f));
+}
+function rpFilialCard(R, mk){
+  const rows = R.filial, day = rpFilDate;
+  const tot = rows.reduce((a,f)=>({bosh:a.bosh+f.bosh, hamkor:a.hamkor+f.hamkor, soni:a.soni+f.soni}), {bosh:0, hamkor:0, soni:0});
+  const col = day ? 'soni' : 'bosh';
+  const max = Math.max(1, ...rows.map(f=> f.hamkor));
+  const th = (k, label, extra)=> `<th style="text-align:right;cursor:pointer;" data-fsort="${k}" class="${rpFilSort===k?'rp-sorted':''}" title="Shu ustun bo‘yicha saralash">${extra||''}<span>${esc(label)}</span>${rpFilSort===k?' ▼':''}</th>`;
+  return `<div class="card rp-card rp-fil"><h3>Filiallar bo‘yicha</h3>
+    <p class="sub">${day ? `<span data-noi18n>${esc(boshPlainDate(day))}</span> sanada qo‘shilgan yangi hamkorlar va shu sana holatiga jami hamkorlar` : `${mk?'Shu oyda':'Jami'} tuzilgan Bosh shartnomalar va ro‘yxatdagi hamkorlar`}</p>
+    <div class="rp-fil-tools">
+      <label>Sana <input type="date" id="rpFilDate" value="${esc(day)}" title="Shu sanada qaysi filial nechta yangi hamkor qo‘shgani"></label>
+      ${day ? '<button type="button" class="link-btn" id="rpFilClear" style="margin:0;">✕ Sanani tozalash</button>' : ''}
+      <label>Saralash <select id="rpFilSort">${[['hamkor','Hamkorlar soni (ko‘pi yuqorida)'],['soni', day ? 'Shu sanadagi yangilar' : 'Shartnomalar'],['nomi','Filial nomi (A–Z)']].map(([v,l])=>`<option value="${v}" ${rpFilSort===v || (v==='soni' && rpFilSort==='bosh')?'selected':''}>${esc(l)}</option>`).join('')}</select></label>
+      <button type="button" class="hk-tool" id="rpFilXlsx" title="Jadvalni rasmdagidek Excel faylga yuklab olish">⬇ Excel${day?'':' (bugungi sana)'}</button>
+    </div>
+    ${rows.length ? `<table class="srv-table rp-fil-table"><thead><tr><th style="width:36px">№</th><th style="cursor:pointer;" data-fsort="nomi" class="${rpFilSort==='nomi'?'rp-sorted':''}">Filial${rpFilSort==='nomi'?' ▲':''}</th>
+      ${th(col, day ? 'Yangi (shu sanada)' : 'Shartnomalar')}${th('hamkor', day ? 'Jami (shu sana holatiga)' : 'Hamkorlar')}</tr></thead>
+      <tbody>${rows.map((f,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td data-noi18n>${esc(f.f)}<div class="rp-mini"><i style="width:${(f.hamkor/max*100).toFixed(1)}%"></i></div></td><td style="text-align:right" data-noi18n><b>${f[col] || (day ? '' : 0)}</b></td><td style="text-align:right" data-noi18n>${f.hamkor}</td></tr>`).join('')}</tbody>
+      <tfoot><tr class="rp-total"><td></td><td><b>Jami</b></td><td style="text-align:right" data-noi18n><b>${tot[col]}</b></td><td style="text-align:right" data-noi18n><b>${tot.hamkor}</b></td></tr></tfoot></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>`;
+}
+function rpFilialExcel(){
+  const day = rpFilDate || todayISO();
+  const keep = rpFilDate; rpFilDate = day;
+  const rows = rpFilialRows(rpMonth==='all' ? '' : rpMonth);
+  rpFilDate = keep;
+  const title = `BirZum Nasiya bo‘yicha filiallar tomonidan tuzilgan shartnomalar soni ${boshPlainDate(day)} yil holatiga`;
+  const tot = rows.reduce((a,f)=>({soni:a.soni+f.soni, hamkor:a.hamkor+f.hamkor}), {soni:0, hamkor:0});
+  const aoa = [[title,'','',''], [], ['№','Filial','Soni','Jami']]
+    .concat(rows.map((f,i)=>[i+1, f.f, f.soni || '', f.hamkor]))
+    .concat([['', 'Jami', tot.soni || '', tot.hamkor]]);
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws['!merges'] = [{s:{r:0,c:0}, e:{r:0,c:3}}];
+  ws['!cols'] = [{wch:6},{wch:28},{wch:10},{wch:10}];
+  ws['!rows'] = [{hpt:36}];
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Filiallar');
+  XLSX.writeFile(wb, `BirZum_filiallar_${day}.xlsx`);
+}
+// Hisobot ochiq turganda ma'lumot o'zgarsa — o'zi yangilanadi (kiritilgan filtrlar saqlanadi)
+let rpAutoT = null;
+function rpAutoRefresh(){
+  clearTimeout(rpAutoT);
+  rpAutoT = setTimeout(()=>{
+    if(activeTab!=='hisobot') return;
+    const a = document.activeElement; if(a && a.closest && a.closest('#rpBody') && /INPUT|SELECT/.test(a.tagName)) return;
+    const y = window.scrollY; renderReports(); window.scrollTo(0, y);
+  }, 1200);
+}
 function reportsMarkup(){
   if(rpMonth === '') { const d = new Date(); rpMonth = `${d.getFullYear()}-${pad2(d.getMonth()+1)}`; }
   return `<div class="rp-wrap">
@@ -7709,7 +7804,6 @@ function renderReports(){
   const sMax = Math.max(1, ...R.segs.map(s=>s.avg||0));
   const slow = R.segs.filter(s=>s.avg!=null).sort((a,b)=>b.avg-a.avg)[0];
   const tMax = Math.max(1, ...R.trend.map(t=>Math.max(t.yangi, t.faol, t.bosh)));
-  const filMax = Math.max(1, ...R.filial.map(f=>f.bosh));
   host.innerHTML = `
     <div class="rp-title"><h2>${esc(rpMonthLabel(mk))}</h2><span class="hk-sub">Hozir jarayonda: <b data-noi18n>${R.nowS.jarayonda}</b> ta hamkor${R.nowS.kechikkan?` · <b class="rp-late" data-noi18n>${R.nowS.kechikkan} ta muddati o‘tgan</b>`:''}</span></div>
     <div class="rp-kpis">${tiles.map(([l,v,d])=>`<div class="card rp-kpi"><span>${esc(l)}</span><b data-noi18n>${esc(String(v))}</b>${d||''}</div>`).join('')}</div>
@@ -7726,15 +7820,20 @@ function renderReports(){
         <div class="rp-tb"><i class="k1" style="height:${(t.yangi/tMax*100).toFixed(1)}%"><em data-noi18n>${t.yangi||''}</em></i><i class="k2" style="height:${(t.faol/tMax*100).toFixed(1)}%"><em data-noi18n>${t.faol||''}</em></i><i class="k3" style="height:${(t.bosh/tMax*100).toFixed(1)}%"><em data-noi18n>${t.bosh||''}</em></i></div>
         <span data-noi18n>${rpShortMonth(t.m)}</span></div>`).join('')}</div></div>
     <div class="rp-cols">
-      <div class="card rp-card"><h3>Filiallar bo‘yicha</h3><p class="sub">${mk?'Shu oyda':'Jami'} tuzilgan Bosh shartnomalar va ro‘yxatdagi hamkorlar</p>
-        ${R.filial.length ? `<table class="srv-table"><thead><tr><th style="width:36px">№</th><th>Filial</th><th style="text-align:right">Shartnomalar</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${R.filial.map((f,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td data-noi18n>${esc(f.f)}<div class="rp-mini"><i style="width:${(f.bosh/filMax*100).toFixed(1)}%"></i></div></td><td style="text-align:right" data-noi18n><b>${f.bosh}</b></td><td style="text-align:right" data-noi18n>${f.hamkor}</td></tr>`).join('')}</tbody></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+      ${rpFilialCard(R, mk)}
       <div class="card rp-card"><h3>Hududlar bo‘yicha</h3><p class="sub">Manzil bo‘yicha aniqlangan: ${mk?'shu oydagi':'barcha'} arizalar, faol bo‘lganlar va jami hamkorlar</p>
-        ${R.hudud.length ? `<table class="srv-table"><thead><tr><th style="width:36px">№</th><th>Hudud</th><th style="text-align:right">Arizalar</th><th style="text-align:right">Faol</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${R.hudud.map((h,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td>${esc(h.n)}</td><td style="text-align:right" data-noi18n><b>${h.ariza}</b></td><td style="text-align:right" data-noi18n>${h.faol}</td><td style="text-align:right" data-noi18n>${h.hamkor}</td></tr>`).join('')}</tbody></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+        ${R.hudud.length ? `<table class="srv-table"><thead><tr><th style="width:36px">№</th><th>Hudud</th><th style="text-align:right">Arizalar</th><th style="text-align:right">Faol</th><th style="text-align:right">Hamkorlar</th></tr></thead><tbody>${R.hudud.map((h,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td>${esc(h.n)}</td><td style="text-align:right" data-noi18n><b>${h.ariza}</b></td><td style="text-align:right" data-noi18n>${h.faol}</td><td style="text-align:right" data-noi18n>${h.hamkor}</td></tr>`).join('')}</tbody>
+          <tfoot><tr class="rp-total"><td></td><td><b>Jami</b></td><td style="text-align:right" data-noi18n><b>${R.hudud.reduce((a,h)=>a+h.ariza,0)}</b></td><td style="text-align:right" data-noi18n><b>${R.hudud.reduce((a,h)=>a+h.faol,0)}</b></td><td style="text-align:right" data-noi18n><b>${R.hudud.reduce((a,h)=>a+h.hamkor,0)}</b></td></tr></tfoot></table>` : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
     </div>
     <div class="card rp-card"><h3>Tuzilgan hujjatlar</h3><div class="rp-docs">
       <div><b data-noi18n>${c.bosh}</b><span>Bosh shartnoma</span>${p?rpDelta(c.bosh,p.bosh):''}</div>
       <div><b data-noi18n>${c.qoshimcha}</b><span>Qo‘shimcha kelishuv</span>${p?rpDelta(c.qoshimcha,p.qoshimcha):''}</div>
       <div><b data-noi18n>${c.bonus}</b><span>Bonus / bekor qilish</span>${p?rpDelta(c.bonus,p.bonus):''}</div></div></div>`;
+  const fd = document.getElementById('rpFilDate'); if(fd) fd.onchange = ()=>{ rpFilDate = fd.value || ''; if(rpFilSort==='bosh' || rpFilSort==='soni') rpFilSort = rpFilDate ? 'soni' : 'bosh'; renderReports(); };
+  const fc = document.getElementById('rpFilClear'); if(fc) fc.onclick = ()=>{ rpFilDate = ''; if(rpFilSort==='soni') rpFilSort = 'bosh'; renderReports(); };
+  const fs = document.getElementById('rpFilSort'); if(fs) fs.onchange = ()=>{ rpFilSort = fs.value==='soni' && !rpFilDate ? 'bosh' : fs.value; renderReports(); };
+  host.querySelectorAll('[data-fsort]').forEach(h=> h.onclick = ()=>{ const k = h.dataset.fsort; rpFilSort = k; renderReports(); });
+  const fx = document.getElementById('rpFilXlsx'); if(fx) fx.onclick = rpFilialExcel;
   i18nApply(host);
 }
 function rpExcel(){
@@ -7758,8 +7857,10 @@ function rpExcel(){
   add('Voronka', R.funnel.map(([l,n])=>({'Bosqich':l, 'Soni':n, 'Ulushi, %':R.funnel[0][1]?Math.round(n/R.funnel[0][1]*100):''})), [26,10,10]);
   add('Bosqichlar vaqti', R.segs.map(s=>({'Bosqich':s.l, 'Mas’ul':s.who, 'Soni':s.n, 'O‘rtacha (soat)':s.avg!=null?+s.avg.toFixed(1):'', 'Mediana (soat)':s.med!=null?+s.med.toFixed(1):'', 'Eng ko‘pi (soat)':s.max!=null?+s.max.toFixed(1):''})), [28,12,8,14,14,14]);
   add('12 oy', R.trend.map(t=>({'Oy':rpMonthLabel(t.m), 'Yangi arizalar':t.yangi, 'Faol hamkor':t.faol, 'Bosh shartnomalar':t.bosh})), [16,14,12,16]);
-  add('Filiallar', R.filial.map((f,i)=>({'№':i+1, 'Filial':f.f, 'Shartnomalar':f.bosh, 'Hamkorlar':f.hamkor})), [5,28,14,12]);
-  add('Hududlar', R.hudud.map((h,i)=>({'№':i+1, 'Hudud':h.n, 'Arizalar':h.ariza, 'Faol':h.faol, 'Hamkorlar':h.hamkor})), [5,20,10,8,12]);
+  add('Filiallar', R.filial.map((f,i)=>Object.assign({'№':i+1, 'Filial':f.f, 'Shartnomalar':f.bosh}, rpFilDate ? {['Yangi ('+boshPlainDate(rpFilDate)+')']:f.soni} : {}, {'Hamkorlar':f.hamkor}))
+    .concat([Object.assign({'№':'', 'Filial':'Jami', 'Shartnomalar':R.filial.reduce((a,f)=>a+f.bosh,0)}, rpFilDate ? {['Yangi ('+boshPlainDate(rpFilDate)+')']:R.filial.reduce((a,f)=>a+f.soni,0)} : {}, {'Hamkorlar':R.filial.reduce((a,f)=>a+f.hamkor,0)})]), [5,28,14,14,12]);
+  add('Hududlar', R.hudud.map((h,i)=>({'№':i+1, 'Hudud':h.n, 'Arizalar':h.ariza, 'Faol':h.faol, 'Hamkorlar':h.hamkor}))
+    .concat([{'№':'', 'Hudud':'Jami', 'Arizalar':R.hudud.reduce((a,h)=>a+h.ariza,0), 'Faol':R.hudud.reduce((a,h)=>a+h.faol,0), 'Hamkorlar':R.hudud.reduce((a,h)=>a+h.hamkor,0)}]), [5,20,10,8,12]);
   add('Arizalar', R.coh.map(x=>({'Tashkilot':(x.a.data||{}).tashkilot_nomi||'', 'STIR':(x.a.data||{}).stir||'', 'Hudud':rpRegion((x.a.data||{}).manzil), 'Yuboruvchi':x.a.userIsm||'',
     'Status':(AR_STATUS[x.a.status]||{}).admin||x.a.status, 'Kelgan':arFmtDT(x.ev.created), 'Qabul':x.ev.qabul?arFmtDT(x.ev.qabul):'', 'Imzo':x.ev.imzo?arFmtDT(x.ev.imzo):'', 'Faol':x.ev.login?arFmtDT(x.ev.login):'',
     'Arizadan faolgacha (kun)':x.ev.login?+(rpHours(x.ev.created,x.ev.login)/24).toFixed(1):''})), [34,16,14,20,26,17,17,17,17,12]);
@@ -8330,7 +8431,7 @@ Object.assign(I18N, {
 "Создайте аккаунт, чтобы подать заявку на договор о партнёрстве",
 "Create an account to apply for a partnership contract"
 ],
-"Hamkormisiz va akkauntingiz yo‘qmi?": [
+"BirZum hodimimisiz va akkauntingiz yo‘qmi?": [
 "Вы партнёр и у вас нет аккаунта?",
 "Are you a partner without an account?"
 ],
@@ -9884,6 +9985,7 @@ Object.assign(I18N, {"Bekor qilinadigan qo‘shimcha kelishuv raqami": ["Ном�
 Object.assign(I18N, {"Fayl o‘qilmoqda…": ["Чтение файла…", "Reading the file…"]});
 Object.assign(I18N, {"⚠️ Bu STIR bo‘yicha aktiv shartnoma mavjud:": ["⚠️ По этому ИНН есть действующий договор:", "⚠️ There is an active contract for this TIN:"], "⚠️ Bu STIR bo‘yicha {n} ta aktiv shartnoma mavjud:": ["⚠️ По этому ИНН есть действующих договоров: {n}", "⚠️ There are {n} active contracts for this TIN:"], "Ushbu sanada shu raqam bilan shartnoma tuzilgan. Agar bu sizning tashkilotingiz bo‘lsa, ariza yuborishdan oldin «{q}» bo‘limi orqali admin bilan bog‘laning.": ["В эту дату заключён договор с этим номером. Если это ваша организация, перед отправкой заявки свяжитесь с администратором через раздел «{q}».", "A contract with this number was signed on this date. If this is your organization, contact the admin via «{q}» before submitting."], "Faol shartnomalar ro‘yxatida (Google Sheets) shu STIR bilan shartnoma bor. Takroriy shartnoma tuzilmasligini tekshiring.": ["В списке действующих договоров (Google Sheets) есть договор с этим ИНН. Проверьте, чтобы не заключить повторный договор.", "The active contracts list (Google Sheets) already has a contract with this TIN. Make sure a duplicate contract isn't made."], "⚠️ Aktiv shartnoma bor": ["⚠️ Есть действующий договор", "⚠️ Active contract exists"], "📋 Faol shartnomalar jadvali (STIR tekshiruvi):": ["📋 Таблица действующих договоров (проверка ИНН):", "📋 Active contracts sheet (TIN check):"], "ta yozuv · yangilangan:": ["записей · обновлено:", "records · updated:"], "📋 STIR tekshiruvi ishlamayapti — serverni yangilang (yangi server.js).": ["📋 Проверка ИНН не работает — обновите сервер (новый server.js).", "📋 TIN check isn't working — update the server (new server.js)."], "Shartnoma turi": ["Тип договора", "Contract type"], "Standart foizlar": ["Стандартные проценты", "Standard rates"], "Oshirilgan foizlar": ["Повышенные проценты", "Increased rates"], "{n}-band foizlari:": ["Проценты п. {n}:", "Clause {n} rates:"], "Excelga yuklab olish": ["Скачать в Excel", "Download Excel"], "📊 Excelga yuklab olish:": ["📊 Скачать в Excel:", "📊 Download Excel:"], "Tanlangan bo‘limdagi bonus shartnomalarini Excelga yuklab olish": ["Скачать бонусные договоры выбранного раздела в Excel", "Download the selected section's bonus agreements to Excel"]});
 Object.assign(I18N, {"📋 STIR tekshiruvi (Apps Script):": ["📋 Проверка ИНН (Apps Script):", "📋 TIN check (Apps Script):"], "📋 STIR tekshiruvi Apps Script orqali ishlayapti · oxirgi javob:": ["📋 Проверка ИНН работает через Apps Script · последний ответ:", "📋 TIN check is working via Apps Script · last response:"]});
+Object.assign(I18N, {"Hodim": ["Сотрудник", "Employee"], "Hodimlar": ["Сотрудники", "Employees"], "Hodim kabineti": ["Кабинет сотрудника", "Employee portal"], "BirZum hodimimisiz va akkauntingiz yo‘qmi?": ["Вы сотрудник BirZum и у вас нет аккаунта?", "Are you a BirZum employee without an account?"], "Hamkorlar bilan shartnoma tuzish uchun ariza yuboradigan hodim akkauntini yarating": ["Создайте аккаунт сотрудника, который отправляет заявки на договоры с партнёрами", "Create an employee account to submit partner contract applications"], "Filial": ["Филиал", "Branch"], "— filialni tanlang —": ["— выберите филиал —", "— choose a branch —"], "Siz ishlaydigan filialni tanlang.": ["Выберите филиал, в котором вы работаете.", "Choose the branch you work at."], "Hodim ishlaydigan filialni tanlang.": ["Выберите филиал сотрудника.", "Choose the employee's branch."], "Siz ishlaydigan filial avtomatik tanlangan.": ["Ваш филиал выбран автоматически.", "Your branch was selected automatically."], "Siz ishlaydigan filialni tanlang": ["Выберите филиал, в котором вы работаете", "Choose the branch you work at"], "Filial arizalarga avtomatik yoziladi va «{q}» bo‘limida shu filial hamkorlari ko‘rinadi. Keyin uni faqat admin o‘zgartira oladi.": ["Филиал автоматически записывается в заявки, а в разделе «{q}» видны партнёры этого филиала. Потом изменить его может только администратор.", "The branch is added to applications automatically, and «{q}» shows that branch's partners. After that only the admin can change it."], "Filial tanlanmagan": ["Филиал не выбран", "No branch selected"], "Hodim (filial xodimi — ariza yuboradi)": ["Сотрудник (сотрудник филиала — отправляет заявки)", "Employee (branch staff — submits applications)"], "Hodim kabineti: hamkorlar uchun ariza yuborish, arizalar holati, o‘z filiali hamkorlarini ko‘rish (faqat ko‘rish) va admin bilan yozishma.": ["Кабинет сотрудника: отправка заявок по партнёрам, статусы заявок, просмотр партнёров своего филиала (только просмотр) и переписка с админом.", "Employee portal: submit partner applications, track statuses, view own branch's partners (read-only) and chat with the admin."], "Filiallar ro‘yxati": ["Список филиалов", "Branch list"], "Hodimlar ro‘yxatdan o‘tayotganda va ariza yuborayotganda shu ro‘yxatdan filial tanlaydi. Har bir filial — alohida qatorda.": ["Сотрудники выбирают филиал из этого списка при регистрации и отправке заявок. Каждый филиал — с новой строки.", "Employees pick their branch from this list when signing up and submitting applications. One branch per line."], "ta filial": ["филиалов", "branches"], "Standart ro‘yxat": ["Стандартный список", "Default list"], "Kamida bitta filial yozing.": ["Укажите хотя бы один филиал.", "Enter at least one branch."], "Standart ro‘yxat qo‘yildi — «{q}» ni bosing.": ["Установлен стандартный список — нажмите «{q}».", "Default list restored — click «{q}»."], "Filiallar ro‘yxatini o‘zgartirdi": ["Изменил список филиалов", "Changed the branch list"], "Faqat ko‘rish": ["Только просмотр", "View only"], "faqat shu filialga tegishli hamkorlar": ["только партнёры этого филиала", "only this branch's partners"], "Bu filialda hozircha hamkor yo‘q.": ["В этом филиале пока нет партнёров.", "This branch has no partners yet."], "Hamkorni tanlang": ["Выберите партнёра", "Select a partner"], "Ro‘yxatdan hamkorni bosing — shartnoma va rekvizit ma’lumotlari shu yerda ochiladi. Ma’lumotlar faqat ko‘rish uchun.": ["Нажмите на партнёра в списке — здесь откроются данные договора и реквизиты. Только для просмотра.", "Click a partner in the list — contract and bank details open here. View only."], "Bosh shartnoma raqami": ["Номер основного договора", "Main contract number"], "Bosh shartnoma sanasi": ["Дата основного договора", "Main contract date"], "Shartnoma": ["Договор", "Contract"], "Telefon": ["Телефон", "Phone"], "Yangi hamkor (do‘kon) bilan BirZum Nasiya shartnomasi tuzish uchun ariza yuboring. Chap tomondagi ro‘yxatdagi hujjatlarni hamkordan olib, rasmga olib yoki skaner qilib yuklang.": ["Отправьте заявку на заключение договора BirZum Nasiya с новым партнёром (магазином). Возьмите у партнёра документы из списка слева и загрузите фото или скан.", "Submit an application for a BirZum Nasiya contract with a new partner (shop). Collect the documents listed on the left from the partner and upload photos or scans."], "hamkor tashkilot ma’lumotlari va hujjatlari.": ["данные и документы организации-партнёра.", "the partner organization's details and documents."], "Ariza qabul qilindi. Tez orada shartnoma tayyorlanadi.": ["Заявка принята. Скоро договор будет подготовлен.", "Application accepted. The contract will be prepared soon."], "Shartnoma Didox orqali hamkorga yuborildi. Hamkor Didox tizimida tekshirib imzolashi kerak.": ["Договор отправлен партнёру через Didox. Партнёр должен проверить и подписать его в Didox.", "The contract was sent to the partner via Didox. The partner must review and sign it in Didox."], "Shartnoma imzolandi. Tez orada hamkorning tizimga kirish login va paroli shartnomadagi telefon raqamiga SMS orqali yuboriladi.": ["Договор подписан. Скоро логин и пароль партнёра будут отправлены SMS на телефон из договора.", "The contract is signed. The partner's login and password will soon be sent by SMS to the phone in the contract."], "Hammasi tayyor! Hamkorning BirZum Nasiya tizimiga kirish login va paroli shartnomada ko‘rsatilgan telefon raqamiga SMS orqali yuboriladi.": ["Всё готово! Логин и пароль партнёра для BirZum Nasiya будут отправлены SMS на телефон из договора.", "All done! The partner's BirZum Nasiya login and password will be sent by SMS to the phone in the contract."], "Ushbu sanada shu raqam bilan shartnoma tuzilgan — bu hamkor bilan shartnoma allaqachon bor. Ariza yuborishdan oldin «{q}» bo‘limi orqali admin bilan bog‘laning.": ["В эту дату заключён договор с этим номером — с этим партнёром договор уже есть. Перед отправкой заявки свяжитесь с админом через раздел «{q}».", "A contract with this number was made on this date — this partner already has a contract. Contact the admin via «{q}» before submitting."], "Sana": ["Дата", "Date"], "Saralash": ["Сортировка", "Sort"], "Hamkorlar soni (ko‘pi yuqorida)": ["Число партнёров (больше — выше)", "Partner count (most first)"], "Shu sanadagi yangilar": ["Новые за эту дату", "New on this date"], "Filial nomi (A–Z)": ["Название филиала (А–Я)", "Branch name (A–Z)"], "✕ Sanani tozalash": ["✕ Сбросить дату", "✕ Clear date"], "⬇ Excel (bugungi sana)": ["⬇ Excel (сегодня)", "⬇ Excel (today)"], "Yangi (shu sanada)": ["Новые (за дату)", "New (on date)"], "Jami (shu sana holatiga)": ["Всего (на дату)", "Total (as of date)"], "sanada qo‘shilgan yangi hamkorlar va shu sana holatiga jami hamkorlar": ["— новые партнёры за эту дату и всего партнёров на эту дату", "— new partners added on this date and total partners as of this date"], "Shu ustun bo‘yicha saralash": ["Сортировать по этому столбцу", "Sort by this column"], "Shu sanada qaysi filial nechta yangi hamkor qo‘shgani": ["Сколько новых партнёров добавил каждый филиал в эту дату", "How many new partners each branch added on this date"], "Jadvalni rasmdagidek Excel faylga yuklab olish": ["Скачать таблицу в Excel", "Download the table to Excel"]});
 
 /* ======================================================================================
    v14 · Tariflar (oddiy / yuqori ustamali), Word-aniq Qo'shimcha va Bonus hujjatlari,
@@ -10256,7 +10358,7 @@ function stirSheetNote(found, who){
   if(!found || !found.length) return '';
   const head = found.length > 1 ? `⚠️ Bu STIR bo‘yicha ${found.length} ta aktiv shartnoma mavjud:` : '⚠️ Bu STIR bo‘yicha aktiv shartnoma mavjud:';
   const tail = who==='user'
-    ? '<div class="stw-tail">Ushbu sanada shu raqam bilan shartnoma tuzilgan. Agar bu sizning tashkilotingiz bo‘lsa, ariza yuborishdan oldin «Xabarlar» bo‘limi orqali admin bilan bog‘laning.</div>'
+    ? '<div class="stw-tail">Ushbu sanada shu raqam bilan shartnoma tuzilgan — bu hamkor bilan shartnoma allaqachon bor. Ariza yuborishdan oldin «Xabarlar» bo‘limi orqali admin bilan bog‘laning.</div>'
     : '<div class="stw-tail">Faol shartnomalar ro‘yxatida (Google Sheets) shu STIR bilan shartnoma bor. Takroriy shartnoma tuzilmasligini tekshiring.</div>';
   return `<div class="ar-note warn stir-warn"><b>${head}</b>${stirSheetLines(found)}${tail}</div>`;
 }
@@ -10339,6 +10441,174 @@ function bindTtBox(){
   const form = sel.closest('form');
   if(form) form.addEventListener('reset', ()=> setTimeout(ttSync, 0));
   ttSync();
+}
+
+/* ======================================================================================
+   v16 · Hodim roli: filiallar ro'yxati, ro'yxatdan o'tishda filial, arizada filial,
+         hodim kabinetida o'z filiali hamkorlari (faqat ko'rish, login/parolsiz)
+   ====================================================================================== */
+
+/* ---------- 1. Filiallar ro'yxati (Sozlamalarda o'zgartiriladi) ---------- */
+const FILIAL_DEFAULT = ['Amaliyot Filiali','Andijon Filiali','Beruniy Filiali','Bulung\'ur Filiali','Do\'stlik Filiali','G\'allaorol Filiali',
+  'G\'ijduvon Filiali','Hazorasp Filiali','Ishtixon Filiali','Izboskan Filiali','Jalaquduq Filiali','Jizzax Filiali','Jomboy Filiali','Jondor Filiali',
+  'Marg\'ilon Filiali','Nukus Filiali','Oltinko\'l Filiali','Pastdarg\'om Filiali','Peshku Filiali','Quva Filiali','Rishton Filiali','Samarqand Filiali',
+  'Shovot Filiali','Urganch Filiali','Xatirchi Filiali','Xo\'jaobod Filiali','Zomin Filiali','Buxoro Filiali'].sort((a,b)=>a.localeCompare(b));
+let FILIAL_CFG = FILIAL_DEFAULT.slice();
+let filialLoaded = false;
+async function filialLoad(){
+  try{
+    const r = await ST.get(META_COL, 'filiallar');
+    if(r && Array.isArray(r.list) && r.list.length) FILIAL_CFG = r.list.map(String).filter(Boolean);
+    filialLoaded = true;
+  }catch(e){}
+  return FILIAL_CFG;
+}
+function fKey(s){ return normFilial(s).toLowerCase().replace(/[‘’ʻʼ`´]/g, "'").replace(/\s+/g, ' ').trim(); }
+function filialOptionsMarkup(sel){
+  const list = FILIAL_CFG.slice();
+  if(sel && !list.some(f=> fKey(f)===fKey(sel))) list.push(sel);
+  return `<option value="">— filialni tanlang —</option>` + list.map(f=>`<option value="${esc(f)}" ${sel && fKey(f)===fKey(sel) ? 'selected' : ''}>${esc(f)}</option>`).join('');
+}
+async function fillSignupFilial(){
+  const s = document.getElementById('suFilial'); if(!s) return;
+  const cur = s.value;
+  if(!filialLoaded) await filialLoad();
+  s.innerHTML = filialOptionsMarkup(cur);
+}
+function filialCardMarkup(){
+  return `<div class="card imp-card" id="filialCard"><h2>Filiallar ro‘yxati</h2>
+    <p class="sub">Hodimlar ro‘yxatdan o‘tayotganda va ariza yuborayotganda shu ro‘yxatdan filial tanlaydi. Har bir filial — alohida qatorda.</p>
+    <textarea id="filList" rows="10" style="width:100%;box-sizing:border-box;font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);" data-noi18n>${esc(FILIAL_CFG.join('\n'))}</textarea>
+    <div class="hint" id="filCount" data-noi18n></div>
+    <div class="hk-actions" style="margin-top:10px;"><button type="button" class="primary" id="filSave">Saqlash</button><button type="button" class="secondary" id="filReset">Standart ro‘yxat</button></div>
+    <div class="status" id="filStatus"></div></div>`;
+}
+function bindFilialCard(){
+  const ta = document.getElementById('filList'); if(!ta) return;
+  const st = document.getElementById('filStatus'), cnt = document.getElementById('filCount');
+  const parse = ()=>{ const seen = new Set(); return ta.value.split('\n').map(x=>x.replace(/\s+/g,' ').trim()).filter(x=>{ const k = fKey(x); if(!k || seen.has(k)) return false; seen.add(k); return true; }); };
+  const upd = ()=>{ cnt.textContent = parse().length + ' ta filial'; };
+  ta.oninput = upd; upd();
+  if(!filialLoaded) filialLoad().then(()=>{ if(document.activeElement!==ta){ ta.value = FILIAL_CFG.join('\n'); upd(); } });
+  document.getElementById('filSave').onclick = async ()=>{
+    const list = parse();
+    if(!list.length){ st.className = 'status err'; st.textContent = 'Kamida bitta filial yozing.'; return; }
+    try{
+      await ST.set(META_COL, 'filiallar', {list, updatedAt:new Date().toISOString()});
+      FILIAL_CFG = list; filialLoaded = true; ta.value = list.join('\n'); upd();
+      logAct('sozlama.filial', {type:'sozlama', name:'Filiallar'}, list.length + ' ta filial');
+      st.className = 'status ok'; st.textContent = '✅ Saqlandi.';
+    }catch(e){ st.className = 'status err'; st.textContent = 'Saqlanmadi: ' + (e.message||e); }
+  };
+  document.getElementById('filReset').onclick = ()=>{ ta.value = FILIAL_DEFAULT.join('\n'); upd(); st.className = 'status'; st.textContent = 'Standart ro‘yxat qo‘yildi — «Saqlash» ni bosing.'; };
+}
+
+/* ---------- 2. Hodimning filiali yo'q bo'lsa — bir marta tanlatamiz ---------- */
+function uFilialAsk(){
+  const u = getUserSession(); if(!u || u.filial) return '';
+  return `<div class="card ar-note warn" id="uFilAsk" style="display:block;">
+    <b>Siz ishlaydigan filialni tanlang</b>
+    <div class="hint" style="margin:4px 0 8px;">Filial arizalarga avtomatik yoziladi va «Hamkorlar» bo‘limida shu filial hamkorlari ko‘rinadi. Keyin uni faqat admin o‘zgartira oladi.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;"><select id="uFilSel" style="flex:1;min-width:200px;">${filialOptionsMarkup('')}</select><button type="button" class="primary" id="uFilSave" style="width:auto;">Saqlash</button></div>
+  </div>`;
+}
+function bindUFilialAsk(){
+  const b = document.getElementById('uFilSave'); if(!b) return;
+  b.onclick = async ()=>{
+    const v = document.getElementById('uFilSel').value; if(!v){ alert('Filialni tanlang.'); return; }
+    const u = getUserSession(); b.disabled = true;
+    try{
+      const me = await ST.get(AR_USERS, u.id);
+      if(me){ me.filial = v; await ST.set(AR_USERS, u.id, me); }
+      u.filial = v; setUserSession(u); renderUserApp();
+    }catch(e){ b.disabled = false; alert('Saqlanmadi: ' + (e.message||e)); }
+  };
+}
+
+/* ---------- 3. Hodim kabineti: «Hamkorlar» — faqat o'z filiali, faqat ko'rish ---------- */
+const UHK_FIELDS = ['tashkilot_nomi','stir','brend','rahbar_fish','rahbar','pinfl','telefon_raqami','manzil','lokatsiya','hisob_raqami','mfo','bank_nomi','filial'];
+let uHk = [], uHkBosh = {}, uHkAt = 0, uHkErr = false, uHkSel = null, uHkQuery = '', uHkPage = 1, uHkPer = 20;
+async function uHkLoad(force){
+  if(!force && uHkAt && Date.now() - uHkAt < 60000) return;
+  try{
+    const [h, b] = await Promise.all([ST.get(CLOUD_COLLECTION, 'hamkor'), ST.get(CLOUD_COLLECTION, 'bosh').catch(()=>null)]);
+    uHk = (h && Array.isArray(h.records) ? h.records : []).slice().reverse();
+    uHkBosh = {};
+    (b && Array.isArray(b.records) ? b.records : []).forEach(r=>{ const d = r.data||{}; const s = String(d.stir||'').trim(); if(!s) return;
+      const cur = uHkBosh[s]; if(!cur || String(d.shartnoma_sanasi||'') > String(cur.shartnoma_sanasi||'')) uHkBosh[s] = {shartnoma_raqami:d.shartnoma_raqami||'', shartnoma_sanasi:d.shartnoma_sanasi||''}; });
+    uHkAt = Date.now(); uHkErr = false;
+  }catch(e){ console.error(e); uHkErr = true; }
+}
+function uHkMine(){
+  const u = getUserSession()||{}; const fk = fKey(u.filial);
+  if(!fk) return [];
+  return uHk.filter(r=> fKey((r.data||{}).filial) === fk);
+}
+async function renderUserHamkor(host){
+  const u = getUserSession()||{};
+  if(!u.filial){ host.innerHTML = `<div class="ua-grid"><div class="ua-main">${uFilialAsk()}</div></div>`; bindUFilialAsk(); i18nApply(host); return; }
+  if(!uHkAt){ host.innerHTML = '<div class="card"><p class="sub">Hamkorlar yuklanmoqda…</p></div>'; await uHkLoad(); if(uTab!=='hamkor') return; }
+  else if(Date.now() - uHkAt > 60000) uHkLoad().then(()=>{ if(uTab==='hamkor') renderUserApp(); });
+  const mine = uHkMine();
+  const q = uHkQuery.trim().toLowerCase();
+  const all = mine.filter(r=>{ const d = r.data||{}; return !q || [d.tashkilot_nomi,d.stir,d.brend,d.rahbar_fish,d.telefon_raqami].some(v=>String(v||'').toLowerCase().includes(q)); });
+  const pages = Math.max(1, Math.ceil(all.length/uHkPer)); if(uHkPage>pages) uHkPage = pages;
+  const rows = all.slice((uHkPage-1)*uHkPer, uHkPage*uHkPer);
+  const rec = mine.find(r=>r.id===uHkSel);
+  const mobile = window.innerWidth <= 760;
+  const bosh = r=> uHkBosh[String((r.data||{}).stir||'').trim()] || {};
+  const head = `<div class="hk-card-head"><h2>Hamkorlar</h2><span class="nav-cnt" data-noi18n>${mine.length}</span><span class="st-badge st-new">Faqat ko‘rish</span>
+      <div class="hk-tools"><div class="hk-search">${ICONS.search}<input type="search" id="uHkSearch" placeholder="Nomi, STIR, brend, rahbar…" value="${esc(uHkQuery)}"></div><button type="button" class="hk-tool" id="uHkReload">↻ Yangilash</button></div></div>
+    <div class="hint" style="margin:0 16px 8px;">🏢 <b data-noi18n>${esc(u.filial)}</b> — <span>faqat shu filialga tegishli hamkorlar</span></div>`;
+  const list = uHkErr ? '<div class="hk-empty">Hamkorlarni yuklab bo‘lmadi.</div>' : (rows.length ? (mobile
+    ? `<div class="ua-list" style="padding:0 12px 12px;">${rows.map(r=>{ const d = r.data||{}, b = bosh(r); return `<button type="button" class="ua-item ${r.id===uHkSel?'sel':''}" data-uhk="${r.id}">
+        <div class="ua-item-top"><b data-noi18n>${esc(d.tashkilot_nomi||'—')}</b></div>
+        <div class="ua-item-sub" data-noi18n>STIR ${esc(d.stir||'—')}${b.shartnoma_raqami?' · № '+esc(b.shartnoma_raqami):''}${b.shartnoma_sanasi?' · '+esc(boshPlainDate(b.shartnoma_sanasi)):''}</div></button>`; }).join('')}</div>`
+    : `<div class="hk-table-wrap"><table class="hk-table"><thead><tr><th>Nomi</th><th>STIR</th><th>Shartnoma</th><th>Telefon</th></tr></thead><tbody>
+        ${rows.map(r=>{ const d = r.data||{}, b = bosh(r); return `<tr data-uhk="${r.id}" class="${r.id===uHkSel?'sel':''}">
+          <td data-noi18n><div class="hk-name">${esc(d.tashkilot_nomi||'—')}</div>${d.brend?`<div class="hk-sub">${esc(d.brend)}</div>`:''}</td>
+          <td data-noi18n>${esc(d.stir||'—')}</td>
+          <td data-noi18n>${b.shartnoma_raqami?`№ ${esc(b.shartnoma_raqami)}<div class="hk-sub">${esc(boshPlainDate(b.shartnoma_sanasi))}</div>`:'—'}</td>
+          <td data-noi18n>${esc(d.telefon_raqami||'—')}</td></tr>`; }).join('')}</tbody></table></div>`)
+    : `<div class="hk-empty">${mine.length ? 'Hamkor topilmadi.' : 'Bu filialda hozircha hamkor yo‘q.'}</div>`);
+  const pager = all.length ? bPagerMarkup(uHkPage, pages, all.length, uHkPer, 'u') : '';
+  let detail = `<div class="hk-card"><div class="hk-empty">${ICONS.store}<b>Hamkorni tanlang</b><span>Ro‘yxatdan hamkorni bosing — shartnoma va rekvizit ma’lumotlari shu yerda ochiladi. Ma’lumotlar faqat ko‘rish uchun.</span></div></div>`;
+  if(rec){
+    const d = rec.data||{}, b = bosh(rec);
+    const ro = (label, v, full, link)=> `<div class="${full?'full':''}"><label>${esc(label)}</label>${link && /^https?:\/\//i.test(String(v||'')) ? `<a class="hk-ro-link" href="${esc(v)}" target="_blank" rel="noopener" data-noi18n>📍 ${esc(v)}</a>` : `<input type="text" readonly tabindex="-1" value="${esc(v||'')}" placeholder="—">`}</div>`;
+    detail = `<div class="hk-card"><div style="padding:16px;">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><h2 style="margin:0;" data-noi18n>${esc(d.tashkilot_nomi||'')}</h2><span class="st-badge st-new">Faqat ko‘rish</span></div>
+      <div class="hk-form hk-ro" style="margin-top:10px;">
+        ${ro('Bosh shartnoma raqami', b.shartnoma_raqami)}${ro('Bosh shartnoma sanasi', b.shartnoma_sanasi ? boshPlainDate(b.shartnoma_sanasi) : '')}
+        ${UHK_FIELDS.map(k=>{ const f = FIELDS.hamkor.find(x=>x[0]===k); if(!f) return ''; return ro(f[1], d[k], ['tashkilot_nomi','rahbar_fish','manzil','lokatsiya','bank_nomi'].includes(k), k==='lokatsiya'); }).join('')}
+      </div>
+      <div class="hk-section"><h3>Rasmlar va hujjatlar <span class="nav-cnt" id="uHkFileCnt" data-noi18n>…</span></h3><div class="hk-files" id="uHkFiles"><div class="hint">Yuklanmoqda…</div></div></div>
+    </div></div>`;
+  }
+  host.innerHTML = mobile && rec
+    ? `<div class="ua-grid"><div class="ua-main"><button type="button" class="ua-back" id="uHkBack">‹ Hamkorlar</button>${detail}</div></div>`
+    : `<div class="hk-grid uhk-grid"><div class="hk-card">${head}${list}${pager}</div>${mobile ? '' : `<div>${detail}</div>`}</div>`;
+  const back = document.getElementById('uHkBack'); if(back) back.onclick = ()=>{ uHkSel = null; renderUserApp(); window.scrollTo(0,0); };
+  const se = document.getElementById('uHkSearch');
+  if(se) se.oninput = ()=>{ uHkQuery = se.value; uHkPage = 1; const pos = se.selectionStart; renderUserApp(); const s2 = document.getElementById('uHkSearch'); if(s2){ s2.focus(); try{ s2.setSelectionRange(pos,pos); }catch(e){} } };
+  const rl = document.getElementById('uHkReload'); if(rl) rl.onclick = async ()=>{ rl.disabled = true; await uHkLoad(true); renderUserApp(); };
+  host.querySelectorAll('[data-upg]').forEach(b=> b.onclick = ()=>{ uHkPage = Number(b.dataset.upg); renderUserApp(); });
+  const pp = host.querySelector('[data-uper]'); if(pp) pp.onchange = ()=>{ uHkPer = Number(pp.value)||20; uHkPage = 1; renderUserApp(); };
+  host.querySelectorAll('[data-uhk]').forEach(b=> b.onclick = ()=>{ uHkSel = b.dataset.uhk; renderUserApp(); if(mobile) window.scrollTo(0,0); });
+  if(rec) uHkFiles(rec);
+  i18nApply(host);
+}
+async function uHkFiles(rec){
+  const box = document.getElementById('uHkFiles'); if(!box) return;
+  let files = []; try{ files = await hfList(rec.id); }catch(e){}
+  if(uHkSel !== rec.id || !document.body.contains(box)) return;
+  const c = document.getElementById('uHkFileCnt'); if(c) c.textContent = files.length;
+  if(!files.length){ box.innerHTML = '<div class="hint" style="grid-column:1/-1;">Hujjat yuklanmagan.</div>'; i18nApply(box); return; }
+  box.innerHTML = files.map((f,i)=>{
+    const thumb = hfIsImage(f) && f.blob ? `<img src="${URL.createObjectURL(f.blob)}" alt="" loading="lazy">` : `<span class="ext ${hfIsPdf(f)?'pdf':''}">${esc(hfExt(f))}</span>`;
+    return `<div class="hk-file"><div class="hk-thumb" data-uview="${i}">${thumb}</div><div class="hk-fmeta" data-noi18n><div class="hk-fname">${esc(f.name)}</div><div class="hk-fsub"><span>${hfSize(f.size)}</span></div></div></div>`;
+  }).join('');
+  box.querySelectorAll('[data-uview]').forEach(b=> b.onclick = ()=> openViewer(files[Number(b.dataset.uview)]));
 }
 
 async function exportHamkorExcel(){
@@ -10449,6 +10719,7 @@ function profilMarkup(){
     ${importsCardMarkup()}
     ${serverCardMarkup()}
     ${tarifCardMarkup()}
+    ${filialCardMarkup()}
     ${slaCardMarkup()}
     ${tgCardMarkup()}
     ${logCardMarkup()}
@@ -10514,6 +10785,7 @@ function bindProfilEvents(){
   bindImportsCard();
   bindServerCard();
   bindTarifCard();
+  bindFilialCard();
   bindSlaCard();
   bindTgCard();
   bindLogCard();

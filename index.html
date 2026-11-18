@@ -1177,6 +1177,67 @@ select#f_tarif_turi{width:100%;}
 .tt-badge{white-space:nowrap;}
 .tt-chk{display:flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--muted);cursor:pointer;white-space:nowrap;}
 .tt-chk input{margin:0;}
+/* ===== v22 ===== */
+.ar-checks{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0;font-size:12.5px;}
+/* ===== v23 · do'konlar monitoringi ===== */
+.mon-head{align-items:flex-start;}
+.mon-tools{margin:0;}
+.mon-quick{display:flex;gap:6px;flex-wrap:wrap;}
+.mon-trend{display:grid;gap:3px;align-items:end;height:190px;overflow-x:auto;padding-top:14px;}
+.mon-tc{display:flex;flex-direction:column;gap:4px;height:100%;min-width:0;}
+.mon-tc > span{font-size:10px;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;}
+.mon-tb{flex:1;display:flex;align-items:flex-end;justify-content:center;border-bottom:1px solid var(--line);}
+.mon-tb i{width:80%;max-width:26px;background:var(--accent);border-radius:3px 3px 0 0;position:relative;min-height:1px;}
+.mon-tb i em{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-style:normal;font-size:10px;color:var(--muted);white-space:nowrap;}
+.mon-tc:hover .mon-tb i{background:var(--accent-2);}
+.mon-donut-wrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
+.mon-donut{width:170px;height:170px;border-radius:50%;position:relative;flex:0 0 auto;}
+.mon-donut::after{content:'';position:absolute;inset:34px;border-radius:50%;background:var(--paper-2);}
+.mon-donut span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;font-weight:700;color:var(--ink);font-size:15px;}
+.mon-legend{display:flex;flex-direction:column;gap:6px;font-size:12.5px;flex:1;min-width:160px;}
+.mon-legend div{display:grid;grid-template-columns:12px 1fr auto;gap:8px;align-items:center;}
+.mon-legend i{width:12px;height:12px;border-radius:3px;}
+.mon-table td{vertical-align:top;}
+.mon-stop{white-space:nowrap;}
+.mon-fil{grid-template-columns:1.6fr 1fr;}
+@media (max-width:900px){ .mon-fil{grid-template-columns:1fr;} }
+
+/* ============ v24: Portfel tahlili ============ */
+.pf-tabs{margin:0 0 12px;display:flex;width:max-content;max-width:100%;}
+.pf-tabs button{padding:9px 14px;font-size:13px;}
+.mon-up-info{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:10px;}
+.mon-up-info div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;min-width:0;}
+.mon-up-info span{font-size:11px;color:var(--muted);}
+.mon-up-info b{font-size:13.5px;color:var(--ink);overflow-wrap:anywhere;}
+.mon-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;}
+.mon-mode{text-align:left;border:1px solid var(--line);background:var(--paper-2);color:var(--text);border-radius:10px;padding:12px 14px;cursor:pointer;font-family:var(--sans);display:flex;flex-direction:column;gap:6px;}
+.mon-mode b{font-size:14px;color:var(--ink);}
+.mon-mode span{font-size:12px;color:var(--muted);line-height:1.4;}
+.mon-mode.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.mon-mode:hover{border-color:var(--accent);}
+@media (max-width:560px){ .mon-modes{grid-template-columns:1fr;} }
+.pf-b0{background:#4caf50;} .pf-b1{background:#e3b505;} .pf-b2{background:#f08a24;} .pf-b3{background:#e05a2b;} .pf-b4{background:#c62828;}
+.pf-stack{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--line-2);margin:6px 0 12px;}
+.pf-stack i{display:block;height:100%;min-width:2px;}
+.pf-ftable .pf-stack{margin:0;height:10px;min-width:110px;}
+.pf-dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:-1px;}
+.pf-btable td,.pf-btable th{white-space:nowrap;}
+.pf-cls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+.pf-cls div,.pf-mini-kpi div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;min-width:0;}
+.pf-cls span,.pf-mini-kpi span{font-size:11px;color:var(--muted);}
+.pf-cls b,.pf-mini-kpi b{font-size:16px;color:var(--ink);}
+.pf-cls em{font-style:normal;font-size:11.5px;color:var(--muted);}
+.pf-mini-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+@media (max-width:560px){ .pf-cls{grid-template-columns:repeat(2,1fr);} .pf-mini-kpi{grid-template-columns:repeat(2,1fr);} }
+.pf-dl{display:inline-block;font-size:11.5px;font-weight:700;color:var(--muted);}
+.pf-dl.up-bad{color:#dc2626;} .pf-dl.up-ok{color:#15803d;}
+:root[data-theme="dark"] .pf-dl.up-bad{color:#ff7d7d;} :root[data-theme="dark"] .pf-dl.up-ok{color:#4cc27e;}
+.pf-hot{color:#dc2626;} .pf-warm{color:#b45309;}
+:root[data-theme="dark"] .pf-hot{color:#ff7d7d;} :root[data-theme="dark"] .pf-warm{color:#f5b04a;}
+.pf-row{cursor:pointer;} .pf-row:hover td{background:var(--hover);}
+.pf-stable td{white-space:nowrap;} .pf-stable td:nth-child(2){white-space:normal;min-width:180px;}
+.rp-card .hk-search input{padding-left:32px;}
+.pf-btable{min-width:520px;}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -1229,6 +1290,7 @@ select#f_tarif_turi{width:100%;}
     <span class="ua-title">Hodim kabineti</span>
     <nav class="ua-tabs"><button type="button" class="ua-tab" data-utab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span>Arizalar</span><span class="ua-badge" data-ubadge="home" style="display:none;"></span></button>
       <button type="button" class="ua-tab" data-utab="hamkor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg><span>Hamkorlar</span></button>
+      <button type="button" class="ua-tab" data-utab="dokon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/><path d="M3 9h18"/></svg><span>Do‘konlar</span></button>
       <button type="button" class="ua-tab" data-utab="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg><span>Xabarlar</span><span class="ua-badge" data-ubadge="chat" style="display:none;"></span></button>
       <button type="button" class="ua-tab" data-utab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6 8-6s7.2 2 8 6"/></svg><span>Profil</span></button></nav>
     <div class="ua-right">
@@ -1240,6 +1302,7 @@ select#f_tarif_turi{width:100%;}
   <div class="ua-wrap" id="uaContent"></div>
   <nav class="ua-bottom"><button type="button" class="ua-tab" data-utab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span>Arizalar</span><span class="ua-badge" data-ubadge="home" style="display:none;"></span></button>
       <button type="button" class="ua-tab" data-utab="hamkor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg><span>Hamkorlar</span></button>
+      <button type="button" class="ua-tab" data-utab="dokon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/><path d="M3 9h18"/></svg><span>Do‘konlar</span></button>
       <button type="button" class="ua-tab" data-utab="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg><span>Xabarlar</span><span class="ua-badge" data-ubadge="chat" style="display:none;"></span></button>
       <button type="button" class="ua-tab" data-utab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6 8-6s7.2 2 8 6"/></svg><span>Profil</span></button></nav>
 </div>
@@ -3746,6 +3809,7 @@ function renderApp(){
   if(activeTab==='profil') app.innerHTML = profilMarkup();
   if(activeTab==='panel') app.innerHTML = flowPanelMarkup();
   if(activeTab==='hisobot') app.innerHTML = reportsMarkup();
+  if(activeTab==='dokon') app.innerHTML = monMarkup();
   if(activeTab==='arizalar') app.innerHTML = arizalarMarkup();
   if(activeTab==='users') app.innerHTML = usersMarkup();
   bindSectionEvents(activeTab);
@@ -4752,6 +4816,7 @@ function renderUserApp(){
   if(uTab==='chat'){ renderUserChat(host); return; }
   if(uTab==='profile'){ renderUserProfile(host); return; }
   if(uTab==='hamkor'){ renderUserHamkor(host); return; }
+  if(uTab==='dokon'){ host.innerHTML = '<div class="rp-wrap" id="uaMonHost"></div>'; renderMonitor(document.getElementById('uaMonHost'), false); return; }
   const cloudWarn = '';
   const mobile = window.innerWidth <= 760;
   const reqs = `<details class="card ua-req" ${mobile && (uView!=='list' || uArizalar.length) ? '' : 'open'}>
@@ -4870,14 +4935,19 @@ function bindUForm(){
   document.querySelectorAll('#arForm input[data-digits]').forEach(inp=>{
     const n = Number(inp.dataset.digits); const hint = document.getElementById('dg_'+inp.id.slice(3));
     const upd = ()=>{
-      const v = inp.value.replace(/\D/g,'').slice(0,n); if(inp.value !== v) inp.value = v;
-      const okLens = inp.id==='ar_stir' ? [9,14] : [n];
-      const ok = okLens.includes(v.length);
-      hint.textContent = v.length ? (ok ? '✓ to‘g‘ri' : `${v.length} / ${inp.id==='ar_stir' ? '9 yoki 14' : n} ta raqam`) : (inp.id==='ar_stir' ? '9 yoki 14 ta raqam' : `aniq ${n} ta raqam`);
+      // STIR: YaTT — 14 xonali JShShIR, MCHJ / X/K / O/K — 9 xonali INN
+      const lens = inp.id==='ar_stir' ? arStirLens() : [n];
+      const max = Math.max(...lens); inp.maxLength = max;
+      const v = inp.value.replace(/\D/g,'').slice(0,max); if(inp.value !== v) inp.value = v;
+      const ok = lens.includes(v.length);
+      const need = lens.length > 1 ? '9 yoki 14' : String(lens[0]);
+      const what = inp.id!=='ar_stir' ? '' : lens.length > 1 ? '' : lens[0]===14 ? ' (YaTT — JShShIR)' : ' (tashkilot INN)';
+      hint.textContent = v.length ? (ok ? '✓ to‘g‘ri' : `${v.length} / ${need} ta raqam${what}`) : `aniq ${need} ta raqam${what}`;
       hint.className = 'hint dg-hint ' + (v.length ? (ok?'ok':'bad') : '');
       inp.classList.toggle('inp-bad', !!v.length && !ok);
     };
     inp.addEventListener('input', upd); upd();
+    if(inp.id==='ar_stir'){ const tt = document.getElementById('ar_tashkilot_turi'); if(tt) tt.addEventListener('change', upd); }
   });
   bindStirSheetWarn();
   const tel = document.getElementById('ar_telefon_raqami');
@@ -4920,13 +4990,38 @@ function bindUForm(){
   document.getElementById('arCancel').onclick = ()=>{ uView = uDraft && uDraft.id ? 'view' : 'list'; uCurrentId = uDraft && uDraft.id || null; renderUserApp(); };
   document.getElementById('arForm').onsubmit = (e)=>{ e.preventDefault(); uSubmit(); };
 }
+// Rasmiy saytlarda qo'lda tekshirish: STIR nusxalanadi va sayt yangi oynada ochiladi
+function arChecksMarkup(a){
+  const d = a.data||{}, st = String(d.stir||'').replace(/\D/g,''); if(!st) return '';
+  const yatt = /yatt/i.test(d.tashkilot_turi||'') || st.length===14;
+  const btn = (k, l, t)=> `<button type="button" class="hk-tool" data-archk="${k}" title="${esc(t)}">${l}</button>`;
+  return `<div class="ar-checks"><span>🔎 Tekshirish (STIR <b data-noi18n>${esc(st)}</b>):</span>
+    ${yatt ? btn('bird', 'Birdarcha — YaTT faolmi', 'new.birdarcha.uz — JShShIR bo‘yicha YaTT holati') : btn('stat', 'registr.stat.uz', 'Yagona davlat reyestri — tashkilot ma’lumotlari')}
+    ${btn('didox', 'Didox', 'didox.uz — STIR bo‘yicha tashkilot rekvizitlari')}
+    <span class="hint" id="arChkHint"></span></div>`;
+}
+function arChecksBind(a){
+  const st = String((a.data||{}).stir||'').replace(/\D/g,'');
+  const urls = {stat:'https://registr.stat.uz/search/common', didox:'https://didox.uz/documents/new', bird:'https://new.birdarcha.uz/check-register?pin=' + st};
+  document.querySelectorAll('[data-archk]').forEach(b=> b.onclick = async ()=>{
+    try{ await navigator.clipboard.writeText(st); const h = document.getElementById('arChkHint'); if(h) h.textContent = t('STIR nusxalandi — saytdagi qidiruvga qo‘ying (Ctrl+V).'); }catch(e){}
+    window.open(urls[b.dataset.archk], '_blank', 'noopener');
+  });
+}
+function arStirLens(turi){
+  const t = turi !== undefined ? turi : ((document.getElementById('ar_tashkilot_turi')||{}).value || '');
+  if(!t) return [9,14];
+  return /yatt/i.test(t) ? [14] : [9];
+}
 function arValidate(data, files){
   const miss = [];
   AR_FIELDS.forEach(([k,l,t,req])=>{ if(req && !String(data[k]||'').trim()) miss.push(l); });
   const dg = v=> String(v||'').replace(/\D/g,'');
   if(data.hisob_raqami && !/^\d{20}$/.test(String(data.hisob_raqami).replace(/\s/g,''))) miss.push(`Bank hisob raqami aniq 20 ta raqamdan iborat bo‘lishi kerak (hozir ${dg(data.hisob_raqami).length} ta)`);
   if(data.mfo && !/^\d{5}$/.test(String(data.mfo).trim())) miss.push('Bank MFO aniq 5 ta raqamdan iborat bo‘lishi kerak');
-  if(data.stir && !/^(\d{9}|\d{14})$/.test(String(data.stir).trim())) miss.push('STIR 9 ta (tashkilot) yoki 14 ta (JShShIR) raqamdan iborat bo‘lishi kerak');
+  if(data.stir){ const L = arStirLens(data.tashkilot_turi), v = String(data.stir).trim();
+    if(!/^\d+$/.test(v) || !L.includes(v.length)) miss.push(L.length > 1 ? 'STIR 9 ta (tashkilot) yoki 14 ta (JShShIR) raqamdan iborat bo‘lishi kerak'
+      : L[0]===14 ? `YaTT uchun STIR (JShShIR) aniq 14 ta raqam bo‘lishi kerak (hozir ${v.length} ta)` : `MCHJ, X/K va O/K uchun STIR (INN) aniq 9 ta raqam bo‘lishi kerak (hozir ${v.length} ta)`); }
   if(data.pinfl && !/^\d{14}$/.test(String(data.pinfl).trim())) miss.push(`Rahbar PINFL aniq 14 ta raqamdan iborat bo‘lishi kerak (hozir ${dg(data.pinfl).length} ta)`);
   if(data.telefon_raqami && dg(data.telefon_raqami).length !== 12) miss.push('Telefon raqami to‘liq emas (+998 __ ___ __ __)');
   const cnt = k=> files.filter(f=>f.docType===k).length;
@@ -5202,6 +5297,7 @@ function renderArDetail(){
       ${a.hamkorId ? `<div class="ar-note good">Hamkorlar ro‘yxatiga qo‘shilgan. <button type="button" class="link-btn" id="arGoHamkor" style="margin:0 0 0 6px;">Hamkorni ochish →</button></div>` : ''}
       ${a.status!=='rad' ? `<button type="button" class="secondary ar-edit-btn" id="arEdit">✏️ Ma’lumotlarni tahrirlash</button>` : ''}
       <div id="arSheetNote">${stirSheetNote(a.sheetMatch, 'admin')}</div>
+      ${arChecksMarkup(a)}
       ${dupHk ? `<div class="ar-note warn">⚠️ Bu STIR bilan hamkor ro‘yxatda allaqachon bor: <b data-noi18n>${esc((dupHk.data||{}).tashkilot_nomi||'')}</b>. Qabul qilinsa, yangi hamkor ochilmaydi — mavjudining bo‘sh maydonlari to‘ldiriladi.</div>` : ''}
       ${dupAr.length ? `<div class="ar-note">ℹ️ Shu STIR bilan yana ${dupAr.length} ta ariza bor: <span data-noi18n>${dupAr.slice(0,3).map(x=>esc((x.userIsm||'—')+' · '+((AR_STATUS[x.status]||{}).admin||x.status))).join('; ')}</span></div>` : ''}
       ${bxDoc ? `<div class="ar-note">📄 Buxgalteriyada: <b data-noi18n>№ ${esc(bxDoc.raqam||'')}</b> — ${buxBadge(bxDoc.status)} <span class="hk-sub" data-noi18n>${arFmtDT(((bxDoc.history||[]).slice(-1)[0]||{}).at||bxDoc.sentAt)}</span></div>` : ''}
@@ -5228,6 +5324,7 @@ function renderArDetail(){
       ${arHistoryMarkup(a)}
     </div>`;
   arSheetLive(a);
+  arChecksBind(a);
   arHydrateFiles(host, a);
   bindDocReview(host, a);
   const g = document.getElementById('arGoHamkor');
@@ -10097,6 +10194,9 @@ Object.assign(I18N, {"Quyidagi farqlar faqat filiali ko‘rsatilgan Excel qatorl
 Object.assign(I18N, {"Fayl — to‘liq ro‘yxat (Hamkorlar): faylda yo‘q yozuvlar saytdan o‘chirilsin": ["Файл — полный список (Партнёры): удалить с сайта записи, которых нет в файле", "File is the full list (Partners): delete site records missing from the file"], "Fayl — to‘liq ro‘yxat (Bosh shartnoma): faylda yo‘q yozuvlar saytdan o‘chirilsin": ["Файл — полный список (Основной договор): удалить с сайта записи, которых нет в файле", "File is the full list (Main contract): delete site records missing from the file"], "Filiali ko‘rsatilmagan qatorlar (Hamkorlar, Bosh shartnoma) olinmaydi.": ["Строки без филиала (Партнёры, Основной договор) не загружаются.", "Rows without a branch (Partners, Main contract) are not imported."], "Bir xil STIR’li bir nechta qator bo‘lsa (qayta shartnoma), ular alohida yozuvlar sifatida, filial bo‘yicha juftlanadi.": ["Несколько строк с одним ИНН (повторный договор) сохраняются как отдельные записи и сопоставляются по филиалу.", "Several rows with the same TIN (repeat contracts) are kept as separate records and matched by branch."]});
 Object.assign(I18N, {"Shartnoma sanasi": ["Дата договора", "Contract date"], "Turi": ["Тип", "Type"], "Holati": ["Статус", "Status"], "Oddiy": ["Обычный", "Standard"], "Yuqori ustamali": ["С повышенной наценкой", "High markup"], "Belgilansa — yuqori ustamali shartnoma": ["Если отмечено — договор с повышенной наценкой", "If checked — high-markup contract"], "Faol hamkor": ["Активный партнёр", "Active partner"], "Manzil bo‘yicha aniqlangan jami hamkorlar": ["Всего партнёров по адресу", "Total partners by address"]});
 Object.assign(I18N, {"12 ta viloyat, Toshkent shahri va Qoraqalpog‘iston Respublikasi — hamkor manzili bo‘yicha (manzildan aniqlanmasa — filiali bo‘yicha)": ["12 областей, город Ташкент и Республика Каракалпакстан — по адресу партнёра (если не определено — по филиалу)", "12 regions, Tashkent city and the Republic of Karakalpakstan — by partner address (or by branch if the address is unclear)"], "Viloyatlar tartibida": ["По порядку областей", "In region order"], "Andijon viloyati": ["Андижанская область", "Andijan region"], "Buxoro viloyati": ["Бухарская область", "Bukhara region"], "Farg‘ona viloyati": ["Ферганская область", "Fergana region"], "Jizzax viloyati": ["Джизакская область", "Jizzakh region"], "Namangan viloyati": ["Наманганская область", "Namangan region"], "Navoiy viloyati": ["Навоийская область", "Navoi region"], "Qashqadaryo viloyati": ["Кашкадарьинская область", "Kashkadarya region"], "Samarqand viloyati": ["Самаркандская область", "Samarkand region"], "Sirdaryo viloyati": ["Сырдарьинская область", "Syrdarya region"], "Surxondaryo viloyati": ["Сурхандарьинская область", "Surkhandarya region"], "Toshkent viloyati": ["Ташкентская область", "Tashkent region"], "Toshkent shahri": ["город Ташкент", "Tashkent city"], "Xorazm viloyati": ["Хорезмская область", "Khorezm region"], "Qoraqalpog‘iston Respublikasi": ["Республика Каракалпакстан", "Republic of Karakalpakstan"], "Aniqlanmagan": ["Не определено", "Unknown"]});
+Object.assign(I18N, {"YaTT uchun STIR (JShShIR) aniq 14 ta raqam bo‘lishi kerak (hozir {n} ta)": ["Для ИП ИНН (ПИНФЛ) должен содержать ровно 14 цифр (сейчас {n})", "For a sole trader the TIN (PINFL) must be exactly 14 digits (now {n})"], "MCHJ, X/K va O/K uchun STIR (INN) aniq 9 ta raqam bo‘lishi kerak (hozir {n} ta)": ["Для ООО, ЧП и СП ИНН должен содержать ровно 9 цифр (сейчас {n})", "For LLC, PE and FE the TIN must be exactly 9 digits (now {n})"], "aniq {n} ta raqam (YaTT — JShShIR)": ["ровно {n} цифр (ИП — ПИНФЛ)", "exactly {n} digits (sole trader — PINFL)"], "aniq {n} ta raqam (tashkilot INN)": ["ровно {n} цифр (ИНН организации)", "exactly {n} digits (company TIN)"], "{n} / {n} ta raqam (YaTT — JShShIR)": ["{n} / {n} цифр (ИП — ПИНФЛ)", "{n} / {n} digits (sole trader — PINFL)"], "{n} / {n} ta raqam (tashkilot INN)": ["{n} / {n} цифр (ИНН организации)", "{n} / {n} digits (company TIN)"]});
+Object.assign(I18N, {"🔎 Tekshirish (STIR": ["🔎 Проверить (ИНН", "🔎 Check (TIN"], "Birdarcha — YaTT faolmi": ["Birdarcha — активен ли ИП", "Birdarcha — is the sole trader active"], "STIR nusxalandi — saytdagi qidiruvga qo‘ying (Ctrl+V).": ["ИНН скопирован — вставьте в поиск на сайте (Ctrl+V).", "TIN copied — paste it into the site's search (Ctrl+V)."]});
+Object.assign(I18N, {"Hamkor do‘konlar monitoringi": ["Мониторинг магазинов-партнёров", "Partner store monitoring"], "Do‘konlar monitoringi": ["Мониторинг магазинов", "Store monitoring"], "Do‘konlar": ["Магазины", "Stores"], "Hamkor do‘konlar qancha shartnoma tuzayotgani: TOP-10, filiallar, kunlik ma’lumot va to‘xtagan do‘konlar": ["Сколько договоров заключают магазины-партнёры: ТОП-10, филиалы, данные по дням и остановившиеся магазины", "How many contracts partner stores make: TOP-10, branches, daily data and inactive stores"], "📥 Excel yuklash": ["📥 Загрузить Excel", "📥 Upload Excel"], "Ma’lumot hali yuklanmagan.": ["Данные ещё не загружены.", "No data uploaded yet."], "Ma’lumot hali yuklanmagan": ["Данные ещё не загружены", "No data uploaded yet"], "Kredit konveyeri eksportini yuklang": ["Загрузите выгрузку из Кредитного конвейера", "Upload the Credit pipeline export"], "Ma’lumot:": ["Данные:", "Data:"], "yuklangan:": ["загружено:", "uploaded:"], "Butun davr": ["Весь период", "All time"], "Oxirgi 30 kun": ["Последние 30 дней", "Last 30 days"], "Oxirgi 7 kun": ["Последние 7 дней", "Last 7 days"], "Shu oy": ["Этот месяц", "This month"], "Barcha filiallar": ["Все филиалы", "All branches"], "Shartnomalar": ["Договоры", "Contracts"], "Jami summa": ["Общая сумма", "Total amount"], "O‘rtacha shartnoma": ["Средний договор", "Average contract"], "Faol do‘konlar": ["Активные магазины", "Active stores"], "To‘xtagan do‘konlar": ["Остановившиеся магазины", "Inactive stores"], "Hech tuzmagan": ["Ни разу не заключали", "Never contracted"], "davrda kamida 1 ta shartnoma": ["минимум 1 договор за период", "at least 1 contract in period"], "Shartnomalar dinamikasi": ["Динамика договоров", "Contracts over time"], "TOP-10: eng ko‘p shartnoma tuzgan do‘konlar": ["ТОП-10: магазины с наибольшим числом договоров", "TOP-10: stores with the most contracts"], "TOP-10: eng ko‘p summa chiqargan do‘konlar": ["ТОП-10: магазины с наибольшей суммой", "TOP-10: stores with the highest amount"], "Tanlangan davr bo‘yicha": ["За выбранный период", "For the selected period"], "Tanlangan davr bo‘yicha, so‘m": ["За выбранный период, сум", "For the selected period, sum"], "Filiallar bo‘yicha": ["По филиалам", "By branch"], "Har bir filialga tegishli hamkor do‘konlar (filial — hamkorlar ro‘yxatidan)": ["Магазины-партнёры каждого филиала (филиал — из реестра партнёров)", "Partner stores of each branch (branch from the partner registry)"], "Faol": ["Активный", "Active"], "Shartnoma": ["Договор", "Contract"], "Summa": ["Сумма", "Amount"], "To‘xtagan": ["Остановился", "Inactive"], "Shartnomalar ulushi": ["Доля договоров", "Share of contracts"], "Filiallar bo‘yicha, tanlangan davr": ["По филиалам, выбранный период", "By branch, selected period"], "Boshqalar": ["Другие", "Others"], "Kunlik ma’lumot": ["Данные за день", "Daily data"], "Tanlangan kunda qaysi do‘kon nechta shartnoma tuzgani va summasi": ["Сколько договоров и на какую сумму заключил каждый магазин в выбранный день", "How many contracts each store made on the selected day, and the amount"], "‹ Oldingi kun": ["‹ Предыдущий день", "‹ Previous day"], "Keyingi kun ›": ["Следующий день ›", "Next day ›"], "Do‘kon": ["Магазин", "Store"], "Summa, so‘m": ["Сумма, сум", "Amount, sum"], "Bu kunda shartnoma tuzilmagan.": ["В этот день договоров не было.", "No contracts on this day."], "Barcha do‘konlar": ["Все магазины", "All stores"], "Hech shartnoma tuzmagan": ["Ни разу не заключал договор", "Never made a contract"], "Ro‘yxatda yo‘q": ["Нет в реестре", "Not in registry"], "ro‘yxatda yo‘q": ["нет в реестре", "not in registry"], "Do‘kon nomi, brend, STIR…": ["Название магазина, бренд, ИНН…", "Store name, brand, TIN…"], "Shartnomalar soni": ["Количество договоров", "Number of contracts"], "Oxirgi shartnoma (yangi)": ["Последний договор (новые)", "Last contract (newest)"], "Eng uzoq to‘xtagan": ["Дольше всех без договоров", "Longest inactive"], "«To‘xtagan» — necha kundan beri": ["«Остановился» — сколько дней без договоров", "«Inactive» — days without contracts"], "Oxirgi shartnoma": ["Последний договор", "Last contract"], "Holati": ["Статус", "Status"], "Topildi.": ["Найдено.", "Found."], "Kunlar bo‘yicha": ["По дням", "By day"], "Oylar bo‘yicha": ["По месяцам", "By month"], "shartnomalar soni. Ustun ustiga sichqoncha olib borsangiz, summasi ko‘rinadi.": ["количество договоров. Наведите на столбец, чтобы увидеть сумму.", "number of contracts. Hover a bar to see the amount."]});
 
 /* ======================================================================================
    v14 · Tariflar (oddiy / yuqori ustamali), Word-aniq Qo'shimcha va Bonus hujjatlari,
@@ -10890,6 +10990,868 @@ renderHistory = function(key){
   _renderHistory20(key);
   if(key==='bosh') bindBoshTur();
 };
+
+/* ======================================================================================
+   v23 · Hamkor do'konlar monitoringi — Kredit konveyeri eksporti (Excel) tahlili
+   Admin: to'liq ko'rinish + Excel yuklash. Hodim: faqat o'z filiali do'konlari.
+   ====================================================================================== */
+const MON_COL = 'birzum_monitor';
+const MON_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/><path d="M3 9h18"/></svg>';
+let MON = null, monLoadedAt = 0, monErr = '';
+const MV = {from:'', to:'', fil:'', day:'', stop:30, grp:'all', q:'', sort:'c', page:1, per:20};
+try{ const s = JSON.parse(localStorage.getItem(STORAGE_PREFIX+'mon_view')||'{}'); if(s.stop) MV.stop = s.stop; if(s.per) MV.per = s.per; }catch(e){}
+function monSaveView(){ try{ localStorage.setItem(STORAGE_PREFIX+'mon_view', JSON.stringify({stop:MV.stop, per:MV.per})); }catch(e){} }
+
+async function monLoad(force){
+  if(MON && !force && Date.now() - monLoadedAt < 120000) return MON;
+  try{ const d = await ST.get(MON_COL, 'data'); MON = d && d.stores ? d : null; monLoadedAt = Date.now(); monErr = ''; }
+  catch(e){ monErr = e.message || String(e); }
+  return MON;
+}
+/* ---------- Excel'ni o'qish va jamlash ---------- */
+function monIsoFromCell(v){
+  if(v instanceof Date && !isNaN(v)) return `${v.getFullYear()}-${pad2(v.getMonth()+1)}-${pad2(v.getDate())}`;
+  if(typeof v === 'number' && v > 20000 && v < 80000){ const d = new Date(Math.round((Math.floor(v) - 25569) * 86400000)); return `${d.getUTCFullYear()}-${pad2(d.getUTCMonth()+1)}-${pad2(d.getUTCDate())}`; }
+  const s = normalizeDateString(String(v||'').trim().split(/[ T]/)[0]);
+  return /^\d{4}-\d{2}-\d{2}$/.test(s||'') ? s : '';
+}
+function monNum(v){ if(typeof v === 'number') return v; const s = String(v||'').replace(/\s/g,'').replace(/,(?=\d{3}(\D|$))/g,'').replace(',', '.'); const n = parseFloat(s.replace(/[^\d.\-]/g,'')); return isNaN(n) ? 0 : n; }
+async function monParseFile(file, say){
+  say('', '⏳ Fayl o‘qilmoqda… (katta fayl bo‘lsa, bir necha soniya)');
+  await new Promise(r=>setTimeout(r, 30));
+  const wb = XLSX.read(await file.arrayBuffer(), {type:'array'});
+  let best = null;
+  for(const sn of wb.SheetNames){
+    const a = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:'', raw:true});
+    for(let h = 0; h < Math.min(10, a.length); h++){
+      const H = a[h].map(x=> normKey(String(x)));
+      const col = re=> H.findIndex(x=> re.test(x));
+      const c = {stir: col(/dokonstir|hamkorstir|dokoninn/), name: col(/dokonnomi|hamkordokon(?!stir)/), brand: col(/brend/), sum: col(/kreditsummasi|ajratilgan.*summa|summasi/),
+        status: col(/kreditstatus|status/), date: col(/provodka/), date2: col(/arizasanasi/), fil: col(/filial/), code: col(/kreditkodi/)};
+      if(c.stir >= 0 && c.sum >= 0 && (c.date >= 0 || c.date2 >= 0)){ best = {a, h, c, sn}; break; }
+    }
+    if(best) break;
+  }
+  if(!best) throw new Error('Faylda kerakli ustunlar topilmadi: «Hamkor do‘kon STIR», «Ajratilgan kredit summasi», «Provodka shakllangan sana».');
+  const {a, h, c} = best;
+  say('', `⏳ ${a.length - h - 1} ta qator tahlil qilinmoqda…`);
+  await new Promise(r=>setTimeout(r, 30));
+  const stores = [], sIdx = new Map(), days = {}, seen = new Set(), skipped = {};
+  let used = 0, total = 0, from = '', to = '', sumAll = 0;
+  for(let i = h + 1; i < a.length; i++){
+    const r = a[i]; if(!r || !r.some(x=> String(x).trim())) continue;
+    total++;
+    const st = String(c.status >= 0 ? r[c.status] : '').trim();
+    if(c.status >= 0 && !/tasdiq|yopil/i.test(st)){ const k = st || '(bo‘sh)'; skipped[k] = (skipped[k]||0) + 1; continue; }
+    const code = c.code >= 0 ? String(r[c.code]).trim() : '';
+    if(code){ if(seen.has(code)){ skipped['takroriy kredit kodi'] = (skipped['takroriy kredit kodi']||0) + 1; continue; } seen.add(code); }
+    const stir = String(r[c.stir]).replace(/\D/g,'');
+    if(!stir){ skipped['do‘kon STIR yo‘q'] = (skipped['do‘kon STIR yo‘q']||0) + 1; continue; }
+    const day = monIsoFromCell(c.date >= 0 ? r[c.date] : '') || monIsoFromCell(c.date2 >= 0 ? r[c.date2] : '');
+    if(!day){ skipped['sana yo‘q'] = (skipped['sana yo‘q']||0) + 1; continue; }
+    const sum = Math.round(monNum(r[c.sum]));
+    let si = sIdx.get(stir);
+    if(si === undefined){ si = stores.length; sIdx.set(stir, si); stores.push([stir, String(c.name>=0 ? r[c.name] : '').replace(/\s+/g,' ').trim(), String(c.brand>=0 ? r[c.brand] : '').trim(), String(c.fil>=0 ? r[c.fil] : '').trim()]); }
+    else { const s0 = stores[si]; if(!s0[1] && c.name>=0) s0[1] = String(r[c.name]).trim(); if(!s0[2] && c.brand>=0) s0[2] = String(r[c.brand]).trim(); }
+    const dd = days[day] = days[day] || {}; const cur = dd[si] = dd[si] || [0, 0]; cur[0]++; cur[1] += sum;
+    used++; sumAll += sum; if(!from || day < from) from = day; if(!to || day > to) to = day;
+  }
+  const out = {};
+  Object.keys(days).sort().forEach(d=>{ out[d] = Object.entries(days[d]).map(([si, v])=> [Number(si), v[0], v[1]]); });
+  return {v:1, fileName:file.name, uploadedAt:new Date().toISOString(), rowsTotal:total, rowsUsed:used, sumAll, skipped, from, to, stores, days:out};
+}
+/* Yangi faylni avvalgisiga qo'shish: fayldagi kunlar almashtiriladi, qolgan kunlar saqlanadi */
+function monMerge(old, d){
+  const stores = old.stores.map(s=> s.slice()), idx = new Map(stores.map((s,i)=> [s[0], i]));
+  const remap = d.stores.map(s=>{ let i = idx.get(s[0]);
+    if(i === undefined){ i = stores.length; idx.set(s[0], i); stores.push(s.slice()); }
+    else { const o = stores[i]; for(let k = 1; k < 4; k++) if(s[k]) o[k] = s[k]; }
+    return i; });
+  const days = {}; let kept = 0, replaced = 0;
+  Object.keys(old.days).forEach(k=>{ if(k < d.from || k > d.to){ days[k] = old.days[k]; kept++; } else replaced++; });
+  Object.keys(d.days).forEach(k=>{ days[k] = d.days[k].map(([i,c,s])=> [remap[i], c, s]); });
+  const out = {}; let used = 0, sumAll = 0;
+  Object.keys(days).sort().forEach(k=>{ out[k] = days[k]; days[k].forEach(x=>{ used += x[1]; sumAll += x[2]; }); });
+  const keys = Object.keys(out);
+  const files = (old.files || [{fileName:old.fileName, from:old.from, to:old.to, uploadedAt:old.uploadedAt}]).concat([{fileName:d.fileName, from:d.from, to:d.to, uploadedAt:d.uploadedAt}]).slice(-40);
+  return Object.assign({}, d, {stores, days:out, from:keys[0], to:keys[keys.length-1], rowsUsed:used, sumAll, files, merge:{kept, replaced, added:d.stores.length ? remap.filter(i=> i >= old.stores.length).length : 0}});
+}
+function monAskMode(d){
+  return new Promise(res=>{
+    const sk = Object.entries(d.skipped);
+    const m = document.createElement('div'); m.className = 'modal-back'; m.id = 'monModeModal';
+    const fmt = n=> Number(n||0).toLocaleString('ru-RU').replace(/,/g,' ');
+    m.innerHTML = `<div class="modal" style="max-width:620px;"><div class="modal-head"><h3>Faylni qanday yuklaymiz?</h3><button type="button" class="modal-x" data-mm="">✕</button></div>
+      <div class="modal-body">
+        <div class="mon-up-info" data-noi18n><div><span>${esc(t('Fayl'))}</span><b>${esc(d.fileName)}</b></div><div><span>${esc(t('Davr'))}</span><b>${boshPlainDate(d.from)} — ${boshPlainDate(d.to)}</b></div>
+          <div><span>${esc(t('Shartnomalar'))}</span><b>${fmt(d.rowsUsed)}</b></div><div><span>${esc(t('Jami summa'))}</span><b>${monMoney(d.sumAll)}</b></div><div><span>${esc(t('Do‘konlar'))}</span><b>${fmt(d.stores.length)}</b></div></div>
+        ${sk.length ? `<p class="hint">Hisobga olinmadi: <span data-noi18n>${esc(sk.map(([k,n])=>k+' — '+n).join('; '))}</span></p>` : ''}
+        ${MON ? `<p class="hint">Hozir saytda: <b data-noi18n>${boshPlainDate(MON.from)} — ${boshPlainDate(MON.to)}</b> davr ma’lumoti bor.</p>
+        <div class="mon-modes">
+          <button type="button" class="mon-mode on" data-mm="merge"><b>➕ Qo‘shib yangilash</b><span>Fayldagi kunlar (<span data-noi18n>${boshPlainDate(d.from)} — ${boshPlainDate(d.to)}</span>) yangilanadi, qolgan kunlar o‘zgarmaydi. Har kuni yoki oxirgi 1 oylik faylni yuklash uchun.</span></button>
+          <button type="button" class="mon-mode" data-mm="replace"><b>🔄 To‘liq almashtirish</b><span>Avvalgi barcha ma’lumot o‘chadi, faqat shu fayl qoladi.</span></button>
+        </div>
+        <p class="hint">Muhim: fayldagi birinchi va oxirgi kunlar to‘liq bo‘lsin — shu kunlarning eski ma’lumoti fayldagisi bilan almashtiriladi.</p>` : ''}
+      </div>
+      <div class="modal-foot">${MON ? '' : '<button type="button" class="primary" data-mm="replace">Yuklash</button>'}<button type="button" class="secondary" data-mm="">Bekor qilish</button></div></div>`;
+    document.body.appendChild(m);
+    m.querySelectorAll('[data-mm]').forEach(b=> b.onclick = ()=>{ const v = b.dataset.mm;
+      if(v === 'replace' && MON && !confirm('Ishonchingiz komilmi?\n\nAvval yuklangan barcha kunlar o‘chiriladi va faqat shu fayl qoladi.')) return;
+      m.remove(); res(v || null); });
+    i18nApply(m);
+  });
+}
+async function monUpload(file){
+  const st = document.getElementById('monStatus');
+  const say = (cls, t)=>{ if(st){ st.className = 'status ' + cls; st.textContent = t; } };
+  try{
+    if(typeof XLSX === 'undefined') throw new Error('Excel kutubxonasi yuklanmadi. Sahifani yangilang.');
+    await monLoad(true);
+    let d = await monParseFile(file, say);
+    if(!d.rowsUsed) throw new Error('Hisobga olinadigan shartnoma topilmadi (holati «Nasiya tasdiqlangan» yoki «Nasiya yopilgan» bo‘lishi kerak).');
+    say('', '');
+    const mode = await monAskMode(d);
+    if(!mode){ say('', 'Bekor qilindi.'); return; }
+    const fFrom = d.from, fTo = d.to;
+    if(mode === 'merge' && MON) d = monMerge(MON, d);
+    say('', '⏳ Saqlanmoqda…');
+    d.uploadedBy = (getUserSession()||{}).ism || 'Admin';
+    await ST.set(MON_COL, 'data', d);
+    MON = d; monLoadedAt = Date.now(); MV.day = ''; MV.page = 1;
+    logAct('import', {type:'import', name:'Do‘konlar monitoringi'}, `${mode==='merge'?'Qo‘shib yangilandi':'Almashtirildi'}: ${d.fileName} (${boshPlainDate(fFrom)} — ${boshPlainDate(fTo)})`);
+    renderMonitor(document.getElementById('monHost'), true);
+    const s2 = document.getElementById('monStatus'); if(s2){ s2.className = 'status ok';
+      s2.textContent = d.merge ? `✅ Qo‘shib yangilandi: ${d.merge.replaced} kun yangilandi, ${d.merge.kept} kun o‘zgarmadi${d.merge.added?`, ${d.merge.added} ta yangi do‘kon`:''}. Endi davr: ${boshPlainDate(d.from)} — ${boshPlainDate(d.to)}.`
+        : `✅ Yuklandi: ${d.rowsUsed.toLocaleString('ru-RU')} ta shartnoma, ${d.stores.length} ta do‘kon.`; }
+  }catch(e){ console.error(e); say('err', '⚠️ ' + (e.message || e)); }
+}
+/* ---------- Hisob-kitob ---------- */
+function monMoney(n){ return Math.round(n||0).toLocaleString('ru-RU').replace(/,/g,' '); }
+function monShort(n){ n = n||0; if(n >= 1e9) return (n/1e9).toFixed(n >= 1e11 ? 0 : 1).replace('.', ',') + ' mlrd'; if(n >= 1e6) return (n/1e6).toFixed(n >= 1e8 ? 0 : 1).replace('.', ',') + ' mln'; return monMoney(n); }
+function monAddDays(iso, n){ const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0,10); }
+function monDiffDays(a, b){ return Math.round((new Date(b+'T00:00:00Z') - new Date(a+'T00:00:00Z')) / 86400000); }
+function monFilName(raw){ const k = fKey(raw); if(!k) return ''; return FILIAL_CFG.find(x=> fKey(x)===k) || normFilial(raw); }
+function monCompute(admin, registry, myFil){
+  const D = MON; if(!D) return null;
+  // ro'yxatdagi hamkorlar: STIR → {nomi, filial}
+  const reg = new Map();
+  (registry||[]).forEach(r=>{ const d = r.data||{}, s = String(d.stir||'').replace(/\D/g,''); if(!s || reg.has(s)) return; reg.set(s, {n:d.tashkilot_nomi||'', b:d.brend||'', f:monFilName(d.filial)}); });
+  const storeFil = i=>{ const s = D.stores[i]; const r = reg.get(s[0]); return (r && r.f) || monFilName(s[3]) || 'Aniqlanmagan'; };
+  const fil = admin ? MV.fil : myFil;
+  const fk = fil ? fKey(fil) : '';
+  const inScope = f=> !fk || fKey(f)===fk;
+  const from = MV.from || D.from, to = MV.to || D.to;
+  const ref = D.to;   // «bugun» o'rniga — fayldagi oxirgi sana
+  const S = D.stores.map((s, i)=>{ const r = reg.get(s[0]); return {i, stir:s[0], n:(r && r.n) || s[1] || '—', b:s[2] || (r && r.b) || '', f:storeFil(i), reg:!!r, c:0, s:0, ca:0, sa:0, first:'', last:''}; });
+  const trend = {}, filAgg = {}, dayRows = [];
+  Object.keys(D.days).forEach(day=>{
+    const inP = day >= from && day <= to;
+    D.days[day].forEach(([i, c, s])=>{
+      const x = S[i]; if(!inScope(x.f)) return;
+      x.ca += c; x.sa += s; if(!x.first || day < x.first) x.first = day; if(!x.last || day > x.last) x.last = day;
+      if(inP){ x.c += c; x.s += s; const t = trend[day] = trend[day] || [0, 0]; t[0] += c; t[1] += s; }
+    });
+  });
+  const stores = S.filter(x=> inScope(x.f) && x.ca);
+  // ro'yxatda bor, lekin hech shartnoma tuzmagan
+  const inFile = new Set(D.stores.map(s=>s[0]));
+  const never = [];
+  (registry||[]).forEach(r=>{ const d = r.data||{}, s = String(d.stir||'').replace(/\D/g,''); if(!s || inFile.has(s)) return; const f = monFilName(d.filial); if(!inScope(f)) return; if(never.some(x=>x.stir===s)) return;
+    never.push({stir:s, n:d.tashkilot_nomi||'—', b:d.brend||'', f:f||'—', reg:true, c:0, s:0, ca:0, sa:0, first:'', last:'', never:true}); });
+  const stopLim = monAddDays(ref, -MV.stop);
+  stores.forEach(x=>{ x.stopped = x.last < stopLim; x.idle = monDiffDays(x.last, ref); });
+  // filiallar
+  [...stores, ...never].forEach(x=>{ const k = fKey(x.f) || '—'; const a = filAgg[k] = filAgg[k] || {f:x.f, reg:0, act:0, c:0, s:0, stop:0, never:0};
+    if(x.reg) a.reg++; if(x.c) a.act++; a.c += x.c; a.s += x.s; if(x.never) a.never++; else if(x.stopped) a.stop++; });
+  const tot = stores.reduce((a,x)=>({c:a.c+x.c, s:a.s+x.s}), {c:0, s:0});
+  return {from, to, ref, stores, never, trend, fil:Object.values(filAgg).sort((a,b)=> b.c-a.c || b.reg-a.reg), tot, act:stores.filter(x=>x.c).length,
+    stopped:stores.filter(x=>x.stopped).length, regCount:[...stores, ...never].filter(x=>x.reg).length, scopeFil:fil};
+}
+/* ---------- Ko'rinish ---------- */
+function monFilialList(){
+  const m = new Map();
+  (DB.hamkor||[]).forEach(r=>{ const f = monFilName((r.data||{}).filial); if(f) m.set(fKey(f), f); });
+  (MON ? MON.stores : []).forEach(s=>{ const f = monFilName(s[3]); if(f && !m.has(fKey(f))) m.set(fKey(f), f); });
+  return [...m.values()].sort((a,b)=> a.localeCompare(b));
+}
+function monMarkup(){
+  return `<div class="rp-wrap"><div id="monHost"><div class="card"><div class="hk-empty">Yuklanmoqda…</div></div></div></div>`;
+}
+function monBars(list, val, fmt, sub){
+  const max = Math.max(1, ...list.map(val));
+  return `<div class="rp-bars">${list.map((x,i)=>`<div class="rp-bar-row"><span class="rp-bl" data-noi18n><b style="color:var(--muted);font-weight:600;">${i+1}.</b> ${esc(x.n)}<small>${esc(sub(x))}</small></span><div class="rp-bar"><i style="width:${(val(x)/max*100).toFixed(1)}%"></i></div><b data-noi18n>${fmt(val(x))}</b><span class="rp-pct" data-noi18n></span></div>`).join('')}</div>`;
+}
+function monTrendMarkup(R){
+  const days = Object.keys(R.trend).sort();
+  if(!days.length) return '<p class="hk-sub">Tanlangan davrda shartnoma yo‘q.</p>';
+  const span = monDiffDays(R.from, R.to);
+  let pts;
+  if(span <= 62){
+    pts = []; for(let d = R.from; d <= R.to; d = monAddDays(d, 1)){ const t = R.trend[d] || [0,0]; pts.push({k:d, l:esc(d.slice(8,10)+'.'+d.slice(5,7)), t:boshPlainDate(d), c:t[0], s:t[1]}); }
+  }else{
+    const m = {}; days.forEach(d=>{ const k = d.slice(0,7); const t = R.trend[d]; const x = m[k] = m[k] || {k, l:rpShortMonth(k), t:rpMonthLabel(k), c:0, s:0}; x.c += t[0]; x.s += t[1]; }); pts = Object.values(m).sort((a,b)=> a.k.localeCompare(b.k));
+  }
+  const max = Math.max(1, ...pts.map(p=>p.c));
+  return `<div class="mon-trend" style="grid-template-columns:repeat(${pts.length}, minmax(${span<=62?18:38}px,1fr));">${pts.map(p=>`<div class="mon-tc" title="${esc(p.t)}: ${p.c} ta shartnoma · ${monMoney(p.s)} so‘m"><div class="mon-tb"><i style="height:${(p.c/max*100).toFixed(1)}%">${span<=62?'':`<em data-noi18n>${p.c}</em>`}</i></div><span data-noi18n>${p.l}</span></div>`).join('')}</div>
+    <div class="hint" style="margin-top:6px;">${span<=62?'Kunlar bo‘yicha':'Oylar bo‘yicha'} shartnomalar soni. Ustun ustiga sichqoncha olib borsangiz, summasi ko‘rinadi.</div>`;
+}
+function monDonut(rows){
+  const tot = rows.reduce((a,x)=>a+x.c,0) || 1;
+  const top = rows.slice(0,7), rest = rows.slice(7).reduce((a,x)=>a+x.c,0);
+  const parts = top.map(x=>({l:x.f, v:x.c})); if(rest) parts.push({l:'Boshqalar', v:rest});
+  const colors = ['#7cb518','#2f7ab8','#c9a227','#d9534f','#8e6bbf','#20a39e','#e07b39','#9aa4ad'];
+  let acc = 0; const segs = parts.map((p,i)=>{ const a0 = acc/tot*100; acc += p.v; return `${colors[i]} ${a0.toFixed(2)}% ${(acc/tot*100).toFixed(2)}%`; });
+  return `<div class="mon-donut-wrap"><div class="mon-donut" style="background:conic-gradient(${segs.join(',')});"><span data-noi18n>${monShort(tot)}</span></div>
+    <div class="mon-legend">${parts.map((p,i)=>`<div><i style="background:${colors[i]}"></i><span data-noi18n>${esc(p.l)}</span><b data-noi18n>${Math.round(p.v/tot*100)}%</b></div>`).join('')}</div></div>`;
+}
+function monStoreList(R){
+  let L = MV.grp==='never' ? R.never.slice() : R.stores.filter(x=> MV.grp==='act' ? x.c : MV.grp==='stop' ? x.stopped : MV.grp==='noreg' ? !x.reg : true);
+  if(MV.grp==='all') L = L.concat(R.never);
+  const q = MV.q.trim().toLowerCase();
+  if(q) L = L.filter(x=> [x.n, x.b, x.stir, x.f].some(v=> String(v||'').toLowerCase().includes(q)));
+  const by = {c:(a,b)=> b.c-a.c || b.s-a.s, s:(a,b)=> b.s-a.s || b.c-a.c, last:(a,b)=> String(b.last).localeCompare(String(a.last)), idle:(a,b)=> (b.idle||0)-(a.idle||0), n:(a,b)=> a.n.localeCompare(b.n)}[MV.sort];
+  return L.sort(by);
+}
+function monHolat(x){
+  if(x.never) return '<span class="badge cancel">Hech shartnoma tuzmagan</span>';
+  if(x.stopped) return `<span class="badge cancel mon-stop">To‘xtagan · <span data-noi18n>${x.idle}</span> kun</span>`;
+  return '<span class="badge bonus">Faol</span>';
+}
+async function renderMonitor(host, admin){
+  if(!host) return;
+  if(!MON && !monErr) await monLoad();
+  const u = getUserSession()||{};
+  const registry = admin ? (DB.hamkor||[]) : (await uHkLoad(), uHk);
+  if(!host.isConnected) return;
+  const head = `<div class="card rp-top"><div class="rp-head mon-head">
+      <div><h2 style="margin:0;">Hamkor do‘konlar monitoringi</h2>
+        <div class="hint">${MON ? `Ma’lumot: <b data-noi18n>${esc(MON.fileName||'')}</b>${MON.files && MON.files.length > 1 ? ` <span data-noi18n>(+${MON.files.length-1})</span>` : ''} · <span data-noi18n>${boshPlainDate(MON.from)} — ${boshPlainDate(MON.to)}</span> · yuklangan: <span data-noi18n>${esc(arFmtDT(MON.uploadedAt))}</span>` : 'Ma’lumot hali yuklanmagan.'}${!admin && u.filial ? ` · 🏢 <b data-noi18n>${esc(u.filial)}</b>` : ''}</div></div>
+      <div class="hk-tools">${admin ? `<button type="button" class="hk-tool" id="monUp">📥 Excel yuklash</button><input type="file" id="monFile" accept=".xlsx,.xls" style="display:none;">` : ''}<button type="button" class="hk-tool" id="monReload">↻ Yangilash</button></div>
+    </div><div class="status" id="monStatus"></div></div>`;
+  if(!MON){
+    host.innerHTML = head + `<div class="card"><div class="hk-empty">${MON_ICON}<b>${admin ? 'Kredit konveyeri eksportini yuklang' : 'Ma’lumot hali yuklanmagan'}</b><span>${admin ? '«📥 Excel yuklash» tugmasini bosib, shartnomalar ro‘yxati (Excel) faylini tanlang: «Hamkor do‘kon STIR», «Ajratilgan kredit summasi», «Provodka shakllangan sana», «Ajratilgan kredit statusi» ustunlari bo‘lishi kerak.' : 'Admin Kredit konveyeri ma’lumotlarini yuklagach, bu yerda filialingiz do‘konlari tahlili ko‘rinadi.'}</span></div></div>`;
+    monBind(host, admin); i18nApply(host); return;
+  }
+  if(!admin && !u.filial){ host.innerHTML = head + uFilialAsk(); bindUFilialAsk(); monBind(host, admin); i18nApply(host); return; }
+  if(!MV.day || MV.day > MON.to || MV.day < MON.from) MV.day = MON.to;
+  const R = monCompute(admin, registry, u.filial);
+  const filOpts = admin ? `<label>Filial<select id="monFil"><option value="">Barcha filiallar</option>${monFilialList().map(f=>`<option value="${esc(f)}" ${fKey(f)===fKey(MV.fil)?'selected':''}>${esc(f)}</option>`).join('')}</select></label>` : '';
+  const tools = `<div class="card rp-card"><div class="rp-fil-tools mon-tools">
+      <label>Sanadan<input type="date" id="monFrom" value="${esc(MV.from)}" min="${MON.from}" max="${MON.to}"></label>
+      <label>Sanagacha<input type="date" id="monTo" value="${esc(MV.to)}" min="${MON.from}" max="${MON.to}"></label>
+      <span class="mon-quick">${[['all','Butun davr'],['30','Oxirgi 30 kun'],['7','Oxirgi 7 kun'],['m','Shu oy']].map(([k,l])=>`<button type="button" class="hk-tool" data-mq="${k}">${esc(l)}</button>`).join('')}</span>
+      ${filOpts}
+    </div></div>`;
+  const avg = R.tot.c ? R.tot.s / R.tot.c : 0;
+  const kpi = (l, v, sub)=> `<div class="card rp-kpi"><span>${esc(l)}</span><b data-noi18n>${v}</b>${sub?`<span class="rp-d" data-noi18n>${sub}</span>`:''}</div>`;
+  const kpis = `<div class="rp-kpis">
+      ${kpi('Shartnomalar', R.tot.c.toLocaleString('ru-RU').replace(/,/g,' '), `${boshPlainDate(R.from)} — ${boshPlainDate(R.to)}`)}
+      ${kpi('Jami summa', monShort(R.tot.s), monMoney(R.tot.s) + ' so‘m')}
+      ${kpi('O‘rtacha shartnoma', monShort(avg), 'so‘m')}
+      ${kpi('Faol do‘konlar', R.act, 'davrda kamida 1 ta shartnoma')}
+      ${kpi('To‘xtagan do‘konlar', R.stopped, `${MV.stop} kundan beri shartnoma yo‘q`)}
+      ${kpi('Hech tuzmagan', R.never.length, `ro‘yxatdagi ${R.regCount} ta hamkordan`)}
+    </div>`;
+  const topC = R.stores.filter(x=>x.c).sort((a,b)=> b.c-a.c || b.s-a.s).slice(0,10);
+  const topS = R.stores.filter(x=>x.c).sort((a,b)=> b.s-a.s || b.c-a.c).slice(0,10);
+  const tops = `<div class="rp-cols">
+      <div class="card rp-card"><h3>TOP-10: eng ko‘p shartnoma tuzgan do‘konlar</h3><p class="sub">Tanlangan davr bo‘yicha</p>${topC.length ? monBars(topC, x=>x.c, n=>n, x=>`${x.f} · ${monShort(x.s)} so‘m`) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+      <div class="card rp-card"><h3>TOP-10: eng ko‘p summa chiqargan do‘konlar</h3><p class="sub">Tanlangan davr bo‘yicha, so‘m</p>${topS.length ? monBars(topS, x=>x.s, n=>monShort(n), x=>`${x.f} · ${x.c} ta shartnoma`) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+    </div>`;
+  const trend = `<div class="card rp-card"><h3>Shartnomalar dinamikasi</h3>${monTrendMarkup(R)}</div>`;
+  const filT = R.fil.reduce((a,x)=>({reg:a.reg+x.reg, act:a.act+x.act, c:a.c+x.c, s:a.s+x.s, stop:a.stop+x.stop, never:a.never+x.never}), {reg:0, act:0, c:0, s:0, stop:0, never:0});
+  const filCard = `<div class="rp-cols mon-fil">
+      <div class="card rp-card"><h3>Filiallar bo‘yicha</h3><p class="sub">Har bir filialga tegishli hamkor do‘konlar (filial — hamkorlar ro‘yxatidan)</p>
+        <div class="hk-table-wrap"><table class="srv-table"><thead><tr><th>№</th><th>Filial</th><th style="text-align:right">Do‘konlar</th><th style="text-align:right">Faol</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Summa</th><th style="text-align:right">To‘xtagan</th><th style="text-align:right">Hech tuzmagan</th></tr></thead>
+        <tbody>${R.fil.map((x,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td data-noi18n>${esc(x.f)}<div class="rp-mini"><i style="width:${(x.c/Math.max(1,R.fil[0].c)*100).toFixed(1)}%"></i></div></td><td style="text-align:right" data-noi18n>${x.reg}</td><td style="text-align:right" data-noi18n>${x.act}</td><td style="text-align:right" data-noi18n><b>${x.c}</b></td><td style="text-align:right" data-noi18n>${monShort(x.s)}</td><td style="text-align:right" data-noi18n>${x.stop||''}</td><td style="text-align:right" data-noi18n>${x.never||''}</td></tr>`).join('')}</tbody>
+        <tfoot><tr class="rp-total"><td></td><td><b>Jami</b></td><td style="text-align:right" data-noi18n><b>${filT.reg}</b></td><td style="text-align:right" data-noi18n><b>${filT.act}</b></td><td style="text-align:right" data-noi18n><b>${filT.c}</b></td><td style="text-align:right" data-noi18n><b>${monShort(filT.s)}</b></td><td style="text-align:right" data-noi18n><b>${filT.stop}</b></td><td style="text-align:right" data-noi18n><b>${filT.never}</b></td></tr></tfoot></table></div></div>
+      <div class="card rp-card"><h3>Shartnomalar ulushi</h3><p class="sub">Filiallar bo‘yicha, tanlangan davr</p>${monDonut(R.fil)}</div>
+    </div>`;
+  // kunlik
+  const dRows = (MON.days[MV.day]||[]).map(([i,c,s])=>{ const x = R.stores.find(y=>y.i===i); return x ? {x, c, s} : null; }).filter(Boolean).sort((a,b)=> b.c-a.c || b.s-a.s);
+  const dTot = dRows.reduce((a,r)=>({c:a.c+r.c, s:a.s+r.s}), {c:0, s:0});
+  const daily = `<div class="card rp-card"><h3>Kunlik ma’lumot</h3><p class="sub">Tanlangan kunda qaysi do‘kon nechta shartnoma tuzgani va summasi</p>
+      <div class="rp-fil-tools"><label>Sana<input type="date" id="monDay" value="${esc(MV.day)}" min="${MON.from}" max="${MON.to}"></label>
+        <button type="button" class="hk-tool" id="monDayPrev">‹ Oldingi kun</button><button type="button" class="hk-tool" id="monDayNext">Keyingi kun ›</button>
+        <button type="button" class="hk-tool" id="monDayXlsx">⬇ Excel</button></div>
+      ${dRows.length ? `<div class="hk-table-wrap" style="max-height:420px;"><table class="srv-table"><thead><tr><th>№</th><th>Do‘kon</th><th>STIR</th><th>Filial</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Summa, so‘m</th></tr></thead>
+        <tbody>${dRows.map((r,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td data-noi18n>${esc(r.x.n)}${r.x.b?`<div class="hk-sub">${esc(r.x.b)}</div>`:''}</td><td data-noi18n>${esc(r.x.stir)}</td><td data-noi18n>${esc(r.x.f)}</td><td style="text-align:right" data-noi18n><b>${r.c}</b></td><td style="text-align:right" data-noi18n>${monMoney(r.s)}</td></tr>`).join('')}</tbody>
+        <tfoot><tr class="rp-total"><td></td><td><b>Jami</b> <span class="hk-sub" data-noi18n>(${dRows.length} ta do‘kon)</span></td><td></td><td></td><td style="text-align:right" data-noi18n><b>${dTot.c}</b></td><td style="text-align:right" data-noi18n><b>${monMoney(dTot.s)}</b></td></tr></tfoot></table></div>`
+        : '<p class="hk-sub">Bu kunda shartnoma tuzilmagan.</p>'}</div>`;
+  // barcha do'konlar
+  const list = monStoreList(R);
+  const pages = Math.max(1, Math.ceil(list.length / MV.per)); if(MV.page > pages) MV.page = pages;
+  const rows = list.slice((MV.page-1)*MV.per, MV.page*MV.per);
+  const cntG = {all:R.stores.length + R.never.length, act:R.act, stop:R.stopped, never:R.never.length, noreg:R.stores.filter(x=>!x.reg).length};
+  const chip = (k,l)=> `<button type="button" class="ar-chip ${MV.grp===k?'on':''}" data-mg="${k}">${esc(l)}<span class="ar-chip-n" data-noi18n>${cntG[k]}</span></button>`;
+  const storesCard = `<div class="card rp-card"><h3>Barcha do‘konlar</h3><p class="sub">«Shartnoma» va «Summa» — tanlangan davr; «Oxirgi shartnoma» — butun ma’lumot bo‘yicha</p>
+      <div class="ar-chips">${chip('all','Hammasi')}${chip('act','Faol')}${chip('stop','To‘xtagan')}${chip('never','Hech shartnoma tuzmagan')}${cntG.noreg ? chip('noreg','Ro‘yxatda yo‘q') : ''}</div>
+      <div class="rp-fil-tools" style="margin-top:8px;">
+        <div class="hk-search" style="flex:1;min-width:220px;">${ICONS.search}<input type="search" id="monQ" placeholder="Do‘kon nomi, brend, STIR…" value="${esc(MV.q)}"></div>
+        <label>Saralash<select id="monSort">${[['c','Shartnomalar soni'],['s','Summa'],['last','Oxirgi shartnoma (yangi)'],['idle','Eng uzoq to‘xtagan'],['n','Nomi (A–Z)']].map(([v,l])=>`<option value="${v}" ${MV.sort===v?'selected':''}>${esc(l)}</option>`).join('')}</select></label>
+        <label>«To‘xtagan» — necha kundan beri<select id="monStop">${[7,14,30,60,90].map(n=>`<option value="${n}" ${MV.stop===n?'selected':''}>${n} kun</option>`).join('')}</select></label>
+        <button type="button" class="hk-tool" id="monXlsx">⬇ Excel</button>
+      </div>
+      ${rows.length ? `<div class="hk-table-wrap"><table class="srv-table mon-table"><thead><tr><th>№</th><th>Do‘kon</th><th>STIR</th><th>Filial</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Summa, so‘m</th><th>Oxirgi shartnoma</th><th>Holati</th></tr></thead>
+        <tbody>${rows.map((x,i)=>`<tr><td class="hk-sub" data-noi18n>${(MV.page-1)*MV.per+i+1}</td><td data-noi18n>${esc(x.n)}${x.b?`<div class="hk-sub">${esc(x.b)}</div>`:''}${!x.reg?'<div class="hk-sub" style="color:var(--danger)">ro‘yxatda yo‘q</div>':''}</td><td data-noi18n>${esc(x.stir)}</td><td data-noi18n>${esc(x.f)}</td>
+          <td style="text-align:right" data-noi18n><b>${x.c||''}</b>${x.ca && x.ca!==x.c?`<div class="hk-sub">jami ${x.ca}</div>`:''}</td><td style="text-align:right" data-noi18n>${x.s?monMoney(x.s):''}</td><td data-noi18n>${x.last?boshPlainDate(x.last):'—'}</td><td>${monHolat(x)}</td></tr>`).join('')}</tbody></table></div>
+        ${bPagerMarkup(MV.page, pages, list.length, MV.per, 'm')}` : '<p class="hk-sub">Topilmadi.</p>'}
+    </div>`;
+  host.innerHTML = head + tools + kpis + trend + tops + filCard + daily + storesCard;
+  monBind(host, admin, R, list, dRows);
+  i18nApply(host);
+}
+function monRerender(admin){ const h = document.getElementById('monHost') || document.getElementById('uaContent'); const y = window.scrollY; renderMonitor(admin ? document.getElementById('monHost') : document.getElementById('uaMonHost') || h, admin).then(()=> window.scrollTo(0, y)); }
+function monBind(host, admin, R, list, dRows){
+  const re = ()=> monRerender(admin);
+  const up = document.getElementById('monUp'), f = document.getElementById('monFile');
+  if(up){ up.onclick = ()=> f.click(); f.onchange = ()=>{ if(f.files[0]) monUpload(f.files[0]); f.value = ''; }; }
+  const rl = document.getElementById('monReload'); if(rl) rl.onclick = async ()=>{ rl.disabled = true; await monLoad(true); if(!admin) await uHkLoad(true); re(); };
+  if(!R) return;
+  const v = id=> document.getElementById(id);
+  if(v('monFrom')) v('monFrom').onchange = ()=>{ MV.from = v('monFrom').value; MV.page = 1; re(); };
+  if(v('monTo')) v('monTo').onchange = ()=>{ MV.to = v('monTo').value; MV.page = 1; re(); };
+  host.querySelectorAll('[data-mq]').forEach(b=> b.onclick = ()=>{ const k = b.dataset.mq;
+    if(k==='all'){ MV.from = ''; MV.to = ''; } else if(k==='m'){ MV.from = MON.to.slice(0,8) + '01'; MV.to = MON.to; } else { MV.to = MON.to; MV.from = monAddDays(MON.to, -(Number(k)-1)); }
+    MV.page = 1; re(); });
+  if(v('monFil')) v('monFil').onchange = ()=>{ MV.fil = v('monFil').value; MV.page = 1; re(); };
+  if(v('monDay')) v('monDay').onchange = ()=>{ MV.day = v('monDay').value || MON.to; re(); };
+  const days = Object.keys(MON.days).sort();
+  if(v('monDayPrev')) v('monDayPrev').onclick = ()=>{ const p = days.filter(d=> d < MV.day).pop(); if(p){ MV.day = p; re(); } };
+  if(v('monDayNext')) v('monDayNext').onclick = ()=>{ const n = days.find(d=> d > MV.day); if(n){ MV.day = n; re(); } };
+  host.querySelectorAll('[data-mg]').forEach(b=> b.onclick = ()=>{ MV.grp = b.dataset.mg; MV.page = 1; re(); });
+  const q = v('monQ'); if(q) q.oninput = ()=>{ MV.q = q.value; MV.page = 1; clearTimeout(q._t); q._t = setTimeout(()=>{ const pos = q.selectionStart; monRerender(admin); setTimeout(()=>{ const q2 = document.getElementById('monQ'); if(q2){ q2.focus(); try{ q2.setSelectionRange(pos,pos); }catch(e){} } }, 30); }, 250); };
+  if(v('monSort')) v('monSort').onchange = ()=>{ MV.sort = v('monSort').value; re(); };
+  if(v('monStop')) v('monStop').onchange = ()=>{ MV.stop = Number(v('monStop').value)||30; monSaveView(); re(); };
+  host.querySelectorAll('[data-mpg]').forEach(b=> b.onclick = ()=>{ MV.page = Number(b.dataset.mpg); re(); });
+  const pp = host.querySelector('[data-mper]'); if(pp) pp.onchange = ()=>{ MV.per = Number(pp.value)||20; MV.page = 1; monSaveView(); re(); };
+  const xl = (name, aoa, cols)=>{ const ws = XLSX.utils.aoa_to_sheet(aoa); ws['!cols'] = cols.map(w=>({wch:w})); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Monitoring'); XLSX.writeFile(wb, name); };
+  if(v('monXlsx')) v('monXlsx').onclick = ()=> xl(`Dokonlar_monitoringi_${R.from}_${R.to}.xlsx`,
+    [[`Hamkor do‘konlar: ${boshPlainDate(R.from)} — ${boshPlainDate(R.to)}${R.scopeFil?' · '+R.scopeFil:''}`], [], ['№','Do‘kon','Brend','STIR','Filial','Shartnoma (davr)','Summa (davr), so‘m','Shartnoma (jami)','Summa (jami), so‘m','Birinchi shartnoma','Oxirgi shartnoma','Holati']]
+      .concat(list.map((x,i)=>[i+1, x.n, x.b, x.stir, x.f, x.c, x.s, x.ca, x.sa, x.first?boshPlainDate(x.first):'', x.last?boshPlainDate(x.last):'', x.never?'Hech shartnoma tuzmagan':x.stopped?`To‘xtagan (${x.idle} kun)`:'Faol'])), [5,34,18,16,20,10,16,10,16,12,12,22]);
+  if(v('monDayXlsx')) v('monDayXlsx').onclick = ()=> xl(`Dokonlar_kunlik_${MV.day}.xlsx`,
+    [[`${boshPlainDate(MV.day)} kuni tuzilgan shartnomalar${R.scopeFil?' · '+R.scopeFil:''}`], [], ['№','Do‘kon','Brend','STIR','Filial','Shartnoma','Summa, so‘m']]
+      .concat(dRows.map((r,i)=>[i+1, r.x.n, r.x.b, r.x.stir, r.x.f, r.c, r.s])).concat([['', 'Jami', '', '', '', dRows.reduce((a,r)=>a+r.c,0), dRows.reduce((a,r)=>a+r.s,0)]]), [5,34,18,16,20,10,16]);
+}
+// Admin menyusi va hodim kabinetiga qo'shish
+ICONS.dokon = MON_ICON;
+NAV_ORDER.splice(NAV_ORDER.indexOf('hisobot') + 1, 0, 'dokon');
+NAV_LABEL.dokon = 'Do‘konlar monitoringi';
+PAGE_SUB.dokon = 'Hamkor do‘konlar qancha shartnoma tuzayotgani: TOP-10, filiallar, kunlik ma’lumot va to‘xtagan do‘konlar';
+
+/* ======================================================================================
+   v24 · BirZum portfeli tahlili — «Активные кредиты» eksporti (katta Excel, oqimli o'qish)
+   Faqat BZN / BZN+ mahsulotlari. Filiallar va do'konlar bo'yicha to'lov intizomi.
+   ====================================================================================== */
+let PF = null, PFH = null, PFL = null, pfLoadedAt = 0, pfErr = '';
+const PV = {fil:'', prod:'', basis:'reg', grp:'all', q:'', sort:'od', page:1, per:20, lq:'', lmin:31, lpage:1, lper:20, lsort:'dpd'};
+try{ const s = JSON.parse(localStorage.getItem(STORAGE_PREFIX+'pf_view')||'{}'); if(s.per) PV.per = s.per; if(s.lper) PV.lper = s.lper; if(s.basis) PV.basis = s.basis; }catch(e){}
+function pfSaveView(){ try{ localStorage.setItem(STORAGE_PREFIX+'pf_view', JSON.stringify({per:PV.per, lper:PV.lper, basis:PV.basis})); }catch(e){} }
+MV.tab = MV.tab || 'mon';
+
+/* Ko'rsatkichlar massivi (har bir guruh uchun) */
+const PM = {n:0, sum:1, od:2, odOver:3, pctOver:4, debt:5, b0:6, b0od:11, c0:16, cl:20, cb0:21, woff:26, LEN:27};
+const PF_BUCKETS = [
+  {k:0, l:'O‘z vaqtida to‘layapti', s:'0 kun', cls:'pf-b0'},
+  {k:1, l:'1–30 kun kechikkan', s:'ogohlantirish', cls:'pf-b1'},
+  {k:2, l:'31–60 kun kechikkan', s:'muammoli', cls:'pf-b2'},
+  {k:3, l:'61–90 kun kechikkan', s:'muammoli', cls:'pf-b3'},
+  {k:4, l:'90 kundan ortiq', s:'jiddiy muammoli', cls:'pf-b4'}];
+const PF_CLASS = [['Хороший','Yaxshi'], ['Субстандартный','Substandart'], ['Сомнительный','Shubhali'], ['Безнадежный','Umidsiz']];
+function pfBucket(d){ return d <= 0 ? 0 : d <= 30 ? 1 : d <= 60 ? 2 : d <= 90 ? 3 : 4; }
+function pfNew(){ return new Array(PM.LEN).fill(0); }
+function pfAdd(a, b){ for(let i = 0; i < PM.LEN; i++) a[i] += b[i] || 0; return a; }
+function pfNameKey(v){
+  return String(v||'').toUpperCase().replace(/[‘’ʻʼ`´'"«»“”]/g,'')
+    .replace(/\b(MCHJ|XK|YATT|QK|OK|MCHJ QK|LLC)\b|ООО/g,'').replace(/[^A-Z0-9А-ЯЁЎҚҒҲ]/g,'');
+}
+function pfStoreFromNote(note){
+  const m = /Do.?kon nomi:\s*([^\n]*)/i.exec(String(note||''));
+  if(!m) return {n:'', b:''};
+  let line = m[1].trim(), b = '';
+  const p = /\(([^()]*)\)\s*([^()]*)$/.exec(line);
+  if(p){ b = p[1].trim(); line = line.slice(0, p.index).trim(); }
+  if(b === '-') b = '';
+  return {n:line.replace(/\s+/g,' '), b};
+}
+async function pfLoad(force){
+  if(PF && !force && Date.now() - pfLoadedAt < 120000) return PF;
+  try{
+    const [d, h] = await Promise.all([ST.get(MON_COL, 'portfel'), ST.get(MON_COL, 'portfel_hist').catch(()=>null)]);
+    PF = d && d.groups ? d : null; PFH = h && Array.isArray(h.list) ? h.list : [];
+    if(force) PFL = null;
+    pfLoadedAt = Date.now(); pfErr = '';
+  }catch(e){ pfErr = e.message || String(e); }
+  return PF;
+}
+async function pfLoadLate(){
+  if(PFL && PF && PFL.uploadedAt === PF.uploadedAt) return PFL;
+  const d = await ST.get(MON_COL, 'portfel_late');
+  PFL = d && Array.isArray(d.rows) ? d : {rows:[], uploadedAt:''};
+  return PFL;
+}
+
+/* ---------- XLSX'ni oqim bilan o'qish (76 MB / 600 MB XML ham sig'adi) ---------- */
+async function pfZipEntries(file){
+  const tailLen = Math.min(file.size, 66000 + 22);
+  const tail = new DataView(await file.slice(file.size - tailLen).arrayBuffer());
+  let eo = -1;
+  for(let i = tailLen - 22; i >= 0; i--) if(tail.getUint32(i, true) === 0x06054b50){ eo = i; break; }
+  if(eo < 0) throw new Error('ZIP');
+  let cnt = tail.getUint16(eo + 10, true), cdSize = tail.getUint32(eo + 12, true), cdOff = tail.getUint32(eo + 16, true);
+  if(cdOff === 0xFFFFFFFF || cnt === 0xFFFF){   // zip64
+    const lo = eo - 20; if(lo >= 0 && tail.getUint32(lo, true) === 0x07064b50){
+      const z64 = Number(tail.getBigUint64(lo + 8, true));
+      const r = new DataView(await file.slice(z64, z64 + 56).arrayBuffer());
+      cnt = Number(r.getBigUint64(32, true)); cdSize = Number(r.getBigUint64(40, true)); cdOff = Number(r.getBigUint64(48, true));
+    }
+  }
+  const cd = new DataView(await file.slice(cdOff, cdOff + cdSize).arrayBuffer());
+  const dec = new TextDecoder();
+  const out = []; let p = 0;
+  for(let k = 0; k < cnt && p + 46 <= cd.byteLength; k++){
+    if(cd.getUint32(p, true) !== 0x02014b50) break;
+    const method = cd.getUint16(p + 10, true), mtime = cd.getUint16(p + 12, true), mdate = cd.getUint16(p + 14, true);
+    let csize = cd.getUint32(p + 20, true), usize = cd.getUint32(p + 24, true);
+    const nl = cd.getUint16(p + 28, true), xl = cd.getUint16(p + 30, true), cl = cd.getUint16(p + 32, true);
+    let off = cd.getUint32(p + 42, true);
+    const name = dec.decode(new Uint8Array(cd.buffer, cd.byteOffset + p + 46, nl));
+    let x = p + 46 + nl; const xe = x + xl;
+    while(x + 4 <= xe){ const id = cd.getUint16(x, true), sz = cd.getUint16(x + 2, true);
+      if(id === 1){ let q = x + 4;
+        if(usize === 0xFFFFFFFF){ usize = Number(cd.getBigUint64(q, true)); q += 8; }
+        if(csize === 0xFFFFFFFF){ csize = Number(cd.getBigUint64(q, true)); q += 8; }
+        if(off === 0xFFFFFFFF){ off = Number(cd.getBigUint64(q, true)); q += 8; } }
+      x += 4 + sz; }
+    const date = `${1980 + (mdate >> 9)}-${pad2((mdate >> 5) & 15)}-${pad2(mdate & 31)}`;
+    out.push({name, method, csize, usize, off, date, time:`${pad2(mtime >> 11)}:${pad2((mtime >> 5) & 63)}`});
+    p += 46 + nl + xl + cl;
+  }
+  return out;
+}
+async function pfZipStream(file, e, onBytes){
+  const h = new DataView(await file.slice(e.off, e.off + 30).arrayBuffer());
+  const start = e.off + 30 + h.getUint16(26, true) + h.getUint16(28, true);
+  let s = file.slice(start, start + e.csize).stream();
+  if(onBytes){ let got = 0; s = s.pipeThrough(new TransformStream({transform(ch, c){ got += ch.byteLength; onBytes(got, e.csize); c.enqueue(ch); }})); }
+  if(e.method === 8) s = s.pipeThrough(new DecompressionStream('deflate-raw'));
+  else if(e.method !== 0) throw new Error('Noma’lum siqish usuli: ' + e.method);
+  return s.pipeThrough(new TextDecoderStream());
+}
+function pfUnesc(s){
+  if(s.indexOf('&') < 0) return s;
+  return s.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos);/gi, (m, c)=> c[0]==='#' ? String.fromCodePoint(c[1].toLowerCase()==='x' ? parseInt(c.slice(2), 16) : parseInt(c.slice(1), 10)) : ({amp:'&', lt:'<', gt:'>', quot:'"', apos:"'"})[c.toLowerCase()]);
+}
+function pfCellText(inner){
+  if(!inner) return '';
+  if(inner.indexOf('<t') >= 0){ let out = '', m; const rx = /<t(?:\s[^>]*)?>([\s\S]*?)<\/t>/g; while((m = rx.exec(inner))) out += m[1]; return pfUnesc(out); }
+  const v = /<v>([\s\S]*?)<\/v>/.exec(inner); return v ? pfUnesc(v[1]) : '';
+}
+/* onRow(rowNum, cells{A:'..'}) → false qaytarsa, to'xtaydi. pre(rowXml) — tez saralash (ixtiyoriy) */
+async function pfReadRows(file, onRow, onProg, pre){
+  let ents;
+  try{ ents = await pfZipEntries(file); }catch(e){ ents = null; }
+  if(!ents){   // eski .xls — SheetJS bilan
+    const wb = XLSX.read(await file.arrayBuffer(), {type:'array'});
+    const a = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:'', raw:false});
+    for(let i = 0; i < a.length; i++){ const c = {}; a[i].forEach((v, j)=>{ if(v !== '') c[XLSX.utils.encode_col(j)] = String(v); }); if(onRow(i + 1, c) === false) break; }
+    return {date:''};
+  }
+  const rels = ents.find(e=> e.name === 'xl/worksheets/sheet1.xml') || ents.find(e=> /^xl\/worksheets\/[^/]+\.xml$/.test(e.name));
+  if(!rels) throw new Error('Excel faylida varaq topilmadi.');
+  let SS = null;
+  const sse = ents.find(e=> e.name === 'xl/sharedStrings.xml');
+  if(sse){
+    let txt = ''; const rd = (await pfZipStream(file, sse)).getReader();
+    for(;;){ const {done, value} = await rd.read(); if(done) break; txt += value; }
+    SS = []; const rx = /<si>([\s\S]*?)<\/si>/g; let m; while((m = rx.exec(txt))) SS.push(pfCellText(m[1]));
+    pre = null;
+  }
+  const rd = (await pfZipStream(file, rels, onProg)).getReader();
+  const cx = /<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g;
+  let buf = '', stop = false, lastYield = Date.now(), hdrDone = false;
+  while(!stop){
+    const {done, value} = await rd.read(); if(done) break;
+    buf += value;
+    let p = 0, e;
+    while((e = buf.indexOf('</row>', p)) >= 0){
+      const s = buf.lastIndexOf('<row', e);
+      const row = buf.slice(s, e); p = e + 6;
+      if(hdrDone && pre && !pre(row)) continue;
+      const rn = parseInt((/^<row[^>]*?\sr="(\d+)"/.exec(row) || [0, 0])[1], 10);
+      const cells = {}; cx.lastIndex = 0; let m;
+      while((m = cx.exec(row))){
+        const at = m[1], ref = /\sr="([A-Z]+)\d*"/.exec(at); if(!ref) continue;
+        const tp = /\st="(\w+)"/.exec(at);
+        let v = pfCellText(m[2]);
+        if(tp && tp[1] === 's' && SS) v = SS[parseInt(v, 10)] || '';
+        cells[ref[1]] = v;
+      }
+      const r = onRow(rn, cells);
+      if(r === 'hdr') hdrDone = true;
+      if(r === false){ stop = true; break; }
+    }
+    buf = buf.slice(p);
+    if(Date.now() - lastYield > 250){ await new Promise(r=> setTimeout(r, 0)); lastYield = Date.now(); }
+  }
+  try{ rd.cancel(); }catch(e){}
+  return {date:rels.date, time:rels.time};
+}
+
+/* ---------- Portfel faylini tahlil qilish ---------- */
+async function pfParseFile(file, say){
+  const t0 = Date.now();
+  say('', '⏳ Fayl ochilmoqda…');
+  const H = {}; let hdrRow = 0, prevRow = {};
+  const groups = [], gIdx = new Map(), gCl = [], late = [], seen = new Set();
+  const tot = pfNew(); const prodCnt = {}; let rowsAll = 0, rowsBz = 0, dup = 0, noStore = 0, maxDate = '';
+  // ro'yxatdagi hamkorlar (nom → filial / STIR)
+  const reg = pfRegMap(DB.hamkor||[]);
+  const col = (names, group)=>{
+    for(const [letter, h] of Object.entries(H)){ if(names.some(n=> h.n === n) && (!group || h.g === group)) return letter; }
+    for(const [letter, h] of Object.entries(H)){ if(names.some(n=> h.n.includes(n)) && (!group || h.g.includes(group))) return letter; }
+    return '';
+  };
+  let C = null;
+  const num = v=>{ const n = parseFloat(String(v||'').replace(/\s/g,'').replace(',', '.')); return isNaN(n) ? 0 : n; };
+  const xIso = v=>{ const n = parseFloat(v); if(!isNaN(n) && n > 20000 && n < 80000 && /^\d+(\.\d+)?$/.test(String(v).trim())){ const d = new Date(Math.round((Math.floor(n) - 25569) * 86400000)); return d.toISOString().slice(0, 10); } return monIsoFromCell(v); };
+  const info = await pfReadRows(file, (rn, c)=>{
+    if(!C){
+      const vals = Object.values(c).map(v=> String(v).trim());
+      if(vals.includes('Продукт') && vals.includes('Филиал')){
+        let g = '';
+        const letters = Object.keys(c).sort((a, b)=> a.length - b.length || a.localeCompare(b));
+        const all = [...new Set(letters.concat(Object.keys(prevRow)))].sort((a, b)=> a.length - b.length || a.localeCompare(b));
+        all.forEach(L=>{ if(String(prevRow[L]||'').trim()) g = String(prevRow[L]).trim(); if(c[L] !== undefined) H[L] = {n:String(c[L]).replace(/\s+/g,' ').trim(), g}; });
+        C = {code:col(['Код']), client:col(['Клиент']), pinfl:col(['ПИНФЛ']), fil:col(['Филиал']), prod:col(['Продукт']), phone:col(['Телефоны']),
+          no:col(['Номер договора']), date:col(['Дата договора']), sum:col(['Сумма']), od:col(['Итого'], 'Основной долг') || 'AG',
+          odOver:col(['На 12405 [Просрочен]']) || 'AC', court:col(['В суде']), woff:col(['Списанный'], 'Основной долг'), pctOver:col(['Просроченные'], 'Проценты') || 'W', debt:col(['Общая задолженность']) || 'AP',
+          dpd:col(['Период просрочки по ранней дате']) || col(['Кол-во дней']), cls:col(['Тип классификации']), note:col(['Примечание в кредите']), end:col(['Кон.дата'])};
+        if(!C.prod || !C.fil || !C.code) throw new Error('Fayl ustunlari tanilmadi («Код», «Филиал», «Продукт» bo‘lishi kerak).');
+        hdrRow = rn; return 'hdr';
+      }
+      prevRow = c; if(rn > 30) throw new Error('Bu fayl «Активные кредиты» eksportiga o‘xshamaydi: sarlavha qatori («Филиал», «Продукт») topilmadi.');
+      return;
+    }
+    const code = String(c[C.code]||'').trim(); if(!code) return;
+    rowsAll++;
+    const prod = String(c[C.prod]||'').trim();
+    if(!/^BZN/i.test(prod)) return;
+    if(seen.has(code)){ dup++; return; } seen.add(code);
+    rowsBz++;
+    const pk = /^BZN\s*\+/i.test(prod) ? 'BZN+' : 'BZN';
+    prodCnt[pk] = (prodCnt[pk]||0) + 1;
+    const st = pfStoreFromNote(c[C.note]); if(!st.n) noStore++;
+    const lf = String(c[C.fil]||'').trim();
+    const nk = pfNameKey(st.n) || '—';
+    const gk = nk + '|' + fKey(lf) + '|' + pk;
+    let gi = gIdx.get(gk);
+    if(gi === undefined){ gi = groups.length; gIdx.set(gk, gi); const r = reg.get(nk) || {};
+      groups.push({n:st.n || '(do‘kon ko‘rsatilmagan)', b:st.b, lf, p:pk, rf:r.f||'', stir:r.s||'', m:pfNew()}); gCl.push(new Map()); }
+    const G = groups[gi], M = G.m;
+    if(!G.b && st.b) G.b = st.b;
+    const dpd = Math.max(0, Math.round(num(c[C.dpd])));
+    const bk = pfBucket(dpd);
+    const woff = C.woff ? num(c[C.woff]) : 0, od = num(c[C.od]), odOver = num(c[C.odOver]) + (C.court ? num(c[C.court]) : 0) + woff, pctOver = num(c[C.pctOver]), debt = num(c[C.debt]), sum = num(c[C.sum]);
+    M[PM.n]++; M[PM.sum] += sum; M[PM.od] += od; M[PM.odOver] += odOver; M[PM.pctOver] += pctOver; M[PM.debt] += debt; M[PM.woff] += woff;
+    M[PM.b0 + bk]++; M[PM.b0od + bk] += od;
+    const cls = String(c[C.cls]||'').trim(); const ci = PF_CLASS.findIndex(x=> x[0] === cls); if(ci >= 0) M[PM.c0 + ci]++;
+    const pin = String(c[C.pinfl]||'').trim() || String(c[C.client]||'').trim() || code;
+    const cm = gCl[gi]; cm.set(pin, Math.max(cm.get(pin) ?? -1, bk));
+    const dt = xIso(c[C.date]); if(dt && dt > maxDate) maxDate = dt;
+    if(dpd > 0){
+      const ph = (String(c[C.phone]||'').match(/\+?\d{9,12}/) || [''])[0];
+      late.push([code, String(c[C.client]||'').trim(), ph, gi, dpd, Math.round(od), Math.round(odOver + pctOver), String(c[C.no]||'').trim(), dt, xIso(c[C.end])]);
+    }
+  }, (got, all)=>{ const pct = Math.min(99, Math.floor(got / all * 100)); if(pct !== pfParseFile._p){ pfParseFile._p = pct; say('', `⏳ O‘qilmoqda: ${pct}% · BirZum shartnomalari: ${rowsBz.toLocaleString('ru-RU')}`); } },
+  row=> row.indexOf('>BZN') >= 0);
+  if(!C) throw new Error('Faylda sarlavha qatori topilmadi.');
+  groups.forEach((G, i)=>{ const cm = gCl[i]; G.m[PM.cl] = cm.size; cm.forEach(b=>{ G.m[PM.cb0 + b]++; }); pfAdd(tot, G.m); });
+  groups.forEach(G=>{ for(const k of [PM.sum, PM.od, PM.odOver, PM.pctOver, PM.debt, PM.woff]) G.m[k] = Math.round(G.m[k]); for(let k = 0; k < 5; k++) G.m[PM.b0od + k] = Math.round(G.m[PM.b0od + k]); });
+  // umumiy (takrorlanmagan) mijozlar
+  const allCl = new Map(); gCl.forEach(cm=> cm.forEach((b, k)=> allCl.set(k, Math.max(allCl.get(k) ?? -1, b))));
+  const uniq = [0,0,0,0,0]; allCl.forEach(b=> uniq[b]++);
+  return {v:1, fileName:file.name, uploadedAt:new Date().toISOString(), asOf:info.date || todayISO(), lastContract:maxDate, rowsAll, rowsBz, dup, noStore, prodCnt,
+    clients:allCl.size, clientsB:uniq, groups:groups.map(G=> [G.n, G.b, G.lf, G.p, G.rf, G.stir, G.m]), late, secs:Math.round((Date.now() - t0) / 1000)};
+}
+function pfRegMap(registry){
+  const m = new Map();
+  (registry||[]).forEach(r=>{ const d = r.data||{}; const f = monFilName(d.filial); const s = String(d.stir||'').replace(/\D/g,'');
+    [d.tashkilot_nomi].forEach(n=>{ const k = pfNameKey(n); if(k && !m.has(k)) m.set(k, {f, s}); }); });
+  // monitoring faylidagi do'konlar (STIR orqali filial)
+  if(MON && MON.stores){ const bySt = new Map(); (registry||[]).forEach(r=>{ const d = r.data||{}; const s = String(d.stir||'').replace(/\D/g,''); if(s && !bySt.has(s)) bySt.set(s, monFilName(d.filial)); });
+    MON.stores.forEach(s=>{ const k = pfNameKey(s[1]); if(k && !m.has(k)) m.set(k, {f: bySt.get(s[0]) || monFilName(s[3]), s:s[0]}); }); }
+  return m;
+}
+async function pfUpload(file){
+  const st = document.getElementById('monStatus');
+  const say = (cls, t)=>{ const el = document.getElementById('monStatus'); if(el){ el.className = 'status ' + cls; el.textContent = t; } };
+  try{
+    if(typeof DecompressionStream === 'undefined') throw new Error('Brauzeringiz eski. Chrome yoki Edge’ning yangi versiyasida oching.');
+    if(!MON) await monLoad();
+    const d = await pfParseFile(file, say);
+    if(!d.rowsBz) throw new Error('Faylda BirZum (BZN / BZN+) shartnomalari topilmadi.');
+    const T = d.groups.reduce((a, g)=> pfAdd(a, g[6]), pfNew());
+    const asOf = prompt(`Fayl o‘qildi (${d.secs} soniya):\n\n• BirZum shartnomalari: ${d.rowsBz.toLocaleString('ru-RU')} ta (BZN: ${d.prodCnt.BZN||0}, BZN+: ${d.prodCnt['BZN+']||0})\n• Mijozlar: ${d.clients.toLocaleString('ru-RU')}\n• Portfel (asosiy qarz): ${monMoney(T[PM.od])} so‘m\n• Kechikkan shartnomalar: ${d.late.length.toLocaleString('ru-RU')} ta\n\nPortfel qaysi sana holatiga? (KK.OO.YYYY) — OK bossangiz, avvalgi portfel shu bilan almashtiriladi.`, boshPlainDate(d.asOf));
+    if(asOf === null){ say('', 'Bekor qilindi.'); return; }
+    const iso = normalizeDateString(String(asOf).trim()); if(/^\d{4}-\d{2}-\d{2}$/.test(iso||'')) d.asOf = iso;
+    d.uploadedBy = (getUserSession()||{}).ism || 'Admin';
+    say('', '⏳ Saqlanmoqda…');
+    const late = {uploadedAt:d.uploadedAt, rows:d.late}; delete d.late; d.lateCount = late.rows.length;
+    await ST.set(MON_COL, 'portfel_late', late);
+    await ST.set(MON_COL, 'portfel', d);
+    // kunlik tarix (filiallar bo'yicha qisqa)
+    const hist = (await ST.get(MON_COL, 'portfel_hist').catch(()=>null)) || {list:[]};
+    const list = (hist.list||[]).filter(x=> x.d !== d.asOf);
+    const byF = {}; const reg = pfRegMap(DB.hamkor||[]);
+    d.groups.forEach(g=>{ const f = pfGroupFil(g, reg, 'reg'); const a = byF[f] = byF[f] || pfNew(); pfAdd(a, g[6]); });
+    const sl = m=> [m[PM.n], m[PM.od], m[PM.odOver] + m[PM.pctOver], m[PM.b0od+2] + m[PM.b0od+3] + m[PM.b0od+4], m[PM.cl], m[PM.cb0+2] + m[PM.cb0+3] + m[PM.cb0+4], m[PM.cb0]];
+    list.push({d:d.asOf, at:d.uploadedAt, t:sl(T), f:Object.fromEntries(Object.entries(byF).map(([k, m])=> [k, sl(m)]))});
+    list.sort((a, b)=> a.d.localeCompare(b.d));
+    await ST.set(MON_COL, 'portfel_hist', {list:list.slice(-180)});
+    PF = d; PFL = late; PFH = list.slice(-180); pfLoadedAt = Date.now(); PV.page = 1; PV.lpage = 1;
+    logAct('import', {type:'import', name:'Portfel tahlili'}, `${d.rowsBz} ta BirZum shartnomasi, ${boshPlainDate(d.asOf)} holatiga (${d.fileName})`);
+    await renderMonitor(document.getElementById('monHost'), true);
+    say('ok', `✅ Portfel yuklandi: ${d.rowsBz.toLocaleString('ru-RU')} ta shartnoma, ${boshPlainDate(d.asOf)} holatiga.`);
+  }catch(e){ console.error(e); say('err', '⚠️ ' + (e.message || e)); }
+}
+
+/* ---------- Hisob-kitob ---------- */
+function pfGroupFil(g, reg, basis){
+  if(basis === 'loan') return monFilName(g[2]) || g[2] || 'Aniqlanmagan';
+  const r = reg.get(pfNameKey(g[0]));
+  return (r && r.f) || g[4] || monFilName(g[2]) || g[2] || 'Aniqlanmagan';
+}
+function pfCompute(admin, registry, myFil){
+  const D = PF; if(!D) return null;
+  const reg = pfRegMap(registry);
+  const basis = admin ? PV.basis : 'reg';
+  const fil = admin ? PV.fil : myFil, fk = fil ? fKey(fil) : '';
+  const G = D.groups.filter(g=> !PV.prod || g[3] === PV.prod).map((g, i)=> ({i, n:g[0], b:g[1], lf:g[2], p:g[3], f:pfGroupFil(g, reg, basis), stir:(reg.get(pfNameKey(g[0]))||{}).s || g[5], reg:reg.has(pfNameKey(g[0])), m:g[6]}));
+  const inS = G.filter(x=> !fk || fKey(x.f) === fk);
+  const T = pfNew(); inS.forEach(x=> pfAdd(T, x.m));
+  const filAgg = {}; G.forEach(x=>{ const k = fKey(x.f) || '—'; const a = filAgg[k] = filAgg[k] || {f:x.f, m:pfNew(), st:new Set()}; pfAdd(a.m, x.m); a.st.add(pfNameKey(x.n)); });
+  // do'konlar (filial ichida bir nechta guruh bo'lishi mumkin: BZN / BZN+, kredit filiali)
+  const stAgg = {}; inS.forEach(x=>{ const k = pfNameKey(x.n) + '|' + fKey(x.f); const a = stAgg[k] = stAgg[k] || {n:x.n, b:x.b, f:x.f, stir:x.stir, reg:x.reg, lf:new Set(), m:pfNew(), gi:[]}; pfAdd(a.m, x.m); a.lf.add(x.lf); a.gi.push(x.i); if(!a.b && x.b) a.b = x.b; });
+  const stores = Object.values(stAgg); stores.forEach(pfDerive);
+  const fils = Object.values(filAgg); fils.forEach(pfDerive); fils.sort((a, b)=> b.m[PM.od] - a.m[PM.od]);
+  return {T:pfDerive({m:T}), stores, fils, fil, basis, groupsIn:new Set(inS.map(x=> x.i))};
+}
+function pfDerive(x){
+  const m = x.m, od = m[PM.od] || 0;
+  x.over = m[PM.odOver] + m[PM.pctOver];
+  x.par30 = od ? (m[PM.b0od+2] + m[PM.b0od+3] + m[PM.b0od+4]) / od * 100 : 0;
+  x.par90 = od ? m[PM.b0od+4] / od * 100 : 0;
+  x.good = m[PM.cl] ? m[PM.cb0] / m[PM.cl] * 100 : 0;
+  x.prob = m[PM.cb0+2] + m[PM.cb0+3] + m[PM.cb0+4];
+  x.risk = m[PM.n] < 5 ? 'few' : x.par30 >= 15 ? 'bad' : x.par30 >= 5 ? 'mid' : 'ok';
+  return x;
+}
+
+/* ---------- Ko'rinish ---------- */
+const pfN = n=> Math.round(n||0).toLocaleString('ru-RU').replace(/,/g,' ');
+const pfP = (v, d=1)=> (v||0).toFixed(d).replace('.', ',') + '%';
+function pfRiskBadge(x){
+  return x.risk === 'bad' ? '<span class="st-badge st-rej">Xavfli</span>' : x.risk === 'mid' ? '<span class="st-badge st-ret">E’tibor talab</span>' : x.risk === 'few' ? '<span class="st-badge st-new">Kam shartnoma</span>' : '<span class="st-badge st-ok">Yaxshi</span>';
+}
+function pfDelta(cur, prev, money, invert){
+  if(prev === undefined || prev === null) return '';
+  const d = cur - prev; if(!d) return '<span class="pf-dl">o‘zgarmagan</span>';
+  const bad = invert ? d < 0 : d > 0;
+  return `<span class="pf-dl ${bad ? 'up-bad' : 'up-ok'}" data-noi18n>${d > 0 ? '▲' : '▼'} ${money ? monShort(Math.abs(d)) : pfN(Math.abs(d))}</span>`;
+}
+function pfStack(m, byOd){
+  const tot = PF_BUCKETS.reduce((a, b)=> a + (byOd ? m[PM.b0od + b.k] : m[PM.cb0 + b.k]), 0) || 1;
+  return `<div class="pf-stack">${PF_BUCKETS.map(b=>{ const v = byOd ? m[PM.b0od + b.k] : m[PM.cb0 + b.k]; return v ? `<i class="${b.cls}" style="width:${(v / tot * 100).toFixed(2)}%" title="${esc(t(b.l))}: ${byOd ? monMoney(v) + ' so‘m' : pfN(v)}"></i>` : ''; }).join('')}</div>`;
+}
+function pfTabsMarkup(){
+  return `<div class="pf-tabs seg" role="tablist"><button type="button" data-mtab="mon" class="${MV.tab==='mon'?'on':''}">📈 Shartnomalar monitoringi</button><button type="button" data-mtab="port" class="${MV.tab==='port'?'on':''}">💼 Portfel tahlili</button></div>`;
+}
+function pfBindTabs(host, admin){
+  host.querySelectorAll('[data-mtab]').forEach(b=> b.onclick = ()=>{ if(MV.tab === b.dataset.mtab) return; MV.tab = b.dataset.mtab; try{ localStorage.setItem(STORAGE_PREFIX+'mon_tab', MV.tab); }catch(e){} monRerender(admin); });
+}
+try{ const tb = localStorage.getItem(STORAGE_PREFIX+'mon_tab'); if(tb === 'port' || tb === 'mon') MV.tab = tb; }catch(e){}
+
+async function renderPortfel(host, admin){
+  if(!host) return;
+  if(!PF && !pfErr) await pfLoad();
+  if(!MON && !monErr) await monLoad();
+  const u = getUserSession()||{};
+  const registry = admin ? (DB.hamkor||[]) : (await uHkLoad(), uHk);
+  if(!host.isConnected) return;
+  const head = `${pfTabsMarkup()}<div class="card rp-top"><div class="rp-head mon-head">
+      <div><h2 style="margin:0;">BirZum portfeli tahlili</h2>
+        <div class="hint">${PF ? `<b data-noi18n>${boshPlainDate(PF.asOf)}</b> holatiga · fayl: <span data-noi18n>${esc(PF.fileName||'')}</span> · yuklangan: <span data-noi18n>${esc(arFmtDT(PF.uploadedAt))}</span>` : 'Portfel ma’lumoti hali yuklanmagan.'}${!admin && u.filial ? ` · 🏢 <b data-noi18n>${esc(u.filial)}</b>` : ''}</div></div>
+      <div class="hk-tools">${admin ? `<button type="button" class="hk-tool" id="pfUp">📥 «Активные кредиты» yuklash</button><input type="file" id="pfFile" accept=".xlsx,.xls" style="display:none;">` : ''}<button type="button" class="hk-tool" id="pfReload">↻ Yangilash</button></div>
+    </div><div class="status" id="monStatus"></div></div>`;
+  if(!PF){
+    host.innerHTML = head + `<div class="card"><div class="hk-empty">${MON_ICON}<b>${admin ? '«Активные кредиты» faylini yuklang' : 'Ma’lumot hali yuklanmagan'}</b><span>${admin ? 'Bank tizimidan olingan «Активные кредиты» Excel faylini tanlang. Fayl katta bo‘lsa ham (100 MB gacha) brauzerning o‘zida o‘qiladi — faqat BirZum (BZN, BZN+) shartnomalari hisobga olinadi. Har kuni yangisini yuklasangiz, portfel yangilanadi va kunlik o‘zgarish ko‘rinadi.' : 'Admin portfel faylini yuklagach, bu yerda filialingiz do‘konlari portfeli tahlili ko‘rinadi.'}</span></div></div>`;
+    pfBind(host, admin); i18nApply(host); return;
+  }
+  if(!admin && !u.filial){ host.innerHTML = head + uFilialAsk(); bindUFilialAsk(); pfBind(host, admin); i18nApply(host); return; }
+  const R = pfCompute(admin, registry, u.filial);
+  const T = R.T, m = T.m;
+  // oldingi kun bilan solishtirish
+  const hist = (PFH||[]).filter(x=> x.d < PF.asOf);
+  const prevH = hist[hist.length - 1];
+  const pv = prevH ? (R.fil ? (prevH.f||{})[Object.keys(prevH.f||{}).find(k=> fKey(k) === fKey(R.fil))] : prevH.t) : null;
+  const canDelta = pv && !PV.prod && R.basis === 'reg';
+  const fOpts = admin ? `<label>Filial<select id="pfFil"><option value="">Barcha filiallar</option>${R.fils.map(x=> x.f).sort((a, b)=> a.localeCompare(b)).map(f=>`<option value="${esc(f)}" ${fKey(f)===fKey(PV.fil)?'selected':''}>${esc(f)}</option>`).join('')}</select></label>
+      <label>Filial qaysi bo‘yicha<select id="pfBasis"><option value="reg" ${PV.basis==='reg'?'selected':''}>Hamkor (do‘kon) filiali</option><option value="loan" ${PV.basis==='loan'?'selected':''}>Kredit fayli («Филиал»)</option></select></label>` : '';
+  const tools = `<div class="card rp-card"><div class="rp-fil-tools mon-tools">${fOpts}
+      <label>Mahsulot<select id="pfProd"><option value="">BZN + BZN+</option><option value="BZN" ${PV.prod==='BZN'?'selected':''}>BZN</option><option value="BZN+" ${PV.prod==='BZN+'?'selected':''}>BZN+</option></select></label></div></div>`;
+  const kpi = (l, v, sub)=> `<div class="card rp-kpi"><span>${esc(l)}</span><b data-noi18n>${v}</b>${sub ? `<span class="rp-d">${sub}</span>` : ''}</div>`;
+  const kpis = `<div class="rp-kpis">
+      ${kpi('Faol shartnomalar', pfN(m[PM.n]), canDelta ? pfDelta(m[PM.n], pv[0], false, true) : '')}
+      ${kpi('Mijozlar', pfN(m[PM.cl]), canDelta ? pfDelta(m[PM.cl], pv[4], false, true) : '')}
+      ${kpi('Portfel (asosiy qarz)', monShort(m[PM.od]), canDelta ? pfDelta(m[PM.od], pv[1], true, true) : `<span data-noi18n>${monMoney(m[PM.od])} so‘m</span>`)}
+      ${kpi('Muddati o‘tgan qarz', monShort(T.over), canDelta ? pfDelta(T.over, pv[2], true) : esc(t('kechikkan + sudda + hisobdan chiqarilgan')))}
+      ${kpi('PAR 30', pfP(T.par30), esc(t('30+ kun kechikkan qarz ulushi')))}
+      ${kpi('Yaxshi to‘layotganlar', pfP(T.good, 0), `<span data-noi18n>${pfN(m[PM.cb0])}</span> ${esc(t('mijoz kechiktirmayapti'))}`)}
+      ${kpi('Muammoli mijozlar', pfN(T.prob), canDelta ? pfDelta(T.prob, pv[5]) : esc(t('30 kundan ortiq kechikkan')))}
+    </div>`;
+  // to'lov intizomi
+  const bRows = PF_BUCKETS.map(b=> ({b, cl:m[PM.cb0 + b.k], n:m[PM.b0 + b.k], od:m[PM.b0od + b.k]}));
+  const disc = `<div class="rp-cols">
+      <div class="card rp-card"><h3>Mijozlar to‘lov intizomi</h3><p class="sub">Har bir mijoz eng ko‘p kechiktirgan shartnomasi bo‘yicha</p>
+        ${pfStack(m, false)}
+        <div class="hk-table-wrap"><table class="srv-table pf-btable"><thead><tr><th>Holat</th><th style="text-align:right">Mijoz</th><th style="text-align:right">Ulushi</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Qoldiq qarz</th></tr></thead><tbody>
+        ${bRows.map(r=>`<tr><td><i class="pf-dot ${r.b.cls}"></i>${esc(t(r.b.l))} <span class="hk-sub">· ${esc(t(r.b.s))}</span></td><td style="text-align:right" data-noi18n><b>${pfN(r.cl)}</b></td><td style="text-align:right" data-noi18n>${pfP(r.cl / Math.max(1, m[PM.cl]) * 100)}</td><td style="text-align:right" data-noi18n>${pfN(r.n)}</td><td style="text-align:right" data-noi18n>${monShort(r.od)}</td></tr>`).join('')}
+        </tbody><tfoot><tr class="rp-total"><td><b>Jami</b></td><td style="text-align:right" data-noi18n><b>${pfN(m[PM.cl])}</b></td><td style="text-align:right">100%</td><td style="text-align:right" data-noi18n><b>${pfN(m[PM.n])}</b></td><td style="text-align:right" data-noi18n><b>${monShort(m[PM.od])}</b></td></tr></tfoot></table></div></div>
+      <div class="card rp-card"><h3>Qarz sifati</h3><p class="sub">Qoldiq qarzning kechikish bo‘yicha taqsimoti va bank tasnifi</p>
+        ${pfStack(m, true)}
+        <div class="pf-cls">${PF_CLASS.map((c, i)=>`<div><span>${esc(t(c[1]))}</span><b data-noi18n>${pfN(m[PM.c0 + i])}</b><em data-noi18n>${pfP(m[PM.c0 + i] / Math.max(1, m[PM.n]) * 100)}</em></div>`).join('')}</div>
+        <div class="pf-mini-kpi"><div><span>PAR 30</span><b data-noi18n>${pfP(T.par30)}</b></div><div><span>PAR 90</span><b data-noi18n>${pfP(T.par90)}</b></div><div><span>${esc(t('Muddati o‘tgan asosiy qarz'))}</span><b data-noi18n>${monShort(m[PM.odOver])}</b></div><div><span>${esc(t('Shundan hisobdan chiqarilgan'))}</span><b data-noi18n>${monShort(m[PM.woff])}</b></div><div><span>${esc(t('Umumiy qarz'))}</span><b data-noi18n>${monShort(m[PM.debt])}</b></div><div><span>${esc(t('Berilgan summa'))}</span><b data-noi18n>${monShort(m[PM.sum])}</b></div></div>
+      </div></div>`;
+  // dinamika
+  const hs = (PFH||[]).slice(-14).map(x=> ({d:x.d, v:R.fil ? (x.f||{})[Object.keys(x.f||{}).find(k=> fKey(k) === fKey(R.fil))] : x.t})).filter(x=> x.v);
+  const dyn = hs.length >= 2 && !PV.prod ? `<div class="card rp-card"><h3>Kunlik o‘zgarish</h3><p class="sub">Har kuni yuklangan portfel bo‘yicha (oxirgi ${hs.length} ta)</p>
+      <div class="hk-table-wrap"><table class="srv-table"><thead><tr><th>Sana</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Portfel</th><th style="text-align:right">Muddati o‘tgan</th><th style="text-align:right">PAR 30</th><th style="text-align:right">Muammoli mijoz</th></tr></thead>
+      <tbody>${hs.slice().reverse().map((x, i, a)=>{ const p = a[i + 1] && a[i + 1].v; const v = x.v; return `<tr><td data-noi18n>${boshPlainDate(x.d)}</td><td style="text-align:right" data-noi18n>${pfN(v[0])}</td><td style="text-align:right" data-noi18n>${monShort(v[1])}</td><td style="text-align:right" data-noi18n>${monShort(v[2])} ${p ? pfDelta(v[2], p[2], true) : ''}</td><td style="text-align:right" data-noi18n>${pfP(v[1] ? v[3] / v[1] * 100 : 0)}</td><td style="text-align:right" data-noi18n>${pfN(v[5])} ${p ? pfDelta(v[5], p[5]) : ''}</td></tr>`; }).join('')}</tbody></table></div></div>` : '';
+  // filiallar
+  const fRows = R.fil ? R.fils.filter(x=> fKey(x.f) === fKey(R.fil)) : R.fils;
+  const fT = pfDerive({m:fRows.reduce((a, x)=> pfAdd(a, x.m), pfNew())});
+  const filCard = admin && !R.fil ? `<div class="card rp-card"><h3>Filiallar bo‘yicha BirZum portfeli</h3><p class="sub">${R.basis==='loan' ? 'Filial — kredit faylidagi «Филиал» ustuni' : 'Filial — hamkor do‘kon qaysi filialga tegishli bo‘lsa (hamkorlar ro‘yxatidan)'} · qatorni bossangiz, o‘sha filial ochiladi</p>
+      <div class="rp-fil-tools"><button type="button" class="hk-tool" id="pfFilXlsx">⬇ Excel</button></div>
+      <div class="hk-table-wrap"><table class="srv-table pf-ftable"><thead><tr><th>№</th><th>Filial</th><th style="text-align:right">Do‘kon</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Mijoz</th><th style="text-align:right">Portfel</th><th style="text-align:right">Muddati o‘tgan</th><th style="text-align:right">Yaxshi to‘lovchi</th><th style="text-align:right">Muammoli mijoz</th><th style="text-align:right">PAR 30</th><th style="min-width:120px;">Intizom</th></tr></thead>
+      <tbody>${fRows.map((x, i)=>`<tr class="pf-row" data-pff="${esc(x.f)}"><td class="hk-sub" data-noi18n>${i + 1}</td><td data-noi18n><b>${esc(x.f)}</b></td><td style="text-align:right" data-noi18n>${x.st.size}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.n])}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cl])}</td><td style="text-align:right" data-noi18n><b>${monShort(x.m[PM.od])}</b></td><td style="text-align:right" data-noi18n>${monShort(x.over)}</td><td style="text-align:right" data-noi18n>${pfP(x.good, 0)}</td><td style="text-align:right" data-noi18n>${pfN(x.prob)}</td><td style="text-align:right" data-noi18n class="${x.par30 >= 15 ? 'pf-hot' : x.par30 >= 5 ? 'pf-warm' : ''}"><b>${pfP(x.par30)}</b></td><td>${pfStack(x.m, false)}</td></tr>`).join('')}</tbody>
+      <tfoot><tr class="rp-total"><td></td><td><b>Jami</b></td><td></td><td style="text-align:right" data-noi18n><b>${pfN(fT.m[PM.n])}</b></td><td style="text-align:right" data-noi18n><b>${pfN(fT.m[PM.cl])}</b></td><td style="text-align:right" data-noi18n><b>${monShort(fT.m[PM.od])}</b></td><td style="text-align:right" data-noi18n><b>${monShort(fT.over)}</b></td><td style="text-align:right" data-noi18n><b>${pfP(fT.good, 0)}</b></td><td style="text-align:right" data-noi18n><b>${pfN(fT.prob)}</b></td><td style="text-align:right" data-noi18n><b>${pfP(fT.par30)}</b></td><td></td></tr></tfoot></table></div></div>` : '';
+  // TOP-10 xavfli do'konlar
+  const riskTop = R.stores.filter(x=> x.m[PM.n] >= 20).sort((a, b)=> b.par30 - a.par30 || b.over - a.over).slice(0, 10);
+  const overTop = R.stores.filter(x=> x.over > 0).sort((a, b)=> b.over - a.over).slice(0, 10);
+  const bestTop = R.stores.filter(x=> x.m[PM.n] >= 20).sort((a, b)=> a.par30 - b.par30 || b.m[PM.n] - a.m[PM.n]).slice(0, 10);
+  const tops = `<div class="rp-cols">
+      <div class="card rp-card"><h3>TOP-10: eng xavfli do‘konlar</h3><p class="sub">PAR 30 bo‘yicha (kamida 20 ta shartnomasi borlar)</p>${riskTop.length ? monBars(riskTop.map(x=> Object.assign({}, x, {n:x.n})), x=> x.par30, v=> pfP(v), x=> `${x.f} · ${pfN(x.prob)} muammoli mijoz`) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+      <div class="card rp-card"><h3>TOP-10: muddati o‘tgan qarzi eng ko‘p</h3><p class="sub">So‘m: kechikkan, sudda va hisobdan chiqarilgan qarz</p>${overTop.length ? monBars(overTop, x=> x.over, v=> monShort(v), x=> `${x.f} · PAR 30: ${pfP(x.par30)}`) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+    </div>
+    <div class="card rp-card"><h3>TOP-10: eng yaxshi to‘lov intizomli do‘konlar</h3><p class="sub">PAR 30 eng past (kamida 20 ta shartnomasi borlar)</p>${bestTop.length ? monBars(bestTop, x=> x.m[PM.n], v=> pfN(v) + ' ta', x=> `${x.f} · PAR 30: ${pfP(x.par30)} · yaxshi: ${pfP(x.good, 0)}`) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>`;
+  // do'konlar ro'yxati
+  const list = pfStoreList(R);
+  const pages = Math.max(1, Math.ceil(list.length / PV.per)); if(PV.page > pages) PV.page = pages;
+  const rows = list.slice((PV.page - 1) * PV.per, PV.page * PV.per);
+  const cnt = {all:R.stores.length, ok:R.stores.filter(x=> x.risk==='ok').length, mid:R.stores.filter(x=> x.risk==='mid').length, bad:R.stores.filter(x=> x.risk==='bad').length, few:R.stores.filter(x=> x.risk==='few').length};
+  const chip = (k, l)=> `<button type="button" class="ar-chip ${PV.grp===k?'on':''}" data-pg="${k}">${esc(l)}<span class="ar-chip-n" data-noi18n>${cnt[k]}</span></button>`;
+  const storesCard = `<div class="card rp-card"><h3>Do‘konlar portfeli</h3><p class="sub">Yaxshi — PAR 30 5% dan kam · E’tibor talab — 5–15% · Xavfli — 15% va undan ko‘p</p>
+      <div class="ar-chips">${chip('all','Hammasi')}${chip('ok','Yaxshi')}${chip('mid','E’tibor talab')}${chip('bad','Xavfli')}${cnt.few ? chip('few','Kam shartnoma (<5)') : ''}</div>
+      <div class="rp-fil-tools" style="margin-top:8px;">
+        <div class="hk-search" style="flex:1;min-width:220px;">${ICONS.search}<input type="search" id="pfQ" placeholder="Do‘kon nomi, brend, filial…" value="${esc(PV.q)}"></div>
+        <label>Saralash<select id="pfSort">${[['od','Portfel (qarz)'],['n','Shartnomalar soni'],['par','PAR 30 (yuqori)'],['over','Muddati o‘tgan qarz'],['prob','Muammoli mijozlar'],['good','Yaxshi to‘lovchilar %'],['name','Nomi (A–Z)']].map(([v, l])=>`<option value="${v}" ${PV.sort===v?'selected':''}>${esc(l)}</option>`).join('')}</select></label>
+        <button type="button" class="hk-tool" id="pfXlsx">⬇ Excel</button></div>
+      ${rows.length ? `<div class="hk-table-wrap"><table class="srv-table mon-table pf-stable"><thead><tr><th>№</th><th>Do‘kon</th><th>Filial</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Mijoz</th><th style="text-align:right">Portfel</th><th style="text-align:right">O‘z vaqtida</th><th style="text-align:right">1–30</th><th style="text-align:right">31–90</th><th style="text-align:right">90+</th><th style="text-align:right">Muddati o‘tgan</th><th style="text-align:right">PAR 30</th><th>Baho</th></tr></thead>
+        <tbody>${rows.map((x, i)=>`<tr><td class="hk-sub" data-noi18n>${(PV.page - 1) * PV.per + i + 1}</td><td data-noi18n>${esc(x.n)}${x.b ? `<div class="hk-sub">${esc(x.b)}</div>` : ''}${!x.reg ? '<div class="hk-sub" style="color:var(--danger)">ro‘yxatda topilmadi</div>' : ''}</td><td data-noi18n>${esc(x.f)}</td>
+          <td style="text-align:right" data-noi18n>${pfN(x.m[PM.n])}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cl])}</td><td style="text-align:right" data-noi18n><b>${monShort(x.m[PM.od])}</b></td>
+          <td style="text-align:right" data-noi18n>${pfN(x.m[PM.cb0])}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cb0+1]) || ''}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cb0+2] + x.m[PM.cb0+3]) || ''}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cb0+4]) || ''}</td>
+          <td style="text-align:right" data-noi18n>${x.over ? monShort(x.over) : ''}</td><td style="text-align:right" data-noi18n class="${x.par30 >= 15 ? 'pf-hot' : x.par30 >= 5 ? 'pf-warm' : ''}"><b>${pfP(x.par30)}</b></td><td>${pfRiskBadge(x)}</td></tr>`).join('')}</tbody></table></div>
+        ${bPagerMarkup(PV.page, pages, list.length, PV.per, 'pf')}` : '<p class="hk-sub">Topilmadi.</p>'}
+      <p class="hint">«O‘z vaqtida», «1–30», «31–90», «90+» — mijozlar soni (kechikish kunlari bo‘yicha).</p></div>`;
+  const lateCard = `<div class="card rp-card" id="pfLateCard"><h3>Kechikayotgan mijozlar ro‘yxati</h3><p class="sub">Undiruv ishlari uchun: kim, qaysi do‘kondan, necha kun kechiktirmoqda</p><div id="pfLateHost"><div class="hk-empty" style="padding:18px;">Yuklanmoqda…</div></div></div>`;
+  const note = `<p class="hint" style="margin:4px 2px 0;">Faqat BirZum mahsulotlari (BZN, BZN+) · ${PF.noStore ? `${pfN(PF.noStore)} ta shartnomada do‘kon nomi yozilmagan · ` : ''}do‘kon filiali hamkorlar ro‘yxatidan nom bo‘yicha topiladi, topilmasa — kredit faylidagi filial olinadi.</p>`;
+  host.innerHTML = head + tools + kpis + disc + dyn + filCard + tops + storesCard + lateCard + note;
+  pfBind(host, admin, R, list);
+  i18nApply(host);
+  pfRenderLate(admin, R);
+}
+function pfStoreList(R){
+  let L = R.stores.filter(x=> PV.grp === 'all' || x.risk === PV.grp);
+  const q = PV.q.trim().toLowerCase();
+  if(q) L = L.filter(x=> [x.n, x.b, x.f, x.stir].some(v=> String(v||'').toLowerCase().includes(q)));
+  const by = {od:(a, b)=> b.m[PM.od] - a.m[PM.od], n:(a, b)=> b.m[PM.n] - a.m[PM.n], par:(a, b)=> b.par30 - a.par30 || b.over - a.over, over:(a, b)=> b.over - a.over,
+    prob:(a, b)=> b.prob - a.prob, good:(a, b)=> b.good - a.good || b.m[PM.n] - a.m[PM.n], name:(a, b)=> a.n.localeCompare(b.n)}[PV.sort] || ((a, b)=> b.m[PM.od] - a.m[PM.od]);
+  return L.sort(by);
+}
+async function pfRenderLate(admin, R){
+  const host = document.getElementById('pfLateHost'); if(!host) return;
+  let L;
+  try{ L = await pfLoadLate(); }catch(e){ host.innerHTML = `<p class="hk-sub">⚠️ ${esc(e.message||e)}</p>`; return; }
+  if(!host.isConnected) return;
+  const gMap = new Map(); R.stores.forEach(s=> s.gi.forEach(i=> gMap.set(i, s)));
+  let rows = L.rows.filter(r=> gMap.has(r[3]) && r[4] >= PV.lmin).map(r=> ({r, s:gMap.get(r[3])}));
+  const q = PV.lq.trim().toLowerCase();
+  if(q) rows = rows.filter(x=> [x.r[1], x.r[2], x.r[7], x.s.n, x.s.f].some(v=> String(v||'').toLowerCase().includes(q)));
+  const by = {dpd:(a, b)=> b.r[4] - a.r[4], over:(a, b)=> b.r[6] - a.r[6], od:(a, b)=> b.r[5] - a.r[5], store:(a, b)=> a.s.n.localeCompare(b.s.n) || b.r[4] - a.r[4]}[PV.lsort];
+  rows.sort(by);
+  const pages = Math.max(1, Math.ceil(rows.length / PV.lper)); if(PV.lpage > pages) PV.lpage = pages;
+  const pr = rows.slice((PV.lpage - 1) * PV.lper, PV.lpage * PV.lper);
+  const totOver = rows.reduce((a, x)=> a + x.r[6], 0);
+  host.innerHTML = `<div class="rp-fil-tools">
+      <label>Kechikish<select id="pfLmin">${[[1,'1 kundan ortiq'],[31,'30 kundan ortiq'],[61,'60 kundan ortiq'],[91,'90 kundan ortiq']].map(([v, l])=>`<option value="${v}" ${PV.lmin===v?'selected':''}>${esc(t(l))}</option>`).join('')}</select></label>
+      <div class="hk-search" style="flex:1;min-width:200px;">${ICONS.search}<input type="search" id="pfLq" placeholder="Mijoz, telefon, shartnoma №, do‘kon…" value="${esc(PV.lq)}"></div>
+      <label>Saralash<select id="pfLsort">${[['dpd','Kechikish kuni'],['over','Muddati o‘tgan summa'],['od','Qoldiq qarz'],['store','Do‘kon']].map(([v, l])=>`<option value="${v}" ${PV.lsort===v?'selected':''}>${esc(t(l))}</option>`).join('')}</select></label>
+      <button type="button" class="hk-tool" id="pfLXlsx">⬇ Excel</button></div>
+    <p class="hint" data-noi18n>${esc(t('Topildi'))}: <b>${pfN(rows.length)}</b> · ${esc(t('muddati o‘tgan jami'))}: <b>${monMoney(totOver)}</b> so‘m</p>
+    ${pr.length ? `<div class="hk-table-wrap"><table class="srv-table mon-table"><thead><tr><th>№</th><th>Mijoz</th><th>Telefon</th><th>Do‘kon</th><th>Filial</th><th>Shartnoma</th><th style="text-align:right">Kechikish</th><th style="text-align:right">Qoldiq qarz</th><th style="text-align:right">Muddati o‘tgan</th></tr></thead>
+      <tbody>${pr.map((x, i)=>`<tr><td class="hk-sub" data-noi18n>${(PV.lpage - 1) * PV.lper + i + 1}</td><td data-noi18n>${esc(x.r[1])}</td><td data-noi18n>${x.r[2] ? `<a href="tel:${esc(x.r[2])}">${esc(x.r[2])}</a>` : '—'}</td><td data-noi18n>${esc(x.s.n)}</td><td data-noi18n>${esc(x.s.f)}</td><td data-noi18n>${esc(x.r[7]||x.r[0])}<div class="hk-sub">${x.r[8] ? boshPlainDate(x.r[8]) : ''}</div></td>
+        <td style="text-align:right" data-noi18n><span class="st-badge ${x.r[4] > 90 ? 'st-rej' : x.r[4] > 30 ? 'st-ret' : 'st-new'}">${x.r[4]} ${esc(t('kun'))}</span></td><td style="text-align:right" data-noi18n>${monMoney(x.r[5])}</td><td style="text-align:right" data-noi18n><b>${monMoney(x.r[6])}</b></td></tr>`).join('')}</tbody></table></div>
+      ${bPagerMarkup(PV.lpage, pages, rows.length, PV.lper, 'pl')}` : '<p class="hk-sub">Bunday mijoz yo‘q 👍</p>'}`;
+  const v = id=> document.getElementById(id);
+  const re = ()=> pfRenderLate(admin, R);
+  v('pfLmin').onchange = ()=>{ PV.lmin = Number(v('pfLmin').value) || 1; PV.lpage = 1; re(); };
+  v('pfLsort').onchange = ()=>{ PV.lsort = v('pfLsort').value; re(); };
+  const lq = v('pfLq'); lq.oninput = ()=>{ PV.lq = lq.value; PV.lpage = 1; clearTimeout(lq._t); lq._t = setTimeout(()=>{ const pos = lq.selectionStart; re().then(()=>{ const q2 = v('pfLq'); if(q2){ q2.focus(); try{ q2.setSelectionRange(pos, pos); }catch(e){} } }); }, 250); };
+  host.querySelectorAll('[data-plpg]').forEach(b=> b.onclick = ()=>{ PV.lpage = Number(b.dataset.plpg); re(); });
+  const pp = host.querySelector('[data-plper]'); if(pp) pp.onchange = ()=>{ PV.lper = Number(pp.value) || 20; PV.lpage = 1; pfSaveView(); re(); };
+  v('pfLXlsx').onclick = ()=> pfXlsx(`Kechikkan_mijozlar_${PF.asOf}${R.fil ? '_' + R.fil : ''}.xlsx`,
+    [[`Kechikayotgan BirZum mijozlari · ${boshPlainDate(PF.asOf)} holatiga${R.fil ? ' · ' + R.fil : ''}`], [], ['№','Mijoz','Telefon','Do‘kon','Brend','Filial','Kredit kodi','Shartnoma №','Shartnoma sanasi','Tugash sanasi','Kechikish, kun','Qoldiq qarz, so‘m','Muddati o‘tgan, so‘m']]
+      .concat(rows.map((x, i)=> [i + 1, x.r[1], x.r[2], x.s.n, x.s.b, x.s.f, x.r[0], x.r[7], x.r[8] ? boshPlainDate(x.r[8]) : '', x.r[9] ? boshPlainDate(x.r[9]) : '', x.r[4], x.r[5], x.r[6]])), [5,32,15,30,16,18,16,14,12,12,10,16,16]);
+  i18nApply(host);
+}
+function pfXlsx(name, aoa, cols){ const ws = XLSX.utils.aoa_to_sheet(aoa); ws['!cols'] = cols.map(w=> ({wch:w})); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Portfel'); XLSX.writeFile(wb, name); }
+function pfBind(host, admin, R, list){
+  pfBindTabs(host, admin);
+  const re = ()=> monRerender(admin);
+  const v = id=> document.getElementById(id);
+  const up = v('pfUp'), f = v('pfFile');
+  if(up){ up.onclick = ()=> f.click(); f.onchange = ()=>{ if(f.files[0]) pfUpload(f.files[0]); f.value = ''; }; }
+  const rl = v('pfReload'); if(rl) rl.onclick = async ()=>{ rl.disabled = true; await pfLoad(true); if(!admin) await uHkLoad(true); re(); };
+  if(!R) return;
+  if(v('pfFil')) v('pfFil').onchange = ()=>{ PV.fil = v('pfFil').value; PV.page = 1; PV.lpage = 1; re(); };
+  if(v('pfBasis')) v('pfBasis').onchange = ()=>{ PV.basis = v('pfBasis').value; PV.fil = ''; PV.page = 1; pfSaveView(); re(); };
+  if(v('pfProd')) v('pfProd').onchange = ()=>{ PV.prod = v('pfProd').value; PV.page = 1; re(); };
+  host.querySelectorAll('[data-pff]').forEach(tr=> tr.onclick = ()=>{ PV.fil = tr.dataset.pff; PV.page = 1; PV.lpage = 1; re(); window.scrollTo(0, 0); });
+  host.querySelectorAll('[data-pg]').forEach(b=> b.onclick = ()=>{ PV.grp = b.dataset.pg; PV.page = 1; re(); });
+  const q = v('pfQ'); if(q) q.oninput = ()=>{ PV.q = q.value; PV.page = 1; clearTimeout(q._t); q._t = setTimeout(()=>{ const pos = q.selectionStart; const y = window.scrollY; renderPortfel(host, admin).then(()=>{ window.scrollTo(0, y); const q2 = v('pfQ'); if(q2){ q2.focus(); try{ q2.setSelectionRange(pos, pos); }catch(e){} } }); }, 250); };
+  if(v('pfSort')) v('pfSort').onchange = ()=>{ PV.sort = v('pfSort').value; re(); };
+  host.querySelectorAll('[data-pfpg]').forEach(b=> b.onclick = ()=>{ PV.page = Number(b.dataset.pfpg); re(); });
+  const pp = host.querySelector('[data-pfper]'); if(pp) pp.onchange = ()=>{ PV.per = Number(pp.value) || 20; PV.page = 1; pfSaveView(); re(); };
+  const hdr = ['Shartnoma','Mijoz','Portfel, so‘m','Muddati o‘tgan asosiy qarz','Muddati o‘tgan foiz','Hisobdan chiqarilgan','Umumiy qarz','O‘z vaqtida (mijoz)','1–30 kun','31–60 kun','61–90 kun','90+ kun','Yaxshi to‘lovchi, %','Muammoli mijoz (30+)','PAR 30, %','PAR 90, %'];
+  const vals = x=> [x.m[PM.n], x.m[PM.cl], x.m[PM.od], x.m[PM.odOver], x.m[PM.pctOver], x.m[PM.woff], x.m[PM.debt], x.m[PM.cb0], x.m[PM.cb0+1], x.m[PM.cb0+2], x.m[PM.cb0+3], x.m[PM.cb0+4], +x.good.toFixed(1), x.prob, +x.par30.toFixed(2), +x.par90.toFixed(2)];
+  const title = s=> [[`${s} · ${boshPlainDate(PF.asOf)} holatiga${PV.prod ? ' · ' + PV.prod : ''}${R.fil ? ' · ' + R.fil : ''}`], []];
+  if(v('pfFilXlsx')) v('pfFilXlsx').onclick = ()=>{ const T = pfDerive({m:R.fils.reduce((a, x)=> pfAdd(a, x.m), pfNew())});
+    pfXlsx(`Portfel_filiallar_${PF.asOf}.xlsx`, title('Filiallar bo‘yicha BirZum portfeli').concat([['№','Filial','Do‘konlar'].concat(hdr)], R.fils.map((x, i)=> [i + 1, x.f, x.st.size].concat(vals(x))), [['', 'Jami', ''].concat(vals(T))]), [5,24,9].concat(hdr.map(()=> 14))); };
+  if(v('pfXlsx')) v('pfXlsx').onclick = ()=> pfXlsx(`Portfel_dokonlar_${PF.asOf}${R.fil ? '_' + R.fil : ''}.xlsx`,
+    title('Do‘konlar portfeli').concat([['№','Do‘kon','Brend','STIR','Filial'].concat(hdr, ['Baho'])], list.map((x, i)=> [i + 1, x.n, x.b, x.stir || '', x.f].concat(vals(x), [x.risk==='bad' ? 'Xavfli' : x.risk==='mid' ? 'E’tibor talab' : x.risk==='few' ? 'Kam shartnoma' : 'Yaxshi']))), [5,34,16,16,20].concat(hdr.map(()=> 13), [14]));
+}
+/* Monitoring sahifasiga «Portfel tahlili» yorlig'ini qo'shish */
+const _pfRenderMonitorBase = renderMonitor;
+renderMonitor = async function(host, admin){
+  if(!host) return;
+  if(MV.tab === 'port') return renderPortfel(host, admin);
+  await _pfRenderMonitorBase(host, admin);
+  if(!host.isConnected || MV.tab !== 'mon') return;
+  host.insertAdjacentHTML('afterbegin', pfTabsMarkup());
+  pfBindTabs(host, admin); i18nApply(host.firstElementChild);
+};
+PAGE_SUB.dokon = 'Shartnomalar monitoringi va BirZum portfeli: filiallar va do‘konlar bo‘yicha to‘lov intizomi, muammoli mijozlar';
 
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){
@@ -11715,6 +12677,7 @@ function renderHistory(key){
 function bindSectionEvents(key){
   if(key === 'panel'){ bindFlowPanel(); return; }
   if(key === 'hisobot'){ bindReports(); return; }
+  if(key === 'dokon'){ renderMonitor(document.getElementById('monHost'), true); return; }
   if(key === 'arizalar'){ bindArizalarEvents(); return; }
   if(key === 'users'){ bindUsersEvents(); return; }
   if(key === 'profil'){

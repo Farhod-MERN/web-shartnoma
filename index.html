@@ -12044,7 +12044,13 @@ window.__authLost = function(){
   tokClear(); try{ clearUserSession(); clearAuthed(); sessionStorage.setItem('birzum_lost', '1'); }catch(e){}
   location.reload();
 };
-function v26LogoutServer(){ const t = tokGet(); if(t){ api('auth/logout').catch(()=>{}); } setTimeout(tokClear, 300); }
+// Chiqishda sahifa to'liq yangilanadi — oldingi foydalanuvchining ma'lumotlari xotirada qolmasin
+function v26LogoutServer(){
+  const t = tokGet(); tokClear();
+  const done = ()=>{ try{ clearUserSession(); clearAuthed(); }catch(e){} location.reload(); };
+  if(t){ fetch((window.BIRZUM_SERVER.url || '').replace(/\/+$/, '') + '/api/auth/logout', {method:'POST', headers:{'Content-Type':'application/json', 'X-Token':t}, body:'{}'}).catch(()=>{}).finally(()=> setTimeout(done, 100)); }
+  else setTimeout(done, 100);
+}
 document.addEventListener('click', e=>{ if(e.target.closest && e.target.closest('#logoutBtn,#uaLogout,#bxLogout')) v26LogoutServer(); }, true);
 
 /* ---------- Kirish ---------- */

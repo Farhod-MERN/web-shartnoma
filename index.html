@@ -1289,6 +1289,87 @@ button.sm{padding:6px 10px !important;font-size:12.5px !important;min-height:0 !
 .tbe-grid label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);margin:0;}
 @media (max-width:640px){ .tbe-grid{grid-template-columns:1fr;} }
 .tbe-del{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;font-size:12.5px;}
+
+/* ============ v27: Portfel — diagrammalar va animatsiya ============ */
+.pf-b0{background:#0ca30c;} .pf-b1{background:#fab219;} .pf-b2{background:#ec835a;} .pf-b3{background:#d9573b;} .pf-b4{background:#b3261e;}
+.pf-stack{gap:2px;background:transparent;}
+.pf-stack i{border-radius:2px;}
+.pf-kpis .pf-kpi{position:relative;overflow:hidden;transition:transform .18s ease, box-shadow .18s ease;}
+.pf-kpis .pf-kpi:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08);}
+.pf-kic{position:absolute;right:12px;top:10px;font-style:normal;font-size:18px;opacity:.55;}
+.pf-okc{color:#0b8a0b;}
+:root[data-theme="dark"] .pf-okc{color:#3ccf3c;}
+.pf-dn-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin:6px 0 10px;}
+.pf-donut{position:relative;flex:0 0 auto;}
+.pf-donut svg{width:100%;height:100%;display:block;}
+.pf-seg{transition:stroke-dasharray 1s cubic-bezier(.2,.8,.2,1);}
+.pf-donut-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;}
+.pf-donut-c b{font-size:24px;color:var(--ink);line-height:1.1;}
+.pf-donut-c span{font-size:11px;color:var(--muted);max-width:90px;}
+.pf-leg{flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px;}
+.pf-leg-r{display:grid;grid-template-columns:12px 1fr auto 54px;gap:8px;align-items:center;font-size:13px;color:var(--text);}
+.pf-leg-r i{width:12px;height:12px;border-radius:3px;display:block;}
+.pf-leg-r span small{display:block;font-size:11px;color:var(--muted);}
+.pf-leg-r b{color:var(--ink);text-align:right;}
+.pf-leg-r em{font-style:normal;color:var(--muted);text-align:right;font-size:12px;}
+.pf-leg-t{border-top:1px solid var(--line);padding-top:6px;margin-top:2px;font-weight:600;}
+.pf-h4{font-size:13px;margin:12px 0 6px;color:var(--ink);}
+.pf-cb{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+.pf-cb-r{display:grid;grid-template-columns:96px 1fr auto 52px;gap:8px;align-items:center;font-size:12.5px;color:var(--text);}
+.pf-cb-bar,.pf-rank-bar{height:10px;background:var(--line-2);border-radius:5px;overflow:hidden;}
+.pf-cb-bar i,.pf-rank-bar i{display:block;height:100%;width:var(--w);border-radius:0 4px 4px 0;animation:pfGrow .9s cubic-bezier(.2,.8,.2,1) both;}
+.pf-cb-r b{color:var(--ink);text-align:right;} .pf-cb-r em{font-style:normal;color:var(--muted);text-align:right;}
+@keyframes pfGrow{from{width:0;}}
+.pf-ch-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+.pf-ch-head h3{margin-bottom:2px;}
+.pf-line{width:100%;height:auto;display:block;margin-top:6px;overflow:visible;}
+.pf-grid{stroke:var(--line-2);stroke-width:1;}
+.pf-base{stroke:var(--line);stroke-width:1;}
+.pf-lbl{font-size:11px;fill:var(--ink);font-weight:700;font-family:var(--sans);}
+.pf-ax{font-size:10.5px;fill:var(--muted);font-family:var(--sans);}
+.pf-path{stroke-dasharray:1;stroke-dashoffset:0;animation:pfDraw 1.2s ease both;}
+@keyframes pfDraw{from{stroke-dashoffset:1;}}
+.pf-hit .pf-cross,.pf-hit .pf-dotp{opacity:0;transition:opacity .12s;}
+.pf-hit:hover .pf-cross,.pf-hit:hover .pf-dotp{opacity:1;}
+.pf-cross{stroke:var(--muted);stroke-width:1;}
+.pf-det{margin-top:8px;}
+.pf-rank{display:flex;flex-direction:column;gap:4px;}
+.pf-rank-r{display:grid;grid-template-columns:24px minmax(0,1.3fr) minmax(60px,1fr) auto;gap:10px;align-items:center;padding:7px 8px;border-radius:8px;border:0;background:transparent;text-align:left;cursor:pointer;color:var(--text);font-family:var(--sans);width:100%;}
+.pf-rank-r:hover{background:var(--hover);}
+.pf-rank-n{width:22px;height:22px;border-radius:50%;background:var(--line-2);color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.pf-rank-l{min-width:0;} .pf-rank-l b{display:block;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pf-rank-l small{display:block;font-size:11px;color:var(--muted);line-height:1.35;}
+.pf-rank-v{font-size:13px;color:var(--ink);white-space:nowrap;}
+@media (max-width:560px){ .pf-rank-r{grid-template-columns:22px 1fr auto;} .pf-rank-bar{grid-column:2 / 4;order:5;} }
+.pf-sth{cursor:pointer;user-select:none;white-space:nowrap;}
+.pf-sth:hover{color:var(--accent-2);}
+.pf-sth.on{color:var(--ink);}
+.pf-ar{display:inline-block;margin-left:4px;font-size:9.5px;opacity:.45;}
+.pf-sth.on .pf-ar{opacity:1;color:var(--accent-2);}
+.pf-link{color:var(--ink);}
+.pf-row:hover .pf-link{color:var(--accent-2);text-decoration:underline;}
+.pf-filbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:13.5px;color:var(--ink);}
+/* do'kon kartasi */
+.pf-sm .modal-body{background:var(--paper-2);}
+.pf-mts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:12px;}
+.pf-mt{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:3px;}
+.pf-mt span{font-size:11.5px;color:var(--muted);} .pf-mt b{font-size:22px;color:var(--ink);line-height:1.15;} .pf-mt em{font-style:normal;font-size:11.5px;color:var(--muted);}
+.pf-sm-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;}
+@media (max-width:800px){ .pf-sm-grid{grid-template-columns:1fr;} }
+.pf-sm-c{margin:0 !important;padding:14px !important;}
+.pf-sm-c h4{margin:0 0 4px;font-size:14px;color:var(--ink);}
+.pf-lt{display:flex;flex-direction:column;gap:6px;}
+.pf-lt-r{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;font-size:12.5px;border-bottom:1px solid var(--line-2);padding-bottom:6px;}
+.pf-lt-r b{color:var(--ink);} .pf-lt-r small{display:block;color:var(--muted);font-size:11px;}
+@media (prefers-reduced-motion: reduce){ .pf-cb-bar i,.pf-rank-bar i,.pf-path{animation:none;} .pf-seg{transition:none;} }
+.pf-kpi b span,.pf-mt b span{font-size:inherit !important;color:inherit;}
+.pf-kpi b .pf-hot,.pf-kpi b .pf-warm,.pf-kpi b .pf-okc{font-size:inherit !important;}
+.pf-kpi b .pf-hot{color:#dc2626 !important;} .pf-kpi b .pf-warm{color:#b45309 !important;} .pf-kpi b .pf-okc{color:#0b8a0b !important;}
+.pf-rank-l b{display:inline;white-space:normal;overflow:visible;font-size:inherit;}
+.pf-rank-l > b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;}
+.pf-lbl{font-size:10px;} .pf-ax{font-size:9.5px;}
+.rp-kpis.pf-kpis{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+@media (max-width:560px){ .rp-kpis.pf-kpis{grid-template-columns:1fr 1fr;} }
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -11803,67 +11884,81 @@ async function renderPortfel(host, admin){
   const canDelta = pv && !PV.prod && R.basis === 'reg';
   const fOpts = admin ? `<label>Filial<select id="pfFil"><option value="">Barcha filiallar</option>${R.fils.map(x=> x.f).sort((a, b)=> a.localeCompare(b)).map(f=>`<option value="${esc(f)}" ${fKey(f)===fKey(PV.fil)?'selected':''}>${esc(f)}</option>`).join('')}</select></label>
       <label>Filial qaysi bo‘yicha<select id="pfBasis"><option value="reg" ${PV.basis==='reg'?'selected':''}>Hamkor (do‘kon) filiali</option><option value="loan" ${PV.basis==='loan'?'selected':''}>Kredit fayli («Филиал»)</option></select></label>` : '';
-  const tools = `<div class="card rp-card"><div class="rp-fil-tools mon-tools">${fOpts}
+  const tools = `<div class="card rp-card">${admin && R.fil ? `<div class="pf-filbar"><span>🏢 <b data-noi18n>${esc(R.fil)}</b> ${esc(t('bo‘yicha ko‘rsatilmoqda'))}</span><button type="button" class="hk-tool" id="pfFilAll">✕ ${esc(t('Barcha filiallar'))}</button></div>` : ''}<div class="rp-fil-tools mon-tools">${fOpts}
       <label>Mahsulot<select id="pfProd"><option value="">BZN + BZN+</option><option value="BZN" ${PV.prod==='BZN'?'selected':''}>BZN</option><option value="BZN+" ${PV.prod==='BZN+'?'selected':''}>BZN+</option></select></label></div></div>`;
-  const kpi = (l, v, sub)=> `<div class="card rp-kpi"><span>${esc(l)}</span><b data-noi18n>${v}</b>${sub ? `<span class="rp-d">${sub}</span>` : ''}</div>`;
-  const kpis = `<div class="rp-kpis">
-      ${kpi('Faol shartnomalar', pfN(m[PM.n]), canDelta ? pfDelta(m[PM.n], pv[0], false, true) : '')}
-      ${kpi('Mijozlar', pfN(m[PM.cl]), canDelta ? pfDelta(m[PM.cl], pv[4], false, true) : '')}
-      ${kpi('Portfel (asosiy qarz)', monShort(m[PM.od]), canDelta ? pfDelta(m[PM.od], pv[1], true, true) : `<span data-noi18n>${monMoney(m[PM.od])} so‘m</span>`)}
-      ${kpi('Muddati o‘tgan qarz', monShort(T.over), canDelta ? pfDelta(T.over, pv[2], true) : esc(t('kechikkan + sudda + hisobdan chiqarilgan')))}
-      ${kpi('PAR 30', pfP(T.par30), esc(t('30+ kun kechikkan qarz ulushi')))}
-      ${kpi('Yaxshi to‘layotganlar', pfP(T.good, 0), `<span data-noi18n>${pfN(m[PM.cb0])}</span> ${esc(t('mijoz kechiktirmayapti'))}`)}
-      ${kpi('Muammoli mijozlar', pfN(T.prob), canDelta ? pfDelta(T.prob, pv[5]) : esc(t('30 kundan ortiq kechikkan')))}
+  const kpi = (l, v, sub, ic)=> `<div class="card rp-kpi pf-kpi">${ic ? `<i class="pf-kic" aria-hidden="true">${ic}</i>` : ''}<span>${esc(t(l))}</span><b data-noi18n>${v}</b>${sub ? `<span class="rp-d">${sub}</span>` : ''}</div>`;
+  const kpis = `<div class="rp-kpis pf-kpis">
+      ${kpi('Faol shartnomalar', pfCnt(m[PM.n], 'n'), canDelta ? pfDelta(m[PM.n], pv[0], false, true) : '', '📄')}
+      ${kpi('Mijozlar', pfCnt(m[PM.cl], 'n'), canDelta ? pfDelta(m[PM.cl], pv[4], false, true) : '', '👥')}
+      ${kpi('Portfel (asosiy qarz)', pfCnt(m[PM.od], 's'), canDelta ? pfDelta(m[PM.od], pv[1], true, true) : `<span data-noi18n>${monMoney(m[PM.od])} so‘m</span>`, '💼')}
+      ${kpi('Muddati o‘tgan qarz', pfCnt(T.over, 's'), (canDelta ? pfDelta(T.over, pv[2], true) + ' · ' : '') + `<span data-noi18n>${pfP(m[PM.od] ? T.over / m[PM.od] * 100 : 0)}</span> ${esc(t('portfeldan'))}`, '⏰')}
+      ${kpi('PAR 30', `<span class="${T.par30 >= 15 ? 'pf-hot' : T.par30 >= 5 ? 'pf-warm' : 'pf-okc'}">${pfCnt(T.par30, 'p')}</span>`, esc(t('30+ kun kechikkan qarz ulushi')), '📉')}
+      ${kpi('Yaxshi to‘layotganlar', pfCnt(T.good, 'p0'), `<span data-noi18n>${pfN(m[PM.cb0])}</span> ${esc(t('mijoz kechiktirmayapti'))}`, '✅')}
+      ${kpi('Muammoli mijozlar', pfCnt(T.prob, 'n'), canDelta ? pfDelta(T.prob, pv[5]) : esc(t('30 kundan ortiq kechikkan')), '⚠️')}
     </div>`;
-  // to'lov intizomi
-  const bRows = PF_BUCKETS.map(b=> ({b, cl:m[PM.cb0 + b.k], n:m[PM.b0 + b.k], od:m[PM.b0od + b.k]}));
+  // to'lov intizomi — halqa diagrammalar
+  const bpc = PF_BUCKETS.map((b, i)=> ({l:b.l, v:m[PM.cb0 + b.k], c:PF_BC[i]}));
+  const bpo = PF_BUCKETS.map((b, i)=> ({l:b.l, v:m[PM.b0od + b.k], c:PF_BC[i]}));
+  const cpp = PF_CLASS.map((c, i)=> ({l:c[1], v:m[PM.c0 + i], c:PF_CC[i]}));
   const disc = `<div class="rp-cols">
       <div class="card rp-card"><h3>Mijozlar to‘lov intizomi</h3><p class="sub">Har bir mijoz eng ko‘p kechiktirgan shartnomasi bo‘yicha</p>
-        ${pfStack(m, false)}
-        <div class="hk-table-wrap"><table class="srv-table pf-btable"><thead><tr><th>Holat</th><th style="text-align:right">Mijoz</th><th style="text-align:right">Ulushi</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Qoldiq qarz</th></tr></thead><tbody>
-        ${bRows.map(r=>`<tr><td><i class="pf-dot ${r.b.cls}"></i>${esc(t(r.b.l))} <span class="hk-sub">· ${esc(t(r.b.s))}</span></td><td style="text-align:right" data-noi18n><b>${pfN(r.cl)}</b></td><td style="text-align:right" data-noi18n>${pfP(r.cl / Math.max(1, m[PM.cl]) * 100)}</td><td style="text-align:right" data-noi18n>${pfN(r.n)}</td><td style="text-align:right" data-noi18n>${monShort(r.od)}</td></tr>`).join('')}
-        </tbody><tfoot><tr class="rp-total"><td><b>Jami</b></td><td style="text-align:right" data-noi18n><b>${pfN(m[PM.cl])}</b></td><td style="text-align:right">100%</td><td style="text-align:right" data-noi18n><b>${pfN(m[PM.n])}</b></td><td style="text-align:right" data-noi18n><b>${monShort(m[PM.od])}</b></td></tr></tfoot></table></div></div>
-      <div class="card rp-card"><h3>Qarz sifati</h3><p class="sub">Qoldiq qarzning kechikish bo‘yicha taqsimoti va bank tasnifi</p>
-        ${pfStack(m, true)}
-        <div class="pf-cls">${PF_CLASS.map((c, i)=>`<div><span>${esc(t(c[1]))}</span><b data-noi18n>${pfN(m[PM.c0 + i])}</b><em data-noi18n>${pfP(m[PM.c0 + i] / Math.max(1, m[PM.n]) * 100)}</em></div>`).join('')}</div>
-        <div class="pf-mini-kpi"><div><span>PAR 30</span><b data-noi18n>${pfP(T.par30)}</b></div><div><span>PAR 90</span><b data-noi18n>${pfP(T.par90)}</b></div><div><span>${esc(t('Muddati o‘tgan asosiy qarz'))}</span><b data-noi18n>${monShort(m[PM.odOver])}</b></div><div><span>${esc(t('Shundan hisobdan chiqarilgan'))}</span><b data-noi18n>${monShort(m[PM.woff])}</b></div><div><span>${esc(t('Umumiy qarz'))}</span><b data-noi18n>${monShort(m[PM.debt])}</b></div><div><span>${esc(t('Berilgan summa'))}</span><b data-noi18n>${monShort(m[PM.sum])}</b></div></div>
+        <div class="pf-dn-row">${pfDonut(bpc, pfP(T.good, 0), t('o‘z vaqtida to‘laydi'))}
+          <div class="pf-leg">${PF_BUCKETS.map((b, i)=>`<div class="pf-leg-r"><i style="background:${PF_BC[i]}"></i><span>${esc(t(b.l))}<small>${pfN(m[PM.b0 + b.k])} ${esc(t('shartnoma'))} · ${monShort(m[PM.b0od + b.k])}</small></span><b data-noi18n>${pfN(m[PM.cb0 + b.k])}</b><em data-noi18n>${pfP(m[PM.cb0 + b.k] / Math.max(1, m[PM.cl]) * 100)}</em></div>`).join('')}
+            <div class="pf-leg-r pf-leg-t"><i></i><span>${esc(t('Jami mijoz'))}</span><b data-noi18n>${pfN(m[PM.cl])}</b><em>100%</em></div></div></div></div>
+      <div class="card rp-card"><h3>Qarz sifati</h3><p class="sub">Qoldiq qarz kechikish kunlari bo‘yicha va bank tasnifi</p>
+        <div class="pf-dn-row">${pfDonut(bpo, pfP(T.par30), t('PAR 30'))}${pfLegend(bpo, m[PM.od], monShort)}</div>
+        <h4 class="pf-h4">${esc(t('Bank tasnifi («Тип классификации»), shartnomalar'))}</h4>${pfClsBars(cpp, m[PM.n])}
+        <div class="pf-mini-kpi"><div><span>PAR 90</span><b data-noi18n>${pfP(T.par90)}</b></div><div><span>${esc(t('Shundan hisobdan chiqarilgan'))}</span><b data-noi18n>${monShort(m[PM.woff])}</b></div><div><span>${esc(t('Berilgan summa'))}</span><b data-noi18n>${monShort(m[PM.sum])}</b></div></div>
       </div></div>`;
-  // dinamika
-  const hs = (PFH||[]).slice(-14).map(x=> ({d:x.d, v:pfHistFor(x, R.fil)})).filter(x=> x.v);
-  const dyn = hs.length >= 2 && !PV.prod ? `<div class="card rp-card"><h3>Kunlik o‘zgarish</h3><p class="sub">Har kuni yuklangan portfel bo‘yicha (oxirgi ${hs.length} ta)</p>
-      <div class="hk-table-wrap"><table class="srv-table"><thead><tr><th>Sana</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Portfel</th><th style="text-align:right">Muddati o‘tgan</th><th style="text-align:right">PAR 30</th><th style="text-align:right">Muammoli mijoz</th></tr></thead>
-      <tbody>${hs.slice().reverse().map((x, i, a)=>{ const p = a[i + 1] && a[i + 1].v; const v = x.v; return `<tr><td data-noi18n>${boshPlainDate(x.d)}</td><td style="text-align:right" data-noi18n>${pfN(v[0])}</td><td style="text-align:right" data-noi18n>${monShort(v[1])}</td><td style="text-align:right" data-noi18n>${monShort(v[2])} ${p ? pfDelta(v[2], p[2], true) : ''}</td><td style="text-align:right" data-noi18n>${pfP(v[1] ? v[3] / v[1] * 100 : 0)}</td><td style="text-align:right" data-noi18n>${pfN(v[5])} ${p ? pfDelta(v[5], p[5]) : ''}</td></tr>`; }).join('')}</tbody></table></div></div>` : '';
+  // dinamika — chiziqli grafik
+  const hs = (PFH||[]).slice(-60).map(x=> ({d:x.d, v:pfHistFor(x, R.fil)})).filter(x=> x.v);
+  const DY = {par:['PAR 30', v=> v[1] ? v[3] / v[1] * 100 : 0, v=> pfP(v), '#d03b3b'], over:['Muddati o‘tgan qarz', v=> v[2], monShort, '#ec835a'], prob:['Muammoli mijozlar', v=> v[5], pfN, '#b3261e'], od:['Portfel', v=> v[1], monShort, PF_ACC], n:['Shartnomalar', v=> v[0], pfN, PF_ACC]};
+  const dk = DY[PV.dyn] ? PV.dyn : 'par', dd = DY[dk];
+  const dyn = !PV.prod ? `<div class="card rp-card"><div class="pf-ch-head"><div><h3>Kunlik o‘zgarish</h3><p class="sub">Har kuni yuklangan «Активные кредиты» fayli bo‘yicha</p></div>
+      <div class="ar-chips">${Object.entries(DY).map(([k, d])=>`<button type="button" class="ar-chip ${k === dk ? 'on' : ''}" data-pdyn="${k}">${esc(t(d[0]))}</button>`).join('')}</div></div>
+      ${pfLine(hs.map(x=> ({l:boshPlainDate(x.d).slice(0, 5), t:boshPlainDate(x.d), v:dd[1](x.v)})), dd[2], dd[3], {label:dd[0]})}
+      ${hs.length >= 2 ? `<details class="pf-det"><summary class="hint">${esc(t('Jadval ko‘rinishida'))}</summary><div class="hk-table-wrap"><table class="srv-table"><thead><tr><th>Sana</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Portfel</th><th style="text-align:right">Muddati o‘tgan</th><th style="text-align:right">PAR 30</th><th style="text-align:right">Muammoli mijoz</th></tr></thead>
+      <tbody>${hs.slice().reverse().slice(0, 30).map((x, i, a)=>{ const p = a[i + 1] && a[i + 1].v; const v = x.v; return `<tr><td data-noi18n>${boshPlainDate(x.d)}</td><td style="text-align:right" data-noi18n>${pfN(v[0])}</td><td style="text-align:right" data-noi18n>${monShort(v[1])}</td><td style="text-align:right" data-noi18n>${monShort(v[2])} ${p ? pfDelta(v[2], p[2], true) : ''}</td><td style="text-align:right" data-noi18n>${pfP(v[1] ? v[3] / v[1] * 100 : 0)}</td><td style="text-align:right" data-noi18n>${pfN(v[5])} ${p ? pfDelta(v[5], p[5]) : ''}</td></tr>`; }).join('')}</tbody></table></div></details>` : ''}</div>` : '';
   // filiallar
-  const fRows = R.fil ? R.fils.filter(x=> fKey(x.f) === fKey(R.fil)) : R.fils;
+  const fRows = pfSortBy((R.fil ? R.fils.filter(x=> fKey(x.f) === fKey(R.fil)) : R.fils).slice(), PV.fsort, PV.fdir);
   const fT = pfDerive({m:fRows.reduce((a, x)=> pfAdd(a, x.m), pfNew())});
-  const filCard = admin && !R.fil ? `<div class="card rp-card"><h3>Filiallar bo‘yicha BirZum portfeli</h3><p class="sub">${R.basis==='loan' ? 'Filial — kredit faylidagi «Филиал» ustuni' : 'Filial — hamkor do‘kon qaysi filialga tegishli bo‘lsa (hamkorlar ro‘yxatidan)'} · qatorni bossangiz, o‘sha filial ochiladi</p>
+  const FH = (l, k, r)=> pfTh(l, k, PV.fsort, PV.fdir, 'pfh', r);
+  const filCard = admin && !R.fil ? `<div class="card rp-card"><h3>Filiallar bo‘yicha BirZum portfeli</h3><p class="sub">${R.basis==='loan' ? 'Filial — kredit faylidagi «Филиал» ustuni' : 'Filial — hamkor do‘kon qaysi filialga tegishli bo‘lsa (hamkorlar ro‘yxatidan)'} · filial nomini bossangiz, butun sahifa o‘sha filial bo‘yicha ko‘rsatiladi · ustun nomini bossangiz, saralanadi</p>
       <div class="rp-fil-tools"><button type="button" class="hk-tool" id="pfFilXlsx">⬇ Excel</button></div>
-      <div class="hk-table-wrap"><table class="srv-table pf-ftable"><thead><tr><th>№</th><th>Filial</th><th style="text-align:right">Do‘kon</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Mijoz</th><th style="text-align:right">Portfel</th><th style="text-align:right">Muddati o‘tgan</th><th style="text-align:right">Yaxshi to‘lovchi</th><th style="text-align:right">Muammoli mijoz</th><th style="text-align:right">PAR 30</th><th style="min-width:120px;">Intizom</th></tr></thead>
-      <tbody>${fRows.map((x, i)=>`<tr class="pf-row" data-pff="${esc(x.f)}"><td class="hk-sub" data-noi18n>${i + 1}</td><td data-noi18n><b>${esc(x.f)}</b></td><td style="text-align:right" data-noi18n>${x.st.size}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.n])}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cl])}</td><td style="text-align:right" data-noi18n><b>${monShort(x.m[PM.od])}</b></td><td style="text-align:right" data-noi18n>${monShort(x.over)}</td><td style="text-align:right" data-noi18n>${pfP(x.good, 0)}</td><td style="text-align:right" data-noi18n>${pfN(x.prob)}</td><td style="text-align:right" data-noi18n class="${x.par30 >= 15 ? 'pf-hot' : x.par30 >= 5 ? 'pf-warm' : ''}"><b>${pfP(x.par30)}</b></td><td>${pfStack(x.m, false)}</td></tr>`).join('')}</tbody>
+      <div class="hk-table-wrap"><table class="srv-table pf-ftable"><thead><tr><th>№</th>${FH('Filial', 'f')}${FH('Do‘kon', 'st', 1)}${FH('Shartnoma', 'n', 1)}${FH('Mijoz', 'cl', 1)}${FH('Portfel', 'od', 1)}${FH('Muddati o‘tgan', 'over', 1)}${FH('Yaxshi to‘lovchi', 'good', 1)}${FH('Muammoli mijoz', 'prob', 1)}${FH('PAR 30', 'par', 1)}<th style="min-width:120px;">Intizom</th></tr></thead>
+      <tbody>${fRows.map((x, i)=>`<tr class="pf-row" data-pff="${esc(x.f)}" title="${esc(t('Shu filial bo‘yicha ko‘rsatish'))}"><td class="hk-sub" data-noi18n>${i + 1}</td><td data-noi18n><b class="pf-link">${esc(x.f)}</b></td><td style="text-align:right" data-noi18n>${x.st.size}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.n])}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cl])}</td><td style="text-align:right" data-noi18n><b>${monShort(x.m[PM.od])}</b></td><td style="text-align:right" data-noi18n>${monShort(x.over)}</td><td style="text-align:right" data-noi18n>${pfP(x.good, 0)}</td><td style="text-align:right" data-noi18n>${pfN(x.prob)}</td><td style="text-align:right" data-noi18n class="${x.par30 >= 15 ? 'pf-hot' : x.par30 >= 5 ? 'pf-warm' : ''}"><b>${pfP(x.par30)}</b></td><td>${pfStack(x.m, false)}</td></tr>`).join('')}</tbody>
       <tfoot><tr class="rp-total"><td></td><td><b>Jami</b></td><td></td><td style="text-align:right" data-noi18n><b>${pfN(fT.m[PM.n])}</b></td><td style="text-align:right" data-noi18n><b>${pfN(fT.m[PM.cl])}</b></td><td style="text-align:right" data-noi18n><b>${monShort(fT.m[PM.od])}</b></td><td style="text-align:right" data-noi18n><b>${monShort(fT.over)}</b></td><td style="text-align:right" data-noi18n><b>${pfP(fT.good, 0)}</b></td><td style="text-align:right" data-noi18n><b>${pfN(fT.prob)}</b></td><td style="text-align:right" data-noi18n><b>${pfP(fT.par30)}</b></td><td></td></tr></tfoot></table></div></div>` : '';
-  // TOP-10 xavfli do'konlar
-  const riskTop = R.stores.filter(x=> x.m[PM.n] >= 20).sort((a, b)=> b.par30 - a.par30 || b.over - a.over).slice(0, 10);
+  // TOP-10
+  const MN = PV.minN;
+  const big = R.stores.filter(x=> x.m[PM.n] >= MN);
+  const riskVal = PV.riskBy === 'cnt' ? (x=> pfProbN(x) / Math.max(1, x.m[PM.n]) * 100) : (x=> x.par30);
+  const riskTop = big.slice().sort((a, b)=> riskVal(b) - riskVal(a) || b.over - a.over).filter(x=> riskVal(x) > 0).slice(0, 10);
   const overTop = R.stores.filter(x=> x.over > 0).sort((a, b)=> b.over - a.over).slice(0, 10);
-  const bestTop = R.stores.filter(x=> x.m[PM.n] >= 20).sort((a, b)=> a.par30 - b.par30 || b.m[PM.n] - a.m[PM.n]).slice(0, 10);
+  const bestTop = R.stores.filter(x=> x.m[PM.cl] >= MN).sort((a, b)=> b.good - a.good || b.m[PM.cl] - a.m[PM.cl]).slice(0, 10);
+  const nTop = n=> `<span class="hint">${esc(t('kamida'))} ${n}</span>`;
   const tops = `<div class="rp-cols">
-      <div class="card rp-card"><h3>TOP-10: eng xavfli do‘konlar</h3><p class="sub">PAR 30 bo‘yicha (kamida 20 ta shartnomasi borlar)</p>${riskTop.length ? monBars(riskTop.map(x=> Object.assign({}, x, {n:x.n})), x=> x.par30, v=> pfP(v), x=> `${x.f} · ${pfN(x.prob)} muammoli mijoz`) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
-      <div class="card rp-card"><h3>TOP-10: muddati o‘tgan qarzi eng ko‘p</h3><p class="sub">So‘m: kechikkan, sudda va hisobdan chiqarilgan qarz</p>${overTop.length ? monBars(overTop, x=> x.over, v=> monShort(v), x=> `${x.f} · PAR 30: ${pfP(x.par30)}`) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+      <div class="card rp-card"><div class="pf-ch-head"><div><h3>TOP-10: eng xavfli do‘konlar</h3><p class="sub">${PV.riskBy === 'cnt' ? `30+ kun kechikkan shartnomalar soni / jami shartnomalar` : `PAR 30 — 30+ kun kechikkan qarz / do‘kon portfeli`} · kamida ${MN} ta shartnomasi borlar</p></div>
+        <div class="ar-chips"><button type="button" class="ar-chip ${PV.riskBy !== 'cnt' ? 'on' : ''}" data-prisk="sum">${esc(t('Summa bo‘yicha'))}</button><button type="button" class="ar-chip ${PV.riskBy === 'cnt' ? 'on' : ''}" data-prisk="cnt">${esc(t('Soni bo‘yicha'))}</button></div></div>
+        ${riskTop.length ? pfRank(riskTop, riskVal, v=> pfP(v), x=> `${esc(x.f)} · ${pfN(pfProbN(x))} / ${pfN(x.m[PM.n])} ${esc(t('shartnoma'))} · ${monShort(pfProbOd(x))} / ${monShort(x.m[PM.od])}`, '#d03b3b', pfSKey) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
+      <div class="card rp-card"><h3>TOP-10: muddati o‘tgan qarzi eng ko‘p</h3><p class="sub">Kechikkan + sudda + hisobdan chiqarilgan qarz · yonida — do‘kon portfelining necha foizi</p>
+        ${overTop.length ? pfRank(overTop, x=> x.over, v=> monShort(v), x=> `${esc(x.f)} · <b class="${x.over / Math.max(1, x.m[PM.od]) * 100 >= 15 ? 'pf-hot' : 'pf-warm'}">${pfP(x.over / Math.max(1, x.m[PM.od]) * 100)}</b> ${esc(t('portfelidan'))} (${monShort(x.m[PM.od])})`, '#ec835a', pfSKey) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>
     </div>
-    <div class="card rp-card"><h3>TOP-10: eng yaxshi to‘lov intizomli do‘konlar</h3><p class="sub">PAR 30 eng past (kamida 20 ta shartnomasi borlar)</p>${bestTop.length ? monBars(bestTop, x=> x.m[PM.n], v=> pfN(v) + ' ta', x=> `${x.f} · PAR 30: ${pfP(x.par30)} · yaxshi: ${pfP(x.good, 0)}`) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>`;
+    <div class="card rp-card"><h3>TOP-10: eng yaxshi to‘lov intizomli do‘konlar</h3><p class="sub">O‘z vaqtida to‘layotgan mijozlar ulushi bo‘yicha · kamida ${MN} ta mijozi borlar · teng bo‘lsa, mijozi ko‘pi yuqorida</p>
+      ${bestTop.length ? pfRank(bestTop, x=> x.good, v=> pfP(v, 1), x=> `${esc(x.f)} · <b>${pfN(x.m[PM.cb0])}</b> / ${pfN(x.m[PM.cl])} ${esc(t('mijoz o‘z vaqtida'))} · PAR 30: ${pfP(x.par30)}`, '#0ca30c', pfSKey) : '<p class="hk-sub">Ma’lumot yo‘q.</p>'}</div>`;
   // do'konlar ro'yxati
   const list = pfStoreList(R);
   const pages = Math.max(1, Math.ceil(list.length / PV.per)); if(PV.page > pages) PV.page = pages;
   const rows = list.slice((PV.page - 1) * PV.per, PV.page * PV.per);
   const cnt = {all:R.stores.length, ok:R.stores.filter(x=> x.risk==='ok').length, mid:R.stores.filter(x=> x.risk==='mid').length, bad:R.stores.filter(x=> x.risk==='bad').length, few:R.stores.filter(x=> x.risk==='few').length};
   const chip = (k, l)=> `<button type="button" class="ar-chip ${PV.grp===k?'on':''}" data-pg="${k}">${esc(l)}<span class="ar-chip-n" data-noi18n>${cnt[k]}</span></button>`;
-  const storesCard = `<div class="card rp-card"><h3>Do‘konlar portfeli</h3><p class="sub">Yaxshi — PAR 30 5% dan kam · E’tibor talab — 5–15% · Xavfli — 15% va undan ko‘p</p>
+  const SH = (l, k, r)=> pfTh(l, k, PV.sort, PV.dir, 'pfsh', r);
+  const storesCard = `<div class="card rp-card" id="pfStoresCard"><h3>Do‘konlar portfeli</h3><p class="sub">Yaxshi — PAR 30 5% dan kam · E’tibor talab — 5–15% · Xavfli — 15% va undan ko‘p · ustun nomini bossangiz saralanadi, do‘konni bossangiz — uning kartasi ochiladi</p>
       <div class="ar-chips">${chip('all','Hammasi')}${chip('ok','Yaxshi')}${chip('mid','E’tibor talab')}${chip('bad','Xavfli')}${cnt.few ? chip('few','Kam shartnoma (<5)') : ''}</div>
       <div class="rp-fil-tools" style="margin-top:8px;">
         <div class="hk-search" style="flex:1;min-width:220px;">${ICONS.search}<input type="search" id="pfQ" placeholder="Do‘kon nomi, brend, filial…" value="${esc(PV.q)}"></div>
-        <label>Saralash<select id="pfSort">${[['od','Portfel (qarz)'],['n','Shartnomalar soni'],['par','PAR 30 (yuqori)'],['over','Muddati o‘tgan qarz'],['prob','Muammoli mijozlar'],['good','Yaxshi to‘lovchilar %'],['name','Nomi (A–Z)']].map(([v, l])=>`<option value="${v}" ${PV.sort===v?'selected':''}>${esc(l)}</option>`).join('')}</select></label>
         <button type="button" class="hk-tool" id="pfXlsx">⬇ Excel</button></div>
-      ${rows.length ? `<div class="hk-table-wrap"><table class="srv-table mon-table pf-stable"><thead><tr><th>№</th><th>Do‘kon</th><th>Filial</th><th style="text-align:right">Shartnoma</th><th style="text-align:right">Mijoz</th><th style="text-align:right">Portfel</th><th style="text-align:right">O‘z vaqtida</th><th style="text-align:right">1–30</th><th style="text-align:right">31–90</th><th style="text-align:right">90+</th><th style="text-align:right">Muddati o‘tgan</th><th style="text-align:right">PAR 30</th><th>Baho</th></tr></thead>
-        <tbody>${rows.map((x, i)=>`<tr><td class="hk-sub" data-noi18n>${(PV.page - 1) * PV.per + i + 1}</td><td data-noi18n>${esc(x.n)}${x.b ? `<div class="hk-sub">${esc(x.b)}</div>` : ''}${!x.reg ? '<div class="hk-sub" style="color:var(--danger)">ro‘yxatda topilmadi</div>' : ''}</td><td data-noi18n>${esc(x.f)}</td>
+      ${rows.length ? `<div class="hk-table-wrap"><table class="srv-table mon-table pf-stable"><thead><tr><th>№</th>${SH('Do‘kon', 'name')}${SH('Filial', 'f')}${SH('Shartnoma', 'n', 1)}${SH('Mijoz', 'cl', 1)}${SH('Portfel', 'od', 1)}${SH('O‘z vaqtida', 'ok', 1)}${SH('1–30', 'b1', 1)}${SH('31–90', 'b23', 1)}${SH('90+', 'b4', 1)}${SH('Muddati o‘tgan', 'over', 1)}${SH('PAR 30', 'par', 1)}<th>Baho</th></tr></thead>
+        <tbody>${rows.map((x, i)=>`<tr class="pf-row" data-pfs="${esc(pfSKey(x))}"><td class="hk-sub" data-noi18n>${(PV.page - 1) * PV.per + i + 1}</td><td data-noi18n><b class="pf-link">${esc(x.n)}</b>${x.b ? `<div class="hk-sub">${esc(x.b)}</div>` : ''}${!x.reg ? '<div class="hk-sub" style="color:var(--danger)">ro‘yxatda topilmadi</div>' : ''}</td><td data-noi18n>${esc(x.f)}</td>
           <td style="text-align:right" data-noi18n>${pfN(x.m[PM.n])}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cl])}</td><td style="text-align:right" data-noi18n><b>${monShort(x.m[PM.od])}</b></td>
           <td style="text-align:right" data-noi18n>${pfN(x.m[PM.cb0])}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cb0+1]) || ''}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cb0+2] + x.m[PM.cb0+3]) || ''}</td><td style="text-align:right" data-noi18n>${pfN(x.m[PM.cb0+4]) || ''}</td>
           <td style="text-align:right" data-noi18n>${x.over ? monShort(x.over) : ''}</td><td style="text-align:right" data-noi18n class="${x.par30 >= 15 ? 'pf-hot' : x.par30 >= 5 ? 'pf-warm' : ''}"><b>${pfP(x.par30)}</b></td><td>${pfRiskBadge(x)}</td></tr>`).join('')}</tbody></table></div>
@@ -11874,15 +11969,14 @@ async function renderPortfel(host, admin){
   host.innerHTML = head + tools + kpis + disc + dyn + filCard + tops + storesCard + lateCard + note;
   pfBind(host, admin, R, list);
   i18nApply(host);
+  if(!renderPortfel._quiet) pfAnimate(host); pfAnimDone(host); renderPortfel._quiet = false;
   pfRenderLate(admin, R);
 }
 function pfStoreList(R){
   let L = R.stores.filter(x=> PV.grp === 'all' || x.risk === PV.grp);
   const q = PV.q.trim().toLowerCase();
   if(q) L = L.filter(x=> [x.n, x.b, x.f, x.stir].some(v=> String(v||'').toLowerCase().includes(q)));
-  const by = {od:(a, b)=> b.m[PM.od] - a.m[PM.od], n:(a, b)=> b.m[PM.n] - a.m[PM.n], par:(a, b)=> b.par30 - a.par30 || b.over - a.over, over:(a, b)=> b.over - a.over,
-    prob:(a, b)=> b.prob - a.prob, good:(a, b)=> b.good - a.good || b.m[PM.n] - a.m[PM.n], name:(a, b)=> a.n.localeCompare(b.n)}[PV.sort] || ((a, b)=> b.m[PM.od] - a.m[PM.od]);
-  return L.sort(by);
+  return pfSortBy(L, PV.sort, PV.dir);
 }
 async function pfRenderLate(admin, R){
   const host = document.getElementById('pfLateHost'); if(!host) return;
@@ -11945,10 +12039,17 @@ function pfBind(host, admin, R, list){
   if(v('pfBasis')) v('pfBasis').onchange = ()=>{ PV.basis = v('pfBasis').value; PV.fil = ''; PV.page = 1; pfSaveView(); re(); };
   if(v('pfProd')) v('pfProd').onchange = ()=>{ PV.prod = v('pfProd').value; PV.page = 1; re(); };
   host.querySelectorAll('[data-pff]').forEach(tr=> tr.onclick = ()=>{ PV.fil = tr.dataset.pff; PV.lfil = ''; PV.lstore = ''; PV.page = 1; PV.lpage = 1; re(); window.scrollTo(0, 0); });
-  host.querySelectorAll('[data-pg]').forEach(b=> b.onclick = ()=>{ PV.grp = b.dataset.pg; PV.page = 1; re(); });
-  const q = v('pfQ'); if(q) q.oninput = ()=>{ PV.q = q.value; PV.page = 1; clearTimeout(q._t); q._t = setTimeout(()=>{ const pos = q.selectionStart; const y = window.scrollY; renderPortfel(host, admin).then(()=>{ window.scrollTo(0, y); const q2 = v('pfQ'); if(q2){ q2.focus(); try{ q2.setSelectionRange(pos, pos); }catch(e){} } }); }, 250); };
-  if(v('pfSort')) v('pfSort').onchange = ()=>{ PV.sort = v('pfSort').value; re(); };
-  host.querySelectorAll('[data-pfpg]').forEach(b=> b.onclick = ()=>{ PV.page = Number(b.dataset.pfpg); re(); });
+  host.querySelectorAll('[data-pg]').forEach(b=> b.onclick = ()=>{ PV.grp = b.dataset.pg; PV.page = 1; quiet(); });
+  const q = v('pfQ'); if(q) q.oninput = ()=>{ PV.q = q.value; PV.page = 1; clearTimeout(q._t); q._t = setTimeout(()=>{ const pos = q.selectionStart; const y = window.scrollY; renderPortfel._quiet = true; renderPortfel(host, admin).then(()=>{ window.scrollTo(0, y); const q2 = v('pfQ'); if(q2){ q2.focus(); try{ q2.setSelectionRange(pos, pos); }catch(e){} } }); }, 250); };
+  const quiet = ()=>{ renderPortfel._quiet = true; const y = window.scrollY; return renderPortfel(host, admin).then(()=> window.scrollTo(0, y)); };
+  const sortTog = (key, cur, dir, set)=>{ const nd = cur === key ? (dir === 'asc' ? 'desc' : 'asc') : (key === 'name' || key === 'f' ? 'asc' : 'desc'); set(key, nd); };
+  host.querySelectorAll('[data-pfsh]').forEach(th=> th.onclick = ()=>{ sortTog(th.dataset.pfsh, PV.sort, PV.dir, (k, d)=>{ PV.sort = k; PV.dir = d; }); PV.page = 1; quiet(); });
+  host.querySelectorAll('[data-pfh]').forEach(th=> th.onclick = ()=>{ sortTog(th.dataset.pfh, PV.fsort, PV.fdir, (k, d)=>{ PV.fsort = k; PV.fdir = d; }); quiet(); });
+  host.querySelectorAll('[data-prisk]').forEach(b=> b.onclick = ()=>{ PV.riskBy = b.dataset.prisk; quiet(); });
+  host.querySelectorAll('[data-pdyn]').forEach(b=> b.onclick = ()=>{ PV.dyn = b.dataset.pdyn; quiet(); });
+  host.querySelectorAll('[data-pfs]').forEach(el=> el.onclick = ()=> pfStoreModal(el.dataset.pfs, R));
+  if(v('pfFilAll')) v('pfFilAll').onclick = ()=>{ PV.fil = ''; PV.page = 1; PV.lfil = ''; PV.lstore = ''; re(); };
+  host.querySelectorAll('[data-pfpg]').forEach(b=> b.onclick = ()=>{ PV.page = Number(b.dataset.pfpg); quiet(); });
   const pp = host.querySelector('[data-pfper]'); if(pp) pp.onchange = ()=>{ PV.per = Number(pp.value) || 20; PV.page = 1; pfSaveView(); re(); };
   const hdr = ['Shartnoma','Mijoz','Portfel, so‘m','Muddati o‘tgan asosiy qarz','Muddati o‘tgan foiz','Hisobdan chiqarilgan','Umumiy qarz','O‘z vaqtida (mijoz)','1–30 kun','31–60 kun','61–90 kun','90+ kun','Yaxshi to‘lovchi, %','Muammoli mijoz (30+)','PAR 30, %','PAR 90, %'];
   const vals = x=> [x.m[PM.n], x.m[PM.cl], x.m[PM.od], x.m[PM.odOver], x.m[PM.pctOver], x.m[PM.woff], x.m[PM.debt], x.m[PM.cb0], x.m[PM.cb0+1], x.m[PM.cb0+2], x.m[PM.cb0+3], x.m[PM.cb0+4], +x.good.toFixed(1), x.prob, +x.par30.toFixed(2), +x.par90.toFixed(2)];
@@ -11969,6 +12070,150 @@ renderMonitor = async function(host, admin){
   pfBindTabs(host, admin); i18nApply(host.firstElementChild);
 };
 PAGE_SUB.dokon = 'Shartnomalar monitoringi va BirZum portfeli: filiallar va do‘konlar bo‘yicha to‘lov intizomi, muammoli mijozlar';
+
+/* ======================================================================================
+   v27 · Portfel tahlili — diagrammalar, animatsiya, do'kon kartasi
+   Ranglar: holat palitrasi (yaxshi → kritik), har doim matn yorlig'i bilan
+   ====================================================================================== */
+const PF_BC = ['#0ca30c', '#fab219', '#ec835a', '#d9573b', '#b3261e'];      // 0 · 1–30 · 31–60 · 61–90 · 90+
+const PF_CC = ['#0ca30c', '#fab219', '#ec835a', '#d03b3b'];                 // Yaxshi · Substandart · Shubhali · Umidsiz
+const PF_ACC = '#2a78d6';
+Object.assign(PV, {sort: PV.sort || 'od', dir: PV.dir || 'desc', fsort: 'od', fdir: 'desc', riskBy: 'sum', dyn: 'par', minN: 30});
+const pfReduced = ()=>{ try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } };
+
+/* ---- son/foiz animatsiyasi ---- */
+const PF_FMT = {n: v=> pfN(v), s: v=> monShort(v), p: v=> pfP(v), p0: v=> pfP(v, 0)};
+function pfCnt(v, f){ return `<span data-cnt="${Number(v) || 0}" data-f="${f}">${PF_FMT[f](v)}</span>`; }
+function pfAnimate(root){
+  if(!root || pfReduced()) return;
+  const els = root.querySelectorAll('[data-cnt]');
+  const t0 = performance.now(), D = 800;
+  els.forEach(el=>{ el.textContent = PF_FMT[el.dataset.f](0); });
+  const step = now=>{
+    const k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3);
+    els.forEach(el=>{ el.textContent = PF_FMT[el.dataset.f](Number(el.dataset.cnt) * e); });
+    if(k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+  requestAnimationFrame(()=> requestAnimationFrame(()=> root.querySelectorAll('[data-dash]').forEach(c=> c.setAttribute('stroke-dasharray', c.dataset.dash))));
+}
+function pfAnimDone(root){ if(pfReduced() && root) root.querySelectorAll('[data-dash]').forEach(c=> c.setAttribute('stroke-dasharray', c.dataset.dash)); }
+
+/* ---- halqa diagramma ---- */
+function pfDonut(parts, big, small, size){
+  size = size || 168; const r = 60, C = 2 * Math.PI * r, tot = parts.reduce((a, p)=> a + p.v, 0) || 1;
+  let off = 0; const gap = parts.filter(p=> p.v > 0).length > 1 ? 2 : 0;
+  const segs = parts.map(p=>{ const L = Math.max(0, p.v / tot * C - gap); const s = `<circle r="${r}" cx="80" cy="80" fill="none" stroke="${p.c}" stroke-width="18" stroke-dasharray="0 ${C}" data-dash="${L.toFixed(2)} ${(C - L).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" class="pf-seg"><title>${esc(p.l)}: ${pfN(p.v)} (${pfP(p.v / tot * 100)})</title></circle>`; off += p.v / tot * C; return s; }).join('');
+  return `<div class="pf-donut" style="width:${size}px;height:${size}px;"><svg viewBox="0 0 160 160" role="img" aria-label="${esc(small || '')}"><circle r="${r}" cx="80" cy="80" fill="none" stroke="var(--line-2)" stroke-width="18"/><g transform="rotate(-90 80 80)">${segs}</g></svg>
+    <div class="pf-donut-c"><b data-noi18n>${big}</b><span>${esc(small || '')}</span></div></div>`;
+}
+function pfLegend(parts, tot, fmt){
+  return `<div class="pf-leg">${parts.map(p=>`<div class="pf-leg-r"><i style="background:${p.c}"></i><span>${esc(t(p.l))}</span><b data-noi18n>${fmt ? fmt(p.v) : pfN(p.v)}</b><em data-noi18n>${pfP(p.v / Math.max(1, tot) * 100)}</em></div>`).join('')}</div>`;
+}
+/* ---- chiziqli grafik (bitta o'q) ---- */
+function pfLine(pts, fmt, color, opts){
+  opts = opts || {};
+  if(pts.length < 2) return `<p class="hk-sub">${esc(t('Grafik uchun kamida 2 kunlik ma’lumot kerak — har kuni yangi fayl yuklang.'))}</p>`;
+  const W = 640, H = opts.h || 160, L = 8, Rr = 8, T = 14, B = 26;
+  const vals = pts.map(p=> p.v), mx = Math.max(...vals), mn = Math.min(0, ...vals);
+  const top = mx === mn ? mx + 1 : mx + (mx - mn) * 0.12;
+  const x = i=> L + (W - L - Rr) * (pts.length === 1 ? 0.5 : i / (pts.length - 1));
+  const y = v=> T + (H - T - B) * (1 - (v - mn) / (top - mn || 1));
+  const path = pts.map((p, i)=> `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
+  const area = `${path} L${x(pts.length - 1).toFixed(1)},${(H - B)} L${x(0).toFixed(1)},${(H - B)} Z`;
+  const grid = [0.25, 0.5, 0.75, 1].map(k=>{ const v = mn + (top - mn) * k; return `<line x1="${L}" x2="${W - Rr}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" class="pf-grid"/>`; }).join('');
+  const li = pts.length - 1, hi = vals.indexOf(mx);
+  const lab = (i, above)=> `<text x="${Math.min(W - 40, Math.max(30, x(i))).toFixed(1)}" y="${(y(pts[i].v) + (above ? -9 : 16)).toFixed(1)}" text-anchor="middle" class="pf-lbl">${esc(fmt(pts[i].v))}</text>`;
+  const step = Math.max(1, Math.ceil(pts.length / 7));
+  const xl = pts.map((p, i)=> i % step === 0 || i === li ? `<text x="${x(i).toFixed(1)}" y="${H - 6}" text-anchor="middle" class="pf-ax">${esc(p.l)}</text>` : '').join('');
+  const hits = pts.map((p, i)=> `<g class="pf-hit"><rect x="${(x(i) - (W / pts.length) / 2).toFixed(1)}" y="0" width="${(W / pts.length).toFixed(1)}" height="${H - B}" fill="transparent"/><line x1="${x(i).toFixed(1)}" x2="${x(i).toFixed(1)}" y1="${T}" y2="${H - B}" class="pf-cross"/><circle cx="${x(i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="4.5" fill="${color}" stroke="var(--paper)" stroke-width="2" class="pf-dotp"/><title>${esc(p.t || p.l)}: ${esc(fmt(p.v))}</title></g>`).join('');
+  return `<svg class="pf-line" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.label || '')}">${grid}<line x1="${L}" x2="${W - Rr}" y1="${H - B}" y2="${H - B}" class="pf-base"/>
+    <path d="${area}" fill="${color}" opacity=".1"/><path d="${path}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" class="pf-path" pathLength="1"/>
+    <circle cx="${x(li).toFixed(1)}" cy="${y(pts[li].v).toFixed(1)}" r="4.5" fill="${color}" stroke="var(--paper)" stroke-width="2"/>${lab(li, true)}${hi !== li ? lab(hi, true) : ''}${xl}${hits}</svg>`;
+}
+/* ---- reyting ro'yxati (gorizontal ustunlar) ---- */
+function pfRank(list, val, fmt, sub, color, key){
+  const max = Math.max(1e-9, ...list.map(val));
+  return `<div class="pf-rank">${list.map((x, i)=>`<button type="button" class="pf-rank-r" data-pfs="${esc(key(x))}" title="${esc(t('Do‘kon kartasini ochish'))}">
+    <span class="pf-rank-n" data-noi18n>${i + 1}</span><span class="pf-rank-l" data-noi18n><b>${esc(x.n)}</b><small>${sub(x)}</small></span>
+    <span class="pf-rank-bar"><i style="--w:${Math.max(1.5, val(x) / max * 100).toFixed(1)}%;background:${color}"></i></span><b class="pf-rank-v" data-noi18n>${fmt(val(x))}</b></button>`).join('')}</div>`;
+}
+function pfSKey(x){ return pfNameKey(x.n) + '|' + fKey(x.f); }
+function pfProbN(x){ return x.m[PM.b0 + 2] + x.m[PM.b0 + 3] + x.m[PM.b0 + 4]; }   // 30+ kun kechikkan shartnomalar soni
+function pfProbOd(x){ return x.m[PM.b0od + 2] + x.m[PM.b0od + 3] + x.m[PM.b0od + 4]; }
+
+/* ---- saralanadigan ustun sarlavhasi ---- */
+function pfTh(label, key, cur, dir, kind, right){
+  const on = cur === key;
+  return `<th class="pf-sth ${on ? 'on' : ''}" data-${kind}="${key}" style="${right ? 'text-align:right;' : ''}" title="${esc(t('Saralash'))}" aria-sort="${on ? (dir === 'asc' ? 'ascending' : 'descending') : 'none'}">${esc(t(label))}<span class="pf-ar">${on ? (dir === 'asc' ? '▲' : '▼') : '⇅'}</span></th>`;
+}
+const PF_SORTS = {
+  name: x=> x.n.toLowerCase(), f: x=> String(x.f).toLowerCase(), n: x=> x.m[PM.n], cl: x=> x.m[PM.cl], od: x=> x.m[PM.od],
+  ok: x=> x.m[PM.cb0], b1: x=> x.m[PM.cb0 + 1], b23: x=> x.m[PM.cb0 + 2] + x.m[PM.cb0 + 3], b4: x=> x.m[PM.cb0 + 4],
+  over: x=> x.over, par: x=> x.par30, good: x=> x.good, prob: x=> x.prob, st: x=> x.st ? x.st.size : 0};
+function pfSortBy(arr, key, dir){
+  const g = PF_SORTS[key] || PF_SORTS.od, s = dir === 'asc' ? 1 : -1;
+  return arr.sort((a, b)=>{ const x = g(a), y = g(b); return (typeof x === 'string' ? x.localeCompare(y) : x - y) * s || (b.m[PM.od] - a.m[PM.od]); });
+}
+
+/* ---- MON dan do'konning oylik savdosi (STIR bo'yicha) ---- */
+function pfStoreMonthly(stir){
+  const s = String(stir || '').replace(/\D/g, ''); if(!s || !MON || !MON.stores) return null;
+  const idx = MON.stores.findIndex(x=> x[0] === s); if(idx < 0) return null;
+  const mo = {}; let last30 = [0, 0], prev30 = [0, 0]; const ref = MON.to; const from30 = monAddDays(ref, -29), from60 = monAddDays(ref, -59);
+  for(const [d, arr] of Object.entries(MON.days || {})) for(const r of arr) if(r[0] === idx){ const k = d.slice(0, 7); const o = mo[k] = mo[k] || [0, 0]; o[0] += r[1]; o[1] += r[2];
+    if(d >= from30){ last30[0] += r[1]; last30[1] += r[2]; } else if(d >= from60){ prev30[0] += r[1]; prev30[1] += r[2]; } }
+  // davrdagi barcha oylar (savdo bo'lmagan oy — 0)
+  const keys = []; for(let k = String(MON.from).slice(0, 7); k <= String(MON.to).slice(0, 7); ){ keys.push(k); mo[k] = mo[k] || [0, 0]; let [y, mm] = k.split('-').map(Number); mm++; if(mm > 12){ mm = 1; y++; } k = `${y}-${String(mm).padStart(2, '0')}`; }
+  return {pts: keys.map(k=> ({l: rpShortMonth(k).replace(/<[^>]+>/g, ''), t: rpMonthLabel(k) + ` · ${mo[k][0]} ta`, v: mo[k][1] / 1e9, c: mo[k][0]})), last30, prev30, keys, mo};
+}
+
+/* ---- do'kon kartasi (oyna) ---- */
+async function pfStoreModal(key, R){
+  const x = R.stores.find(s=> pfSKey(s) === key); if(!x) return;
+  const rankList = R.stores.slice().sort((a, b)=> b.m[PM.od] - a.m[PM.od]); const rank = rankList.indexOf(x) + 1;
+  const share = R.T.m[PM.od] ? x.m[PM.od] / R.T.m[PM.od] * 100 : 0;
+  const mo = pfStoreMonthly(x.stir);
+  let mDelta = '';
+  if(mo && mo.prev30[1]) mDelta = (mo.last30[1] - mo.prev30[1]) / mo.prev30[1] * 100;
+  const bp = PF_BUCKETS.map((b, i)=> ({l: b.l, v: x.m[PM.cb0 + b.k], c: PF_BC[i]}));
+  const cp = PF_CLASS.map((c, i)=> ({l: c[1], v: x.m[PM.c0 + i], c: PF_CC[i]}));
+  const m = document.createElement('div'); m.className = 'modal-back'; m.id = 'pfStoreModal';
+  const tile = (l, v, s)=> `<div class="pf-mt"><span>${esc(t(l))}</span><b data-noi18n>${v}</b>${s ? `<em data-noi18n>${s}</em>` : ''}</div>`;
+  m.innerHTML = `<div class="modal pf-sm" style="max-width:980px;"><div class="modal-head"><h3 data-noi18n>${esc(x.n)}${x.b ? ` <span class="hk-sub">· ${esc(x.b)}</span>` : ''}</h3><button type="button" class="modal-x" id="pfsX">✕</button></div>
+    <div class="modal-body">
+      <p class="sub" style="margin-top:0;" data-noi18n>🏢 ${esc(x.f)}${x.stir ? ' · STIR ' + esc(x.stir) : ''} · ${esc(t('Reytingda'))} <b>${rank}</b>-${esc(t('o‘rin'))} (${esc(t('portfel bo‘yicha'))}) · ${esc(t('portfelning'))} ${pfP(share)} · ${boshPlainDate(PF.asOf)} ${esc(t('holatiga'))}</p>
+      <div class="pf-mts">
+        ${tile('Portfel qoldig‘i', pfCnt(x.m[PM.od], 's'), `${pfN(x.m[PM.n])} ${t('shartnoma')} · ${pfN(x.m[PM.cl])} ${t('mijoz')}`)}
+        ${tile('O‘rtacha qoldiq', monShort(x.m[PM.n] ? x.m[PM.od] / x.m[PM.n] : 0), t('bitta shartnomaga'))}
+        ${tile('Muddati o‘tgan qarz', pfCnt(x.over, 's'), `${pfP(x.m[PM.od] ? x.over / x.m[PM.od] * 100 : 0)} ${t('qoldiqdan')}`)}
+        ${tile('PAR 30', `<span class="${x.par30 >= 15 ? 'pf-hot' : x.par30 >= 5 ? 'pf-warm' : 'pf-okc'}">${pfP(x.par30)}</span>`, `${pfN(pfProbN(x))} ${t('ta shartnoma 30+ kun')}`)}
+        ${mo ? tile('Oxirgi 30 kunda berilgan', monShort(mo.last30[1]), `${pfN(mo.last30[0])} ${t('ta shartnoma')}${mDelta !== '' ? ` · ${mDelta >= 0 ? '▲' : '▼'} ${pfP(Math.abs(mDelta), 0)} ${t('oldingi 30 kunga nisbatan')}` : ''}`) : ''}
+      </div>
+      <div class="pf-sm-grid">
+        <div class="card pf-sm-c"><h4>${esc(t('Oylik berilgan nasiya, mlrd so‘m'))}</h4><p class="hint">${esc(t('Do‘konlar monitoringi faylidan (STIR bo‘yicha)'))}</p>
+          ${mo && mo.pts.length ? pfLine(mo.pts, v=> v.toFixed(2).replace('.', ','), PF_ACC, {h: 200, label: 'Oylik savdo'}) : `<p class="hk-sub">${esc(t('Bu do‘kon bo‘yicha monitoring ma’lumoti topilmadi.'))}</p>`}</div>
+        <div class="card pf-sm-c"><h4>${esc(t('Mijozlar to‘lov intizomi'))}</h4><div class="pf-dn-row">${pfDonut(bp, pfP(x.good, 0), t('o‘z vaqtida'), 150)}${pfLegend(bp, x.m[PM.cl])}</div></div>
+        <div class="card pf-sm-c"><h4>${esc(t('Bank tasnifi (shartnomalar)'))}</h4>${pfClsBars(cp, x.m[PM.n])}</div>
+        <div class="card pf-sm-c"><h4>${esc(t('Eng ko‘p kechiktirayotgan mijozlar'))}</h4><div id="pfsLate"><p class="hk-sub">⏳</p></div></div>
+      </div></div>
+    <div class="modal-foot"><button type="button" class="primary" id="pfsLateAll">📋 ${esc(t('Barcha kechikkan mijozlari'))}</button><button type="button" class="secondary" id="pfsClose">${esc(t('Yopish'))}</button></div></div>`;
+  document.body.appendChild(m);
+  const close = ()=> m.remove();
+  m.querySelector('#pfsX').onclick = close; m.querySelector('#pfsClose').onclick = close; m.onclick = e=>{ if(e.target === m) close(); };
+  m.querySelector('#pfsLateAll').onclick = ()=>{ close(); PV.lstore = key; PV.lmin = 1; PV.lpage = 1; pfRenderLate(isAuthed(), R).then(()=>{ const c = document.getElementById('pfLateCard'); if(c) c.scrollIntoView({behavior: 'smooth'}); }); };
+  i18nApply(m); pfAnimate(m); pfAnimDone(m);
+  try{
+    const L = await pfLoadLate(); const gi = new Set(x.gi);
+    const rows = L.rows.filter(r=> gi.has(r[3])).sort((a, b)=> b[4] - a[4] || b[6] - a[6]).slice(0, 8);
+    const box = m.querySelector('#pfsLate'); if(!box) return;
+    box.innerHTML = rows.length ? `<div class="pf-lt">${rows.map(r=>`<div class="pf-lt-r"><span data-noi18n><b>${esc(r[1])}</b><small>${r[2] ? esc(r[2]) : ''}${r[8] ? ' · ' + boshPlainDate(r[8]) : ''}</small></span><span class="st-badge ${r[4] > 90 ? 'st-rej' : r[4] > 30 ? 'st-ret' : 'st-new'}" data-noi18n>${r[4]} ${esc(t('kun'))}</span><b data-noi18n>${monShort(r[6])}</b></div>`).join('')}</div>` : `<p class="hk-sub">${esc(t('Kechikayotgan mijozi yo‘q 👍'))}</p>`;
+    i18nApply(box);
+  }catch(e){}
+}
+function pfClsBars(cp, tot){
+  return `<div class="pf-cb">${cp.map(p=>`<div class="pf-cb-r"><span>${esc(t(p.l))}</span><div class="pf-cb-bar"><i style="--w:${Math.max(p.v ? 1.5 : 0, p.v / Math.max(1, tot) * 100).toFixed(1)}%;background:${p.c}"></i></div><b data-noi18n>${pfN(p.v)}</b><em data-noi18n>${pfP(p.v / Math.max(1, tot) * 100)}</em></div>`).join('')}</div>`;
+}
 
 /* ======================================================================================
    v25 · Sana formati (kk.oo.yyyy) hamma joyda · Hamkorlar shartnoma sanasi bo'yicha tartib
@@ -12594,6 +12839,56 @@ async function renderMyRahbar(host){
   for(const x of tasks.filter(k=> !k.seenByTo && k.status === 'yangi')){ try{ await ST.set(TK_COL, x.id, Object.assign({}, x, {status:'yangi'})); x.seenByTo = true; }catch(e){} }
   i18nApply(host);
 }
+
+/* ======================================================================================
+   Buxgalter Bosh shartnomani «Tasdiqlandi» qilsa — hamkor avtomatik «Hamkorlar» ga qo'shiladi
+   (admin sahifasida bajariladi: hamkorlar ro'yxatini faqat admin o'zgartira oladi)
+   ====================================================================================== */
+const BX_HK_FIELDS = ['tashkilot_nomi','stir','rahbar','rahbar_fish','manzil','hisob_raqami','bank_nomi','mfo','telefon_raqami','telegram_user','login','parol','filial','pinfl','brend','lokatsiya'];
+let bxHkBusy = false;
+async function bxAutoHamkor(opts){
+  if(bxHkBusy || !isAuthed()) return 0;
+  bxHkBusy = true;
+  try{
+    if(typeof arCloudInitPromise !== 'undefined' && arCloudInitPromise) await arCloudInitPromise.catch(()=>{});
+    const list = await ST.all(BUX_COL).catch(()=> []);
+    const cutoff = new Date(Date.now() - 30 * 86400e3).toISOString();
+    const todo = list.filter(x=> (x.tur || 'bosh') === 'bosh' && x.status === 'tasdiq' && !x.hamkorId && !x.hamkorSkip &&
+      String(((x.history || []).filter(h=> h.status === 'tasdiq').slice(-1)[0] || {}).at || x.updatedAt || '') >= cutoff);
+    let added = 0, linked = 0;
+    for(const x of todo){
+      const stir = nfStir(x.stir || (x.data || {}).stir); if(!stir) continue;
+      const bosh = (DB.bosh || []).filter(r=> nfStir((r.data || {}).stir) === stir && (!x.raqam || String((r.data || {}).shartnoma_raqami || '') === String(x.raqam))).slice(-1)[0];
+      const src = Object.assign({}, x.data || {}, bosh ? bosh.data : {});
+      if(src.rahbar_fish && !src.rahbar) src.rahbar = shortFio(src.rahbar_fish);
+      let rec = (DB.hamkor || []).find(r=> nfStir((r.data || {}).stir) === stir && (!src.filial || !normFilial((r.data || {}).filial) || fKey((r.data || {}).filial) === fKey(src.filial)));
+      if(rec){
+        BX_HK_FIELDS.forEach(k=>{ if(src[k] && !String(rec.data[k] || '').trim()) rec.data[k] = src[k]; });
+        rec.updatedAt = new Date().toISOString(); linked++;
+      }else{
+        const data = {no: nextSequenceNumber('hamkor')};
+        BX_HK_FIELDS.forEach(k=>{ data[k] = src[k] || ''; });
+        rec = {id: uid(), kind: 'main', data, createdAt: new Date().toISOString(), fromBux: x.id};
+        DB.hamkor.push(rec); added++;
+        logAct('hamkor.qoshildi', {type: 'hamkor', id: rec.id, name: data.tashkilot_nomi, stir: data.stir}, `Bosh shartnoma № ${x.raqam || ''} buxgalter tomonidan tasdiqlandi — hamkorlar ro‘yxatiga avtomatik qo‘shildi`);
+      }
+      try{ const cur = await ST.get(BUX_COL, x.id); if(cur){ cur.hamkorId = rec.id; await ST.set(BUX_COL, x.id, cur); } }catch(e){}
+    }
+    if(added || linked){
+      persist('hamkor');
+      try{ renderTabs(); if(activeTab === 'hamkor'){ renderHamkorList(); renderHamkorDetail(); } }catch(e){}
+      if(added) showToast({icon: '🤝', title: 'Yangi hamkor qo‘shildi', body: `${added} ta tasdiqlangan Bosh shartnoma bo‘yicha hamkor «Hamkorlar» ro‘yxatiga qo‘shildi.`, onClick: ()=>{ activeTab = 'hamkor'; renderApp(); }});
+    }
+    return added;
+  }catch(e){ console.error('bxAutoHamkor', e); return 0; }
+  finally{ bxHkBusy = false; }
+}
+const _v26ShowApp = showApp;
+showApp = function(){
+  _v26ShowApp();
+  setTimeout(bxAutoHamkor, 4000);
+  clearInterval(bxAutoHamkor._t); bxAutoHamkor._t = setInterval(bxAutoHamkor, 60000);
+};
 
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){

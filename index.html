@@ -1383,6 +1383,11 @@ body.ro-mode .grid:has(> .card #form_bosh), body.ro-mode .grid:has(> .card #form
 body.ro-mode .grid:has(> .card #form_bosh) .preview-shell, body.ro-mode .grid:has(> .card #form_qosh) .preview-shell, body.ro-mode .grid:has(> .card #form_bonus) .preview-shell{display:none !important;}
 body.ro-mode .grid:has(> .card #form_bosh) .right-col, body.ro-mode .grid:has(> .card #form_qosh) .right-col, body.ro-mode .grid:has(> .card #form_bonus) .right-col{max-width:none;width:100%;}
 body.ro-mode [data-reply], body.ro-mode #chatFile{display:none !important;}
+/* Bosh ofis: sozlamalar ikki ustunda */
+.set-grid.ro-set{display:grid !important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start;max-width:1200px;}
+.set-grid.ro-set > .ro-col{display:flex;flex-direction:column;gap:18px;min-width:0;}
+.set-grid.ro-set .card{grid-column:auto !important;width:auto !important;margin:0 !important;}
+@media (max-width:900px){ .set-grid.ro-set{grid-template-columns:1fr;} }
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -3392,7 +3397,7 @@ function initShell(){
     if(activeTab==='profil') renderApp();
   };
   const lb2 = document.getElementById('logoutBtn2'); if(lb2) lb2.onclick = ()=> document.getElementById('logoutBtn').click();
-  document.getElementById('sbUserName').textContent = (admLogin()||'admin').toUpperCase();
+  v28SbName();
 }
 
 /* ============================= LOGIN: PAROLNI KO'RSATISH ============================= */
@@ -12451,6 +12456,7 @@ async function bindSecCard(){
 function v26BindProfilForm(){
   const form = document.getElementById('form_profil'); if(!form) return;
   const cl = document.getElementById('pf_current_login'); if(cl) cl.value = admLogin();
+  const nl0 = document.getElementById('pf_new_login'); if(nl0) nl0.placeholder = admLogin();
   form.onsubmit = async e=>{
     e.preventDefault();
     const st = document.getElementById('status_profil'); const err = m=>{ st.className = 'status err'; st.textContent = m; };
@@ -12464,7 +12470,7 @@ function v26BindProfilForm(){
       const upd = {login: nl || me.login, _old: cur}; if(p1) upd._pass = p1;
       await ST.set(AR_USERS, id, upd);
       try{ sessionStorage.setItem('birzum_admin_login', upd.login); }catch(x){}
-      const un = document.getElementById('sbUserName'); if(un) un.textContent = upd.login.toUpperCase();
+      v28SbName();
       form.reset(); if(cl) cl.value = upd.login;
       st.className = 'status ok'; st.textContent = 'Saqlandi.' + (p1 ? ' Parol o‘zgartirildi — boshqa qurilmalardagi sessiyalar yopildi.' : '');
     }catch(ex){ err(ex.message || String(ex)); }
@@ -12916,7 +12922,7 @@ v26Enter = function(u){
     v28SetRO(true);
     _v28Enter(Object.assign({}, u, {role:'admin'}));
     try{ sessionStorage.setItem('birzum_admin_role', 'boshofis'); }catch(e){}
-    const un = document.getElementById('sbUserName'); if(un) un.textContent = (u.login || '').toUpperCase() + ' · ' + t('KO‘RISH');
+    v28SbName();
     return;
   }
   v28SetRO(false); try{ sessionStorage.removeItem('birzum_admin_role'); }catch(e){}
@@ -12925,7 +12931,7 @@ v26Enter = function(u){
 if(v28RO()) document.body.classList.add('ro-mode');
 /* Yozishga urinish — saqlanmaydi, foydalanuvchi bosgan bo'lsa ogohlantiramiz */
 let v28LastClick = 0;
-document.addEventListener('click', ()=>{ v28LastClick = Date.now(); }, true);
+document.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('button, input[type=checkbox], [role=button]'); if(b && !b.closest('.nav-item, .ar-chips, .hk-pager, .seg, .pf-tabs, [data-mtab], .modal-x, .sb-user, .hk-search, #loginScreen')) v28LastClick = Date.now(); }, true);
 document.addEventListener('submit', e=>{ if(v28RO() && isAuthed() && !e.target.closest('#form_profil')){ e.preventDefault(); e.stopImmediatePropagation(); v28Warn(); } }, true);
 function v28Warn(){
   if(Date.now() - (v28Warn._t || 0) < 2500) return; v28Warn._t = Date.now();
@@ -12944,12 +12950,27 @@ persist = function(key){ if(v28RO() && isAuthed()){ if(Date.now() - v28LastClick
     return orig.apply(this, arguments);
   };
 });
-// Sozlamalar: faqat profil, ko'rinish, Telegram, Telegram tasdiq, jurnal
+/* Chap pastki tugma: admin — login, Bosh ofis — hodimning ismi (masalan: U.R.Maxmudov) */
+function v28SbName(){
+  const un = document.getElementById('sbUserName'); if(!un) return;
+  if(v28RO()){
+    let ism = ''; try{ ism = sessionStorage.getItem('birzum_admin_name') || ''; }catch(e){}
+    const w = ism.trim().split(/\s+/).filter(Boolean);
+    un.textContent = w.length >= 2 ? shortFio(ism) : (ism || admLogin() || t('Bosh ofis'));
+    const b = document.getElementById('logoutBtn'); if(b) b.title = `${ism || admLogin()} · ${t('Bosh ofis')} — ${t('Chiqish')}`;
+  }else un.textContent = (admLogin() || 'admin').toUpperCase();
+}
+// Sozlamalar: faqat profil, ko'rinish, Telegram, Telegram tasdiq, jurnal — ikki ustunda chiroyli joylashadi
 function v28ProfilRO(){
-  document.querySelectorAll('.set-grid > .card').forEach(c=>{
-    const keep = c.querySelector('[data-theme-val],#form_profil,#logOpen') || c.id === 'tgCard' || c.id === 'secCard';
-    if(!keep) c.remove();
-  });
+  const grid = document.querySelector('.set-grid'); if(!grid) return;
+  const find = fn=> [...grid.children].find(c=> c.classList.contains('card') && fn(c));
+  const prof = find(c=> c.querySelector('#form_profil')), look = find(c=> c.querySelector('[data-theme-val]')),
+        tg = find(c=> c.id === 'tgCard'), sec = find(c=> c.id === 'secCard'), log = find(c=> c.querySelector('#logOpen'));
+  [...grid.children].forEach(c=>{ if(![prof, look, tg, sec, log].includes(c)) c.remove(); });
+  const col = (...cards)=>{ const d = document.createElement('div'); d.className = 'ro-col'; cards.filter(Boolean).forEach(c=> d.appendChild(c)); return d; };
+  grid.classList.add('ro-set');
+  grid.append(col(prof, look), col(tg, sec, log));
+  const sub = document.querySelector('.page-sub, #pageSub'); if(sub) sub.textContent = t('Profil, Telegram va ko‘rinish sozlamalari');
 }
 const _v28BxAuto = bxAutoHamkor;
 bxAutoHamkor = function(){ return v28RO() ? Promise.resolve(0) : _v28BxAuto.apply(this, arguments); };

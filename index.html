@@ -1388,6 +1388,12 @@ body.ro-mode [data-reply], body.ro-mode #chatFile{display:none !important;}
 .set-grid.ro-set > .ro-col{display:flex;flex-direction:column;gap:18px;min-width:0;}
 .set-grid.ro-set .card{grid-column:auto !important;width:auto !important;margin:0 !important;}
 @media (max-width:900px){ .set-grid.ro-set{grid-template-columns:1fr;} }
+.mon-st-btn{cursor:pointer;transition:filter .15s, box-shadow .15s;}
+.mon-st-btn:hover,.mon-st-btn:focus{filter:brightness(.95);box-shadow:0 0 0 2px var(--accent-soft);outline:none;}
+.mon-note{font-size:11.5px;color:var(--text);margin-top:4px;max-width:260px;line-height:1.35;overflow-wrap:anywhere;}
+.mon-ncell{min-width:140px;}
+.mon-note-h{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+.mon-note-h div{font-size:12px;border-left:3px solid var(--line);padding-left:8px;} .mon-note-h span{display:block;color:var(--muted);font-size:11px;}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -7607,7 +7613,7 @@ const LOG_ACT = {
   'bux.didox':'Shartnomani Didoxdan yubordi', 'bux.tasdiq':'Shartnoma tasdiqlandi deb belgiladi', 'bux.bekor':'Shartnomani bekor qildi',
   'hamkor.qoshildi':'Hamkor qo‘shdi', 'hamkor.tahrir':'Hamkor ma’lumotlarini o‘zgartirdi', 'hamkor.ochirildi':'Hamkorni o‘chirdi',
   'user.qoshildi':'Foydalanuvchi qo‘shdi', 'user.tahrir':'Foydalanuvchini tahrirladi', 'user.faol':'Foydalanuvchini faollashtirdi', 'user.ochirildi':'Foydalanuvchini o‘chirdi', 'user.nofaol':'Foydalanuvchini nofaol qildi',
-  'import':'Import qildi', 'sozlama.muddat':'Muddatlarni o‘zgartirdi', 'sozlama.tarif':'Tariflarni o‘zgartirdi', 'sozlama.filial':'Filiallar ro‘yxatini o‘zgartirdi', 'bonus.holat':'Bonus holatini o‘zgartirdi',
+  'import':'Import qildi', 'sozlama.muddat':'Muddatlarni o‘zgartirdi', 'sozlama.tarif':'Tariflarni o‘zgartirdi', 'sozlama.filial':'Filiallar ro‘yxatini o‘zgartirdi', 'bonus.holat':'Bonus holatini o‘zgartirdi', 'export':'Excelga yuklab oldi',
 };
 const LOG_SECT = {bosh:'Bosh shartnoma', qoshimcha:'Qo‘shimcha kelishuv', bonus:'Bonus shartnoma', hamkor:'Hamkor'};
 function logActor(){
@@ -10921,7 +10927,7 @@ async function renderUserHamkor(host){
   const mobile = window.innerWidth <= 760;
   const bosh = r=> uHkBosh[String((r.data||{}).stir||'').trim()] || {};
   const head = `<div class="hk-card-head"><h2>Hamkorlar</h2><span class="nav-cnt" data-noi18n>${mine.length}</span><span class="st-badge st-new">Faqat ko‘rish</span>
-      <div class="hk-tools"><div class="hk-search">${ICONS.search}<input type="search" id="uHkSearch" placeholder="Nomi, STIR, brend, rahbar…" value="${esc(uHkQuery)}"></div><button type="button" class="hk-tool" id="uHkReload">↻ Yangilash</button></div></div>
+      <div class="hk-tools"><div class="hk-search">${ICONS.search}<input type="search" id="uHkSearch" placeholder="Nomi, STIR, brend, rahbar…" value="${esc(uHkQuery)}"></div>${u.role === 'rahbar' ? '<button type="button" class="hk-tool" id="uHkXlsx">⬇ Excel</button>' : ''}<button type="button" class="hk-tool" id="uHkReload">↻ Yangilash</button></div></div>
     <div class="hint" style="margin:0 16px 8px;">🏢 <b data-noi18n>${esc(u.filial)}</b> — <span>faqat shu filialga tegishli hamkorlar</span></div>`;
   const list = uHkErr ? '<div class="hk-empty">Hamkorlarni yuklab bo‘lmadi.</div>' : (rows.length ? (mobile
     ? `<div class="ua-list" style="padding:0 12px 12px;">${rows.map(r=>{ const d = r.data||{}, b = bosh(r); return `<button type="button" class="ua-item ${r.id===uHkSel?'sel':''}" data-uhk="${r.id}">
@@ -10955,6 +10961,17 @@ async function renderUserHamkor(host){
   const se = document.getElementById('uHkSearch');
   if(se) se.oninput = ()=>{ uHkQuery = se.value; uHkPage = 1; const pos = se.selectionStart; renderUserApp(); const s2 = document.getElementById('uHkSearch'); if(s2){ s2.focus(); try{ s2.setSelectionRange(pos,pos); }catch(e){} } };
   const rl = document.getElementById('uHkReload'); if(rl) rl.onclick = async ()=>{ rl.disabled = true; await uHkLoad(true); renderUserApp(); };
+  const ux = document.getElementById('uHkXlsx');
+  if(ux) ux.onclick = ()=>{
+    const cols = FIELDS.hamkor.filter(f=> !['login','parol','no'].includes(f[0]));
+    const head = ['№', 'Bosh shartnoma raqami', 'Bosh shartnoma sanasi'].concat(cols.map(f=> f[1]));
+    const aoa = [[`${u.filial} — hamkorlar ro‘yxati · ${boshPlainDate(todayISO())} holatiga`], [], head]
+      .concat(all.map((r, i)=>{ const d = r.data || {}, b = bosh(r); return [i + 1, b.shartnoma_raqami || '', b.shartnoma_sanasi ? boshPlainDate(b.shartnoma_sanasi) : ''].concat(cols.map(f=> d[f[0]] ?? '')); }));
+    const ws = XLSX.utils.aoa_to_sheet(aoa); ws['!cols'] = [5, 16, 14].concat(cols.map(f=> ({tashkilot_nomi:36, manzil:36, rahbar_fish:30, bank_nomi:28, lokatsiya:30}[f[0]] || 16))).map(w=> ({wch:w}));
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Hamkorlar');
+    XLSX.writeFile(wb, `Hamkorlar_${String(u.filial).replace(/[^\wА-Яа-яЎўҚқҒғҲҳ‘’' -]/g, '').replace(/\s+/g, '_')}_${todayISO()}.xlsx`);
+    logAct('export', {type:'hamkor', name:'Hamkorlar ro‘yxati'}, `${u.filial}: ${all.length} ta hamkor Excelga yuklab olindi`);
+  };
   host.querySelectorAll('[data-upg]').forEach(b=> b.onclick = ()=>{ uHkPage = Number(b.dataset.upg); renderUserApp(); });
   const pp = host.querySelector('[data-uper]'); if(pp) pp.onchange = ()=>{ uHkPer = Number(pp.value)||20; uHkPage = 1; renderUserApp(); };
   host.querySelectorAll('[data-uhk]').forEach(b=> b.onclick = ()=>{ uHkSel = b.dataset.uhk; renderUserApp(); if(mobile) window.scrollTo(0,0); });
@@ -11156,7 +11173,7 @@ function monSaveView(){ try{ localStorage.setItem(STORAGE_PREFIX+'mon_view', JSO
 
 async function monLoad(force){
   if(MON && !force && Date.now() - monLoadedAt < 120000) return MON;
-  try{ const d = await ST.get(MON_COL, 'data'); MON = d && d.stores ? d : null; monLoadedAt = Date.now(); monErr = ''; }
+  try{ const [d, nt] = await Promise.all([ST.get(MON_COL, 'data'), ST.get(MON_COL, 'notes').catch(()=> null)]); MON = d && d.stores ? d : null; MONN = (nt && nt.items) || {}; monLoadedAt = Date.now(); monErr = ''; }
   catch(e){ monErr = e.message || String(e); }
   return MON;
 }
@@ -11366,10 +11383,58 @@ function monStoreList(R){
   const by = {c:(a,b)=> b.c-a.c || b.s-a.s, s:(a,b)=> b.s-a.s || b.c-a.c, last:(a,b)=> String(b.last).localeCompare(String(a.last)), idle:(a,b)=> (b.idle||0)-(a.idle||0), n:(a,b)=> a.n.localeCompare(b.n)}[MV.sort];
   return L.sort(by);
 }
+let MONN = {};   // do'kon izohlari: STIR -> {t, by, at, hist}
+function monNoteCan(){ return isAuthed() && !(typeof v28RO === 'function' && v28RO()); }
 function monHolat(x){
-  if(x.never) return '<span class="badge cancel">Hech shartnoma tuzmagan</span>';
-  if(x.stopped) return `<span class="badge cancel mon-stop">To‘xtagan · <span data-noi18n>${x.idle}</span> kun</span>`;
-  return '<span class="badge bonus">Faol</span>';
+  const n = MONN[String(x.stir || '')];
+  const can = monNoteCan() && (x.never || x.stopped);
+  const note = n && n.t ? `<div class="mon-note" data-noi18n title="${esc(n.by || '')} · ${esc(arFmtDT(n.at))}">📝 ${esc(n.t)}</div>` : '';
+  const att = can ? ` data-mnote="${esc(x.stir || '')}" role="button" tabindex="0" title="${esc(t(n && n.t ? 'Izohni o‘zgartirish' : 'Izoh yozish'))}"` : '';
+  let b;
+  if(x.never) b = `<span class="badge cancel ${can ? 'mon-st-btn' : ''}"${att}>Nofaol${can ? ' ✎' : ''}</span>`;
+  else if(x.stopped) b = `<span class="badge cancel mon-stop ${can ? 'mon-st-btn' : ''}"${att}>To‘xtagan · <span data-noi18n>${x.idle}</span> kun${can ? ' ✎' : ''}</span>`;
+  else b = '<span class="badge bonus">Faol</span>';
+  return b + note;
+}
+function monNoteText(x){ const n = MONN[String(x.stir || '')]; return n && n.t ? n.t : ''; }
+function monNoteModal(stir, name, onDone){
+  const n = MONN[stir] || {};
+  const m = document.createElement('div'); m.className = 'modal-back'; m.id = 'monNoteModal';
+  m.innerHTML = `<div class="modal" style="max-width:560px;"><div class="modal-head"><h3>Izoh: <span data-noi18n>${esc(name)}</span></h3><button type="button" class="modal-x" data-nx>✕</button></div>
+    <div class="modal-body"><p class="sub" style="margin-top:0;">Do‘kon nima sababdan to‘xtagani yoki nofaolligi haqida eslatma. Izohni admin, bosh ofis va shu filial rahbari ko‘radi.</p>
+      <textarea id="monNoteTxt" rows="4" maxlength="1000" style="width:100%;" placeholder="${esc(t('Masalan: do‘kon yopildi / boshqa kompaniya bilan ishlayapti / ta’mirda — 01.12 dan qayta ochiladi'))}">${esc(n.t || '')}</textarea>
+      ${n.at ? `<p class="hint" data-noi18n>${esc(t('Oxirgi o‘zgarish'))}: ${esc(n.by || '')} · ${arFmtDT(n.at)}</p>` : ''}
+      ${(n.hist || []).length ? `<details><summary class="hint">${esc(t('Avvalgi izohlar'))} (${n.hist.length})</summary><div class="mon-note-h">${n.hist.slice().reverse().map(h=>`<div data-noi18n><b>${esc(h.t || '—')}</b><span>${esc(h.by || '')} · ${arFmtDT(h.at)}</span></div>`).join('')}</div></details>` : ''}
+      <div class="status" id="monNoteSt"></div></div>
+    <div class="modal-foot"><button type="button" class="primary" id="monNoteSave">Saqlash</button>${n.t ? '<button type="button" class="secondary" id="monNoteDel">Izohni o‘chirish</button>' : ''}<button type="button" class="secondary" data-nx>Bekor qilish</button></div></div>`;
+  document.body.appendChild(m);
+  const close = ()=> m.remove();
+  m.querySelectorAll('[data-nx]').forEach(b=> b.onclick = close);
+  const ta = m.querySelector('#monNoteTxt'); ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
+  const save = async txt=>{
+    const st = m.querySelector('#monNoteSt'); st.className = 'status'; st.textContent = '⏳';
+    try{
+      const cur = (await ST.get(MON_COL, 'notes').catch(()=> null)) || {items:{}}; cur.items = cur.items || {};
+      const old = cur.items[stir] || {};
+      const hist = (old.hist || []).concat(old.t ? [{t:old.t, by:old.by, at:old.at}] : []).slice(-10);
+      const by = (typeof admLogin === 'function' && sessionStorage.getItem('birzum_admin_name')) || 'Admin';
+      if(txt) cur.items[stir] = {t:txt, by, at:new Date().toISOString(), name, hist};
+      else if(old.t) cur.items[stir] = {t:'', by, at:new Date().toISOString(), name, hist};
+      await ST.set(MON_COL, 'notes', cur);
+      MONN = cur.items;
+      logAct('hamkor.tahrir', {type:'hamkor', name, stir}, txt ? `Monitoring izohi: ${txt}` : 'Monitoring izohi o‘chirildi');
+      close(); onDone && onDone();
+    }catch(e){ st.className = 'status err'; st.textContent = '⚠️ ' + (e.message || e); }
+  };
+  m.querySelector('#monNoteSave').onclick = ()=> save(ta.value.trim());
+  const d = m.querySelector('#monNoteDel'); if(d) d.onclick = ()=>{ if(confirm('Izoh o‘chirilsinmi?')) save(''); };
+  i18nApply(m);
+}
+function monBindNotes(root, R, re){
+  root.querySelectorAll('[data-mnote]').forEach(el=>{
+    const go = e=>{ e.stopPropagation(); const stir = el.dataset.mnote; const x = (R.stores.concat(R.never)).find(s=> String(s.stir || '') === stir); monNoteModal(stir, x ? x.n : stir, re); };
+    el.onclick = go; el.onkeydown = e=>{ if(e.key === 'Enter') go(e); };
+  });
 }
 async function renderMonitor(host, admin){
   if(!host) return;
@@ -11404,7 +11469,7 @@ async function renderMonitor(host, admin){
       ${kpi('O‘rtacha shartnoma', monShort(avg), 'so‘m')}
       ${kpi('Faol do‘konlar', R.act, 'davrda kamida 1 ta shartnoma', 'act')}
       ${kpi('To‘xtagan do‘konlar', R.stopped, `${MV.stop} kundan beri shartnoma yo‘q`, 'stop')}
-      ${kpi('Hech tuzmagan', R.never.length, `ro‘yxatdagi ${R.regCount} ta hamkordan`, 'never')}
+      ${kpi('Nofaol hamkorlar', R.never.length, `davrda shartnomasi yo‘q · ro‘yxatdagi ${R.regCount} ta hamkordan`, 'never')}
     </div>`;
   const topC = R.stores.filter(x=>x.c).sort((a,b)=> b.c-a.c || b.s-a.s).slice(0,10);
   const topS = R.stores.filter(x=>x.c).sort((a,b)=> b.s-a.s || b.c-a.c).slice(0,10);
@@ -11439,7 +11504,7 @@ async function renderMonitor(host, admin){
   const cntG = {all:R.stores.length + R.never.length, act:R.act, stop:R.stopped, never:R.never.length, noreg:R.stores.filter(x=>!x.reg).length};
   const chip = (k,l)=> `<button type="button" class="ar-chip ${MV.grp===k?'on':''}" data-mg="${k}">${esc(l)}<span class="ar-chip-n" data-noi18n>${cntG[k]}</span></button>`;
   const storesCard = `<div class="card rp-card"><h3>Barcha do‘konlar</h3><p class="sub">«Shartnoma» va «Summa» — tanlangan davr; «Oxirgi shartnoma» — butun ma’lumot bo‘yicha</p>
-      <div class="ar-chips">${chip('all','Hammasi')}${chip('act','Faol')}${chip('stop','To‘xtagan')}${chip('never','Hech shartnoma tuzmagan')}${cntG.noreg ? chip('noreg','Ro‘yxatda yo‘q') : ''}</div>
+      <div class="ar-chips">${chip('all','Hammasi')}${chip('act','Faol')}${chip('stop','To‘xtagan')}${chip('never','Nofaol')}${cntG.noreg ? chip('noreg','Ro‘yxatda yo‘q') : ''}</div>
       <div class="rp-fil-tools" style="margin-top:8px;">
         <div class="hk-search" style="flex:1;min-width:220px;">${ICONS.search}<input type="search" id="monQ" placeholder="Do‘kon nomi, brend, STIR…" value="${esc(MV.q)}"></div>
         <label>Saralash<select id="monSort">${[['c','Shartnomalar soni'],['s','Summa'],['last','Oxirgi shartnoma (yangi)'],['idle','Eng uzoq to‘xtagan'],['n','Nomi (A–Z)']].map(([v,l])=>`<option value="${v}" ${MV.sort===v?'selected':''}>${esc(l)}</option>`).join('')}</select></label>
@@ -11473,6 +11538,7 @@ function monBind(host, admin, R, list, dRows){
   const days = Object.keys(MON.days).sort();
   if(v('monDayPrev')) v('monDayPrev').onclick = ()=>{ const p = days.filter(d=> d < MV.day).pop(); if(p){ MV.day = p; re(); } };
   if(v('monDayNext')) v('monDayNext').onclick = ()=>{ const n = days.find(d=> d > MV.day); if(n){ MV.day = n; re(); } };
+  monBindNotes(host, R, re);
   host.querySelectorAll('[data-mk]').forEach(b=>{ b.onclick = ()=> monListModal(b.dataset.mk, R); b.onkeydown = e=>{ if(e.key==='Enter') monListModal(b.dataset.mk, R); }; });
   host.querySelectorAll('[data-mg]').forEach(b=> b.onclick = ()=>{ MV.grp = b.dataset.mg; MV.page = 1; re(); });
   const q = v('monQ'); if(q) q.oninput = ()=>{ MV.q = q.value; MV.page = 1; clearTimeout(q._t); q._t = setTimeout(()=>{ const pos = q.selectionStart; monRerender(admin); setTimeout(()=>{ const q2 = document.getElementById('monQ'); if(q2){ q2.focus(); try{ q2.setSelectionRange(pos,pos); }catch(e){} } }, 30); }, 250); };
@@ -11482,19 +11548,19 @@ function monBind(host, admin, R, list, dRows){
   const pp = host.querySelector('[data-mper]'); if(pp) pp.onchange = ()=>{ MV.per = Number(pp.value)||20; MV.page = 1; monSaveView(); re(); };
   const xl = (name, aoa, cols)=>{ const ws = XLSX.utils.aoa_to_sheet(aoa); ws['!cols'] = cols.map(w=>({wch:w})); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Monitoring'); XLSX.writeFile(wb, name); };
   if(v('monXlsx')) v('monXlsx').onclick = ()=> xl(`Dokonlar_monitoringi_${R.from}_${R.to}.xlsx`,
-    [[`Hamkor do‘konlar: ${boshPlainDate(R.from)} — ${boshPlainDate(R.to)}${R.scopeFil?' · '+R.scopeFil:''}`], [], ['№','Do‘kon','Brend','STIR','Filial','Shartnoma (davr)','Summa (davr), so‘m','Shartnoma (jami)','Summa (jami), so‘m','Birinchi shartnoma','Oxirgi shartnoma','Holati']]
-      .concat(list.map((x,i)=>[i+1, x.n, x.b, x.stir, x.f, x.c, x.s, x.ca, x.sa, x.first?boshPlainDate(x.first):'', x.last?boshPlainDate(x.last):'', x.never?'Hech shartnoma tuzmagan':x.stopped?`To‘xtagan (${x.idle} kun)`:'Faol'])), [5,34,18,16,20,10,16,10,16,12,12,22]);
+    [[`Hamkor do‘konlar: ${boshPlainDate(R.from)} — ${boshPlainDate(R.to)}${R.scopeFil?' · '+R.scopeFil:''}`], [], ['№','Do‘kon','Brend','STIR','Filial','Shartnoma (davr)','Summa (davr), so‘m','Shartnoma (jami)','Summa (jami), so‘m','Birinchi shartnoma','Oxirgi shartnoma','Holati','Izoh']]
+      .concat(list.map((x,i)=>[i+1, x.n, x.b, x.stir, x.f, x.c, x.s, x.ca, x.sa, x.first?boshPlainDate(x.first):'', x.last?boshPlainDate(x.last):'', x.never?'Nofaol':x.stopped?`To‘xtagan (${x.idle} kun)`:'Faol', monNoteText(x)])), [5,34,18,16,20,10,16,10,16,12,12,22]);
   if(v('monDayXlsx')) v('monDayXlsx').onclick = ()=> xl(`Dokonlar_kunlik_${MV.day}.xlsx`,
     [[`${boshPlainDate(MV.day)} kuni tuzilgan shartnomalar${R.scopeFil?' · '+R.scopeFil:''}`], [], ['№','Do‘kon','Brend','STIR','Filial','Shartnoma','Summa, so‘m']]
       .concat(dRows.map((r,i)=>[i+1, r.x.n, r.x.b, r.x.stir, r.x.f, r.c, r.s])).concat([['', 'Jami', '', '', '', dRows.reduce((a,r)=>a+r.c,0), dRows.reduce((a,r)=>a+r.s,0)]]), [5,34,18,16,20,10,16]);
 }
 /* KPI bosilganda: do'konlar ro'yxati (oyna) + Excel */
 function monListModal(kind, R){
-  const T = {act:'Faol do‘konlar', stop:'To‘xtagan do‘konlar', never:'Hech shartnoma tuzmagan hamkorlar'}[kind];
+  const T = {act:'Faol do‘konlar', stop:'To‘xtagan do‘konlar', never:'Nofaol hamkorlar'}[kind];
   const base = kind==='never' ? R.never.slice().sort((a,b)=> String(a.f).localeCompare(String(b.f)) || a.n.localeCompare(b.n))
     : kind==='stop' ? R.stores.filter(x=> x.stopped).sort((a,b)=> b.idle - a.idle)
     : R.stores.filter(x=> x.c).sort((a,b)=> b.c - a.c || b.s - a.s);
-  const sub = kind==='never' ? 'Hamkorlar ro‘yxatida bor, lekin yuklangan faylda birorta ham shartnomasi yo‘q.'
+  const sub = kind==='never' ? 'Hamkorlar ro‘yxatida bor, lekin yuklangan fayl davrida birorta ham nasiya shartnomasi rasmiylashtirmagan.'
     : kind==='stop' ? `Oxirgi ${MV.stop} kunda (${boshPlainDate(monAddDays(R.ref, -MV.stop))} dan keyin) birorta ham shartnoma tuzmagan do‘konlar.`
     : `${boshPlainDate(R.from)} — ${boshPlainDate(R.to)} davrida kamida 1 ta shartnoma tuzgan do‘konlar.`;
   const fils = [...new Set(base.map(x=> x.f))].sort((a,b)=> String(a).localeCompare(String(b)));
@@ -11514,20 +11580,21 @@ function monListModal(kind, R){
     const q = (m.querySelector('#mlQ').value||'').trim().toLowerCase(), f = (m.querySelector('#mlF')||{}).value || '';
     cur = base.filter(x=> (!f || x.f===f) && (!q || [x.n, x.b, x.stir].some(v=> String(v||'').toLowerCase().includes(q))));
     m.querySelector('#mlCnt').textContent = cur.length;
-    m.querySelector('#mlBody').innerHTML = cur.length ? `<table class="srv-table mon-table"><thead><tr><th>№</th><th>Do‘kon</th><th>STIR</th><th>Filial</th>${kind==='never' ? '' : `<th style="text-align:right">${kind==='act'?'Shartnoma (davr)':'Jami shartnoma'}</th><th style="text-align:right">Summa, so‘m</th><th>Oxirgi shartnoma</th>`}${kind==='stop' ? '<th style="text-align:right">Necha kundan beri</th>' : ''}</tr></thead>
+    m.querySelector('#mlBody').innerHTML = cur.length ? `<table class="srv-table mon-table"><thead><tr><th>№</th><th>Do‘kon</th><th>STIR</th><th>Filial</th>${kind==='never' ? '' : `<th style="text-align:right">${kind==='act'?'Shartnoma (davr)':'Jami shartnoma'}</th><th style="text-align:right">Summa, so‘m</th><th>Oxirgi shartnoma</th>`}${kind==='stop' ? '<th style="text-align:right">Necha kundan beri</th>' : ''}${kind !== 'act' ? '<th>Izoh</th>' : ''}</tr></thead>
       <tbody>${cur.map((x,i)=>`<tr><td class="hk-sub" data-noi18n>${i+1}</td><td data-noi18n>${esc(x.n)}${x.b?`<div class="hk-sub">${esc(x.b)}</div>`:''}</td><td data-noi18n>${esc(x.stir)}</td><td data-noi18n>${esc(x.f)}</td>
         ${kind==='never' ? '' : `<td style="text-align:right" data-noi18n><b>${kind==='act'?x.c:x.ca}</b></td><td style="text-align:right" data-noi18n>${monMoney(kind==='act'?x.s:x.sa)}</td><td data-noi18n>${x.last?boshPlainDate(x.last):'—'}</td>`}
-        ${kind==='stop' ? `<td style="text-align:right" data-noi18n><span class="badge cancel">${x.idle} kun</span></td>` : ''}</tr>`).join('')}</tbody></table>` : '<div class="hk-empty">Topilmadi.</div>';
+        ${kind==='stop' ? `<td style="text-align:right" data-noi18n><span class="badge cancel">${x.idle} kun</span></td>` : ''}${kind !== 'act' ? `<td class="mon-ncell">${monNoteCan() ? `<button type="button" class="link-btn" data-mnote="${esc(x.stir || '')}" style="margin:0;">${monNoteText(x) ? '✎' : '＋ ' + esc(t('izoh'))}</button>` : ''}${monNoteText(x) ? `<div class="mon-note" data-noi18n>📝 ${esc(monNoteText(x))}</div>` : ''}</td>` : ''}</tr>`).join('')}</tbody></table>` : '<div class="hk-empty">Topilmadi.</div>';
     i18nApply(m.querySelector('#mlBody'));
+    monBindNotes(m.querySelector('#mlBody'), R, ()=>{ draw(); monRerender(isAuthed()); });
   };
   m.querySelector('#mlQ').oninput = draw; if(m.querySelector('#mlF')) m.querySelector('#mlF').onchange = draw;
   draw();
   m.querySelector('#mlXlsx').onclick = ()=>{
-    const head = ['№','Do‘kon','Brend','STIR','Filial'].concat(kind==='never' ? [] : [kind==='act'?'Shartnoma (davr)':'Jami shartnoma', 'Summa, so‘m', 'Birinchi shartnoma', 'Oxirgi shartnoma'], kind==='stop' ? ['Necha kundan beri shartnoma yo‘q'] : []);
-    const aoa = [[`${T}${R.scopeFil ? ' · ' + R.scopeFil : ''} · ${boshPlainDate(R.ref)} holatiga`], [sub], head].concat(cur.map((x,i)=> [i+1, x.n, x.b, x.stir, x.f].concat(kind==='never' ? [] : [kind==='act'?x.c:x.ca, kind==='act'?x.s:x.sa, x.first?boshPlainDate(x.first):'', x.last?boshPlainDate(x.last):''], kind==='stop' ? [x.idle] : [])));
+    const head = ['№','Do‘kon','Brend','STIR','Filial'].concat(kind==='never' ? [] : [kind==='act'?'Shartnoma (davr)':'Jami shartnoma', 'Summa, so‘m', 'Birinchi shartnoma', 'Oxirgi shartnoma'], kind==='stop' ? ['Necha kundan beri shartnoma yo‘q'] : [], kind !== 'act' ? ['Izoh'] : []);
+    const aoa = [[`${T}${R.scopeFil ? ' · ' + R.scopeFil : ''} · ${boshPlainDate(R.ref)} holatiga`], [sub], head].concat(cur.map((x,i)=> [i+1, x.n, x.b, x.stir, x.f].concat(kind==='never' ? [] : [kind==='act'?x.c:x.ca, kind==='act'?x.s:x.sa, x.first?boshPlainDate(x.first):'', x.last?boshPlainDate(x.last):''], kind==='stop' ? [x.idle] : [], kind !== 'act' ? [monNoteText(x)] : [])));
     const ws = XLSX.utils.aoa_to_sheet(aoa); ws['!cols'] = [5,36,18,16,20,14,18,14,14,14].map(w=>({wch:w}));
     const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Royxat');
-    XLSX.writeFile(wb, `${{act:'Faol_dokonlar', stop:'Toxtagan_dokonlar', never:'Hech_tuzmagan_hamkorlar'}[kind]}_${R.ref}${R.scopeFil ? '_' + R.scopeFil : ''}.xlsx`);
+    XLSX.writeFile(wb, `${{act:'Faol_dokonlar', stop:'Toxtagan_dokonlar', never:'Nofaol_hamkorlar'}[kind]}_${R.ref}${R.scopeFil ? '_' + R.scopeFil : ''}.xlsx`);
   };
   i18nApply(m);
 }

@@ -1370,6 +1370,19 @@ button.sm{padding:6px 10px !important;font-size:12.5px !important;min-height:0 !
 .pf-lbl{font-size:10px;} .pf-ax{font-size:9.5px;}
 .rp-kpis.pf-kpis{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
 @media (max-width:560px){ .rp-kpis.pf-kpis{grid-template-columns:1fr 1fr;} }
+
+/* ============ v28: Bosh ofis — faqat ko'rish ============ */
+body.ro-mode #hkNew, body.ro-mode #hkEdit, body.ro-mode .hk-tool.del, body.ro-mode .hk-ico.del, body.ro-mode #hkDrop, body.ro-mode #hkFileInput, body.ro-mode [data-fdel],
+body.ro-mode #usersNew, body.ro-mode #uEditBtn, body.ro-mode #uDelBtn, body.ro-mode #uApprove, body.ro-mode #uReject, body.ro-mode #uActiveSw, body.ro-mode #uNewBtn, body.ro-mode #uFixBtn,
+body.ro-mode #arAccept, body.ro-mode #arApprove, body.ro-mode #arReturn, body.ro-mode #arReject, body.ro-mode #arEdit, body.ro-mode #arQuickBux, body.ro-mode #arMakeContract, body.ro-mode #arDidox, body.ro-mode [data-rev],
+body.ro-mode #monUp, body.ro-mode #pfUp, body.ro-mode #toBux_bosh, body.ro-mode .tt-chk,
+body.ro-mode #chatForm, body.ro-mode [data-medit], body.ro-mode [data-mdel], body.ro-mode [data-act="del"], body.ro-mode [data-act="edit"],
+body.ro-mode .card:has(#form_bosh), body.ro-mode .card:has(#form_qosh), body.ro-mode .card:has(#form_bonus), body.ro-mode .card:has(#form_hamkor){display:none !important;}
+body.ro-mode .ar-decide, body.ro-mode .uv-actions{display:none !important;}
+body.ro-mode .grid:has(> .card #form_bosh), body.ro-mode .grid:has(> .card #form_qosh), body.ro-mode .grid:has(> .card #form_bonus){grid-template-columns:1fr !important;}
+body.ro-mode .grid:has(> .card #form_bosh) .preview-shell, body.ro-mode .grid:has(> .card #form_qosh) .preview-shell, body.ro-mode .grid:has(> .card #form_bonus) .preview-shell{display:none !important;}
+body.ro-mode .grid:has(> .card #form_bosh) .right-col, body.ro-mode .grid:has(> .card #form_qosh) .right-col, body.ro-mode .grid:has(> .card #form_bonus) .right-col{max-width:none;width:100%;}
+body.ro-mode [data-reply], body.ro-mode #chatFile{display:none !important;}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -6105,7 +6118,7 @@ function openUserEditModal(u){
   m.innerHTML = `<div class="modal" style="max-width:520px;">
     <div class="modal-head"><h3>Foydalanuvchini tahrirlash</h3><button type="button" class="modal-x" id="umX">✕</button></div>
     <form id="umForm" autocomplete="off"><div class="modal-body">
-      <label>Rol</label><select id="umRole">${['user','rahbar','buxgalter','admin'].map(r=>`<option value="${r}" ${userRole(u)===r?'selected':''}>${ROLE_LABEL[r]}</option>`).join('')}</select>
+      <label>Rol</label><select id="umRole">${['user','rahbar','boshofis','buxgalter','admin'].map(r=>`<option value="${r}" ${userRole(u)===r?'selected':''}>${ROLE_LABEL[r]}</option>`).join('')}</select>
       <div id="umFilialRow"><label>JShShIR (PINFL) <span class="opt">— tabeldan: filial va lavozim avtomatik olinadi</span></label><input type="text" id="umPinfl" inputmode="numeric" maxlength="14" value="${esc(u.pinfl||'')}" placeholder="14 ta raqam"><label>Filial</label><select id="umFilial">${filialOptionsMarkup(u.filial||'')}</select></div>
       <label>Ism va familiya</label><input type="text" id="umIsm" value="${esc(u.ism||'')}">
       <label>Telefon raqami</label><input type="tel" id="umTel" value="${esc(u.telefon||'')}">
@@ -6250,7 +6263,7 @@ function openUserCreateModal(){
     <div class="modal-head"><h3>Yangi foydalanuvchi qo‘shish</h3><button type="button" class="modal-x" id="ucX">✕</button></div>
     <form id="ucForm" autocomplete="off"><div class="modal-body">
       <label>Rol</label>
-      <select id="ucRole"><option value="buxgalter">Buxgalter</option><option value="user">Hodim (filial xodimi — ariza yuboradi)</option><option value="rahbar">Filial rahbari</option><option value="admin">Admin</option></select>
+      <select id="ucRole"><option value="buxgalter">Buxgalter</option><option value="user">Hodim (filial xodimi — ariza yuboradi)</option><option value="rahbar">Filial rahbari</option><option value="boshofis">Bosh ofis (hammasini ko‘radi, o‘zgartira olmaydi)</option><option value="admin">Admin</option></select>
       <div class="hint" id="ucRoleHint"></div>
       <div id="ucFilialRow"><label>JShShIR (PINFL) <span class="opt">— hodim tabelda bo‘lishi kerak</span></label><input type="text" id="ucPinfl" inputmode="numeric" maxlength="14" placeholder="14 ta raqam"><label>Filial</label><select id="ucFilial">${filialOptionsMarkup('')}</select></div>
       <label>Ism va familiya</label><input type="text" id="ucIsm" placeholder="Masalan: Aliyeva Dilnoza">
@@ -12890,6 +12903,57 @@ showApp = function(){
   clearInterval(bxAutoHamkor._t); bxAutoHamkor._t = setInterval(bxAutoHamkor, 60000);
 };
 
+/* ======================================================================================
+   v28 · «Bosh ofis» roli: admin bo'limini to'liq KO'RADI, lekin hech narsani o'zgartira olmaydi
+   (server ham yozishni rad etadi — bu yerdagi cheklovlar faqat qulaylik uchun)
+   ====================================================================================== */
+ROLE_LABEL.boshofis = 'Bosh ofis (ko‘rish)';
+function v28RO(){ try{ return sessionStorage.getItem('birzum_ro') === '1'; }catch(e){ return false; } }
+function v28SetRO(on){ try{ on ? sessionStorage.setItem('birzum_ro', '1') : sessionStorage.removeItem('birzum_ro'); }catch(e){} document.body.classList.toggle('ro-mode', !!on); }
+const _v28Enter = v26Enter;
+v26Enter = function(u){
+  if(u && u.role === 'boshofis'){
+    v28SetRO(true);
+    _v28Enter(Object.assign({}, u, {role:'admin'}));
+    try{ sessionStorage.setItem('birzum_admin_role', 'boshofis'); }catch(e){}
+    const un = document.getElementById('sbUserName'); if(un) un.textContent = (u.login || '').toUpperCase() + ' · ' + t('KO‘RISH');
+    return;
+  }
+  v28SetRO(false); try{ sessionStorage.removeItem('birzum_admin_role'); }catch(e){}
+  _v28Enter(u);
+};
+if(v28RO()) document.body.classList.add('ro-mode');
+/* Yozishga urinish — saqlanmaydi, foydalanuvchi bosgan bo'lsa ogohlantiramiz */
+let v28LastClick = 0;
+document.addEventListener('click', ()=>{ v28LastClick = Date.now(); }, true);
+document.addEventListener('submit', e=>{ if(v28RO() && isAuthed() && !e.target.closest('#form_profil')){ e.preventDefault(); e.stopImmediatePropagation(); v28Warn(); } }, true);
+function v28Warn(){
+  if(Date.now() - (v28Warn._t || 0) < 2500) return; v28Warn._t = Date.now();
+  showToast({icon:'👁', title:t('Faqat ko‘rish huquqi'), body:t('Sizning rolingizda ma’lumotlarni o‘zgartirib bo‘lmaydi.')});
+}
+const V28_OK_COLS = new Set(['birzum_log', 'birzum_tg_codes', 'birzum_tg']);
+const _v28Persist = persist;
+persist = function(key){ if(v28RO() && isAuthed()){ if(Date.now() - v28LastClick < 2000) v28Warn(); return; } return _v28Persist.apply(this, arguments); };
+['set', 'del'].forEach(op=>{
+  const orig = ST[op]; if(!orig) return;
+  ST[op] = function(col, id){
+    if(v28RO() && isAuthed() && !V28_OK_COLS.has(col) && !(col === AR_USERS && id === (sessionStorage.getItem(ADMIN_ID_KEY) || ''))){
+      if(Date.now() - v28LastClick < 2000) v28Warn();
+      return Promise.resolve();
+    }
+    return orig.apply(this, arguments);
+  };
+});
+// Sozlamalar: faqat profil, ko'rinish, Telegram, Telegram tasdiq, jurnal
+function v28ProfilRO(){
+  document.querySelectorAll('.set-grid > .card').forEach(c=>{
+    const keep = c.querySelector('[data-theme-val],#form_profil,#logOpen') || c.id === 'tgCard' || c.id === 'secCard';
+    if(!keep) c.remove();
+  });
+}
+const _v28BxAuto = bxAutoHamkor;
+bxAutoHamkor = function(){ return v28RO() ? Promise.resolve(0) : _v28BxAuto.apply(this, arguments); };
+
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){
     alert('Excel kutubxonasi yuklanmadi. Internet aloqasini tekshirib, sahifani qayta yuklang.');
@@ -13131,7 +13195,7 @@ function bindProfilEvents(){
     document.getElementById('pf_current_login').value = newLogin;
     document.getElementById('pf_new_login').placeholder = newLogin;
   };
-  v26BindProfilForm(); bindSecCard(); bindTabelCard();
+  v26BindProfilForm(); bindSecCard(); if(typeof v28RO === 'function' && v28RO()) v28ProfilRO(); else bindTabelCard();
 }
 
 function readForm(key){

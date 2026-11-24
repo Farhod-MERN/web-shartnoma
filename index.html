@@ -2,6 +2,13 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
+<script>try{ if(sessionStorage.getItem('birzum_tok')) document.documentElement.classList.add('booting'); }catch(e){}</script>
+<style>
+html.booting #loginScreen{display:none !important}
+html.booting body::before{content:'';position:fixed;left:50%;top:45%;width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;border:3px solid rgba(124,181,24,.25);border-top-color:#7cb518;animation:bootspin .8s linear infinite;z-index:99998}
+html.booting body::after{content:'Yuklanmoqda…';position:fixed;left:0;right:0;top:calc(45% + 32px);text-align:center;font:500 13px/1.4 system-ui,sans-serif;color:#7a8794;z-index:99998}
+@keyframes bootspin{to{transform:rotate(360deg)}}
+</style>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Brauzer bu sahifani keshda saqlab, eski versiyasini ko'rsatib qolmasligi uchun -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -12514,7 +12521,12 @@ fillSignupFilial = function(){};
 })();
 
 /* ---------- Sahifa ochilganda ---------- */
+function v35BootDone(){ document.documentElement.classList.remove('booting'); }
+setTimeout(v35BootDone, 20000);   // har ehtimolga qarshi — ekran hech qachon bo'sh qolib ketmasin
 async function v26Boot(){
+  try{ return await v26Boot0(); }finally{ v35BootDone(); }
+}
+async function v26Boot0(){
   if(!window.__SERVER_MODE){ showLogin(); const e = document.getElementById('loginError'); if(e){ e.className = 'status err'; e.textContent = 'Server manzili sozlanmagan (index.html → BIRZUM_SERVER.url).'; } return; }
   if(!tokGet()){ clearAuthed(); clearUserSession(); showLogin(); return; }
   try{

@@ -55,13 +55,21 @@ window.BIRZUM_SERVER = {
   }
   async function call(op, body){
     var r;
-    try{
-      r = await fetch(BASE + '/api/' + op, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'X-Token': (function(){ try{ return sessionStorage.getItem('birzum_tok') || ''; }catch(e){ return ''; } })()},
-        body: JSON.stringify(body || {})
-      });
-    }catch(e){
+    // v31: mobil internet bir lahzaga uzilsa — bir necha marta qayta urinamiz
+    var payload = JSON.stringify(body || {});
+    var safeOp = /^(get|list|set|del|stats|auth\/me|ping|tabel\/info|tabel\/list|staff)$/.test(op);
+    var tries = safeOp ? 4 : 1, lastErr = null;
+    for(var t = 0; t < tries; t++){
+      try{
+        r = await fetch(BASE + '/api/' + op, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json', 'X-Token': (function(){ try{ return sessionStorage.getItem('birzum_tok') || ''; }catch(e){ return ''; } })()},
+          body: payload
+        });
+        lastErr = null; break;
+      }catch(e){ lastErr = e; r = null; if(t < tries - 1) await new Promise(function(ok){ setTimeout(ok, 1500 * (t + 1)); }); }
+    }
+    try{ if(lastErr) throw lastErr; }catch(e){
       banner(true, '⚠️ Server bilan aloqa yo‘q — Adminga murojaat qiling. Telegram: @birzumadmin');
       var er = new Error('Serverga ulanib bo‘lmadi. Adminga murojaat qiling (Telegram: @birzumadmin).');
       er.code = 'unavailable'; throw er;
@@ -1394,6 +1402,18 @@ body.ro-mode [data-reply], body.ro-mode #chatFile{display:none !important;}
 .mon-ncell{min-width:140px;}
 .mon-note-h{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
 .mon-note-h div{font-size:12px;border-left:3px solid var(--line);padding-left:8px;} .mon-note-h span{display:block;color:var(--muted);font-size:11px;}
+
+/* v33: ariza qoralamasi */
+.dr-status{font-size:12.5px;color:var(--muted);margin:10px 0 4px;min-height:0}
+.dr-status:empty{display:none}
+.dr-status.server{color:var(--accent-dark, #4d7c0f)}
+.dr-status.local{color:#b45309}
+.dr-card{border:1.5px dashed var(--accent, #7cb518);border-radius:14px;padding:12px 14px;margin:12px 0 4px;background:color-mix(in srgb, var(--accent, #7cb518) 7%, transparent)}
+.dr-card-h{font-weight:700;font-size:14px;margin-bottom:4px}
+.dr-card-n{font-weight:600;font-size:13.5px}
+.dr-card-s{font-size:12px;color:var(--muted);margin:2px 0 10px}
+.dr-card-a{display:flex;gap:8px;flex-wrap:wrap}
+.dr-card-a button{flex:1;min-width:130px;margin:0}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -4072,13 +4092,14 @@ async function hfCompressImage(file){
     const url = URL.createObjectURL(file);
     const img = await new Promise((res, rej)=>{ const im = new Image(); im.onload = ()=>res(im); im.onerror = rej; im.src = url; });
     URL.revokeObjectURL(url);
-    const max = 2000;
+    const max = 2000;   // v33: sifat saqlanadi (hujjat matni aniq o'qiladi)
     const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
     const w = Math.round(img.naturalWidth * k), h = Math.round(img.naturalHeight * k);
     const c = document.createElement('canvas'); c.width = w; c.height = h;
     const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,w,h); ctx.drawImage(img, 0, 0, w, h);
-    let q = 0.86, blob = await new Promise(r=> c.toBlob(r, 'image/jpeg', q));
-    while(blob && blob.size > HF_CLOUD_MAX && q > 0.6){ q -= 0.08; blob = await new Promise(r=> c.toBlob(r, 'image/jpeg', q)); }
+    const lim = Math.min(HF_CLOUD_MAX, 1100 * 1024);   // v33: bitta rasm ~1 MB gacha, sifat 70% dan pasaymaydi
+    let q = 0.85, blob = await new Promise(r=> c.toBlob(r, 'image/jpeg', q));
+    while(blob && blob.size > lim && q > 0.72){ q -= 0.05; blob = await new Promise(r=> c.toBlob(r, 'image/jpeg', q)); }
     if(!blob || blob.size >= file.size) return file;
     const name = file.name.replace(/\.(png|webp|jpe?g)$/i, '') + '.jpg';
     return new File([blob], name, {type:'image/jpeg'});
@@ -5193,9 +5214,12 @@ async function uSubmit(){
     for(const f of uDraft.files){
       if(f.isNew){
         st.className='status'; st.textContent = `Fayllar yuklanmoqda: ${++done} / ${newOnes.length} …`;
-        const fid = 'f' + uid();
-        const chunks = await arSaveFile(fid, f.blob);
-        metas.push({id:fid, docType:f.docType, name:f.name, type:f.type, size:f.size, chunks, addedAt:new Date().toISOString()});
+        if(!f._up){
+          const fid = 'f' + uid();
+          const chunks = await arSaveFile(fid, f.blob);
+          f._up = {id:fid, chunks, addedAt:new Date().toISOString()};   // v31: keyingi urinishda qayta yuklanmaydi
+        }
+        metas.push({id:f._up.id, docType:f.docType, name:f.name, type:f.type, size:f.size, chunks:f._up.chunks, addedAt:f._up.addedAt});
       }else{
         metas.push({id:f.id, docType:f.docType, name:f.name, type:f.type, size:f.size, chunks:f.chunks, addedAt:f.addedAt});
       }
@@ -5224,7 +5248,7 @@ async function uSubmit(){
     if(st2){ st2.className = 'ua-flash ok'; st2.textContent = cloud ? '✅ Ariza adminga yuborildi. Holatini shu sahifada kuzatib borishingiz mumkin.' : '⚠ Ariza saqlandi, lekin internet (bulut) ulanmagani uchun hozircha faqat shu qurilmada turibdi.'; setTimeout(()=>{ st2.className='ua-flash'; st2.textContent=''; }, 8000); }
   }catch(e){
     console.error(e); btn.disabled = false;
-    st.className='status err'; st.textContent = 'Yuborishda xatolik: ' + (e && e.message ? e.message : e) + '. Internetni tekshirib, qayta urinib ko‘ring.';
+    st.className='status err'; st.textContent = 'Yuborishda xatolik: ' + String(e && e.message ? e.message : e).replace(/\.+$/, '') + '. Internetni tekshirib, «Adminga yuborish» ni yana bosing — yuklangan rasmlar qayta yuklanmaydi, davom ettiriladi.';
   }
 }
 function arDataTable(a){
@@ -13033,6 +13057,240 @@ function v28ProfilRO(){
 }
 const _v28BxAuto = bxAutoHamkor;
 bxAutoHamkor = function(){ return v28RO() ? Promise.resolve(0) : _v28BxAuto.apply(this, arguments); };
+
+/* ======================================================================================
+   v33: ARIZA QORALAMASI — kiritilgan ma'lumot va rasmlar yo'qolmaydi
+   1) Har o'zgarishda telefonning o'zida (IndexedDB) saqlanadi — internet yo'q bo'lsa ham.
+   2) Internet bo'lsa — serverga ham (rasmlar fonda yuklanadi), boshqa qurilmadan ham davom ettirsa bo'ladi.
+   3) Ariza yuborilgach qoralama o'chadi. Rasmlar oldindan yuklangani uchun yuborish tez bo'ladi.
+   ====================================================================================== */
+const DR_COL = 'birzum_ariza_draft';
+let drCur = null;          // joriy qoralama (yoki null)
+let drLoaded = false;
+let drT = null, drBusy = false, drAgain = false;
+let drSessObj = null, drSig = '';
+let drUps = new Map();     // serverga yuklangan qoralama fayllari: id -> chunks
+let drLastKind = '', drLastAt = '';
+let drDirty = false;
+
+function drKey(){ const u = getUserSession(); return u && u.id ? 'd_' + u.id : null; }
+function drIdb(){
+  return new Promise((res, rej)=>{
+    const r = indexedDB.open('birzum_draft_v1', 1);
+    r.onupgradeneeded = ()=> r.result.createObjectStore('d');
+    r.onsuccess = ()=> res(r.result); r.onerror = ()=> rej(r.error);
+  });
+}
+async function drLocal(op, key, val){
+  try{
+    const db = await drIdb();
+    return await new Promise((res, rej)=>{
+      const tx = db.transaction('d', op === 'get' ? 'readonly' : 'readwrite'); const st = tx.objectStore('d');
+      const rq = op === 'get' ? st.get(key) : op === 'put' ? st.put(val, key) : st.delete(key);
+      rq.onsuccess = ()=> res(rq.result); rq.onerror = ()=> rej(rq.error);
+    });
+  }catch(e){ return null; }
+}
+function drFileSig(){ return uDraft ? uDraft.files.map(f=> f.docType + ':' + f.name + ':' + f.size).join('|') + '#' + (uDraft.removed || []).length : ''; }
+function drSnap(){
+  return {
+    editOf: uDraft.id || '',
+    data: Object.assign({}, uDraft.data),
+    files: uDraft.files.map(f=>({docType: f.docType, name: f.name, type: f.type, size: f.size, isNew: !!f.isNew,
+      id: f.isNew ? '' : f.id, chunks: f.isNew ? 0 : f.chunks, addedAt: f.addedAt || '', up: f._up || null})),
+    removed: (uDraft.removed || []).map(r=>({id: r.id, docType: r.docType, name: r.name, type: r.type, size: r.size, chunks: r.chunks, addedAt: r.addedAt})),
+    savedAt: new Date().toISOString()
+  };
+}
+function drEmpty(sn){ return !sn.editOf && !Object.values(sn.data || {}).some(v=> String(v || '').trim() && v !== (getUserSession() || {}).filial) && !(sn.files || []).length; }
+function drWithBlobs(sn){ return Object.assign({}, sn, {files: sn.files.map((m, i)=> Object.assign({}, m, {blob: (uDraft.files[i] && uDraft.files[i].blob) || null}))}); }
+function drTime(iso){ try{ const d = new Date(iso); return `${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`; }catch(e){ return ''; } }
+function drSay(kind){
+  drLastKind = kind; drLastAt = new Date().toISOString();
+  const el = document.getElementById('drStatus'); if(!el) return;
+  const tm = drTime(drLastAt).slice(11);
+  el.className = 'dr-status ' + kind;
+  el.textContent = kind === 'server' ? `☁️ Qoralama saqlandi · ${tm}. Internet uzilsa yoki telefon o‘chsa ham ma’lumotlar yo‘qolmaydi — keyinroq davom ettirishingiz mumkin.`
+    : kind === 'local' ? `💾 Qoralama shu telefonda saqlandi · ${tm} (internet tiklangach serverga ham saqlanadi).`
+    : kind === 'saving' ? '⏳ Qoralama saqlanmoqda…' : '';
+}
+function drSoon(ms){ drDirty = true; clearTimeout(drT); drT = setTimeout(drSave, ms == null ? 1200 : ms); }
+async function drSave(){
+  if(uView !== 'form' || !uDraft) return;
+  if(typeof v28RO === 'function' && v28RO()) return;
+  if(drBusy){ drAgain = true; return; }
+  const key = drKey(); if(!key) return;
+  drBusy = true;
+  try{
+    try{ uCollectData(); }catch(e){}
+    const sn = drSnap();
+    if(drEmpty(sn)){ await drLocal('del', key); drCur = null; return; }
+    await drLocal('put', key, drWithBlobs(sn)); drCur = drWithBlobs(sn); drSay('local');
+    // yangi rasmlarni fonda serverga yuklaymiz (yuborishda qayta yuklanmaydi)
+    for(const f of uDraft.files.slice()){
+      if(f.isNew && !f._up && f.blob){
+        const fid = 'f' + uid(); const chunks = await arSaveFile(fid, f.blob);
+        f._up = {id: fid, chunks, addedAt: new Date().toISOString()};
+      }
+    }
+    // olib tashlangan qoralama rasmlarini serverdan ham o'chiramiz
+    const now = new Map(); uDraft.files.forEach(f=>{ if(f._up) now.set(f._up.id, f._up.chunks); });
+    for(const [id, ch] of drUps) if(!now.has(id)) arDeleteFile({id, chunks: ch}).catch(()=>{});
+    drUps = now;
+    const sn2 = drSnap();
+    await ST.set(DR_COL, key, Object.assign({userId: (getUserSession() || {}).id}, sn2));
+    await drLocal('put', key, drWithBlobs(sn2)); drCur = drWithBlobs(sn2);
+    drSay('server');
+  }catch(e){ console.warn('qoralama:', e); if(drCur) drSay('local'); }
+  finally{ drBusy = false; if(drAgain){ drAgain = false; drSoon(2500); } }
+}
+async function drLoad(force){
+  if(drLoaded && !force) return drCur;
+  const key = drKey(); if(!key) return null;
+  const loc = await drLocal('get', key);
+  let srv = null;
+  try{ srv = await ST.get(DR_COL, key); }catch(e){}
+  let d = loc || null;
+  if(srv && (!d || String(srv.savedAt || '') > String(d.savedAt || ''))){
+    // serverdagi yangiroq — mahalliy rasmlarni nomi/hajmi bo'yicha ulaymiz
+    const lf = (loc && loc.files) || [];
+    d = Object.assign({}, srv, {files: (srv.files || []).map(m=>{ const x = lf.find(z=> z.name === m.name && z.size === m.size && z.docType === m.docType); return Object.assign({}, m, {blob: x && x.blob || null}); })});
+  }
+  // tuzatilayotgan ariza endi ko'rib chiqilgan bo'lsa — qoralama keraksiz
+  if(d && d.editOf){
+    const a = uArizalar.find(x=> x.id === d.editOf);
+    if(uArizalar.length && (!a || a.status !== 'qaytarildi')){ await drDrop(false); d = null; }
+  }
+  drCur = d; drLoaded = true;
+  return d;
+}
+async function drDrop(delFiles){
+  const key = drKey(); clearTimeout(drT);
+  const d = drCur; drCur = null;
+  if(key){ await drLocal('del', key); try{ await ST.del(DR_COL, key); }catch(e){} }
+  if(delFiles && d) (d.files || []).forEach(m=>{ if(m.up) arDeleteFile({id: m.up.id, chunks: m.up.chunks}).catch(()=>{}); });
+  drUps = new Map();
+}
+async function drResume(){
+  const d = drCur; if(!d) return;
+  const host = document.getElementById('uaContent');
+  const msg = document.getElementById('drCardMsg'); if(msg) msg.textContent = '⏳ Qoralama ochilmoqda…';
+  const files = [];
+  for(const m of (d.files || [])){
+    const f = {docType: m.docType, name: m.name, type: m.type, size: m.size};
+    if(m.isNew){
+      f.isNew = true; if(m.up) f._up = m.up;
+      f.blob = m.blob || null;
+      if(!f.blob && m.up){ try{ f.blob = await arFileBlob({id: m.up.id, chunks: m.up.chunks, type: m.type}); }catch(e){} }
+      if(!f.blob && !f._up) continue;
+      if(f.blob && /^image\//.test(f.type || '')) f.thumbUrl = URL.createObjectURL(f.blob);
+    }else Object.assign(f, {id: m.id, chunks: m.chunks, addedAt: m.addedAt});
+    files.push(f);
+  }
+  drUps = new Map(); files.forEach(f=>{ if(f._up) drUps.set(f._up.id, f._up.chunks); });
+  uDraft = {data: Object.assign({}, d.data || {}), files, removed: (d.removed || []).slice()};
+  if(d.editOf && uArizalar.some(a=> a.id === d.editOf)) uDraft.id = d.editOf;
+  drSessObj = uDraft; drSig = drFileSig(); drDirty = true;
+  uView = 'form'; uCurrentId = null; renderUserApp(); window.scrollTo(0, 0);
+  drSay(drLastKind || 'server');
+}
+function drCardMarkup(d){
+  const nm = (d.data && (d.data.tashkilot_nomi || d.data.brend)) || (d.editOf ? 'Tuzatilayotgan ariza' : 'Nomi kiritilmagan');
+  const nf = (d.files || []).length;
+  return `<div class="dr-card" id="drCard">
+    <div class="dr-card-h">📝 Tugallanmagan ariza (qoralama)</div>
+    <div class="dr-card-n" data-noi18n>«${esc(nm)}»${d.data && d.data.stir ? ' · STIR ' + esc(d.data.stir) : ''}</div>
+    <div class="dr-card-s"><span data-noi18n>${nf}</span> ta fayl · saqlangan: <span data-noi18n>${esc(drTime(d.savedAt))}</span></div>
+    <div class="dr-card-a"><button type="button" class="primary" id="drGo">✏️ Davom ettirish</button><button type="button" class="secondary" id="drDel">🗑 O‘chirish</button></div>
+    <div class="hint" id="drCardMsg"></div>
+  </div>`;
+}
+function drPaintCard(){
+  const old = document.getElementById('drCard'); if(old) old.remove();
+  if(uTab !== 'home' || uView === 'form' || !drCur) return;
+  const nb = document.getElementById('uNewBtn') || document.getElementById('uNewBtn2'); if(!nb) return;
+  nb.insertAdjacentHTML('beforebegin', drCardMarkup(drCur));
+  ['uNewBtn', 'uNewBtn2'].forEach(id=>{ const b = document.getElementById(id); if(b) b.style.display = 'none'; });
+  document.getElementById('drGo').onclick = drResume;
+  document.getElementById('drDel').onclick = async ()=>{
+    if(!confirm('Qoralama butunlay o‘chirilsinmi? Kiritilgan ma’lumotlar va rasmlar qayta tiklanmaydi.')) return;
+    await drDrop(true); renderUserApp();
+  };
+  // tuzatish tugmasi: shu ariza uchun qoralama bo'lsa — qoralamadan davom etadi
+  const fx = document.getElementById('uFixBtn'); if(fx && drCur.editOf && drCur.editOf === uCurrentId) fx.onclick = drResume;
+  try{ i18nApply(document.getElementById('drCard')); }catch(e){}
+}
+function drBindForm(){
+  if(!uDraft) return;
+  if(drSessObj !== uDraft){ drSessObj = uDraft; drSig = drFileSig(); drLastKind = ''; drDirty = false; }
+  else if(drFileSig() !== drSig){ drSig = drFileSig(); drSoon(400); }
+  const form = document.getElementById('arForm'); if(!form) return;
+  if(!document.getElementById('drStatus')){
+    const st = document.getElementById('arStatus');
+    if(st) st.insertAdjacentHTML('beforebegin', '<div class="dr-status" id="drStatus"></div>');
+  }
+  if(drLastKind) drSay(drLastKind);
+  if(!form._dr){
+    form._dr = true;
+    form.addEventListener('input', e=>{ if(e.target && e.target.type !== 'file') drSoon(); });
+    form.addEventListener('change', e=>{ if(e.target && e.target.type !== 'file') drSoon(); });
+  }
+  const acts = form.querySelector('.hk-actions');
+  if(acts && !document.getElementById('drSaveBtn')){
+    acts.insertAdjacentHTML('beforeend', '<button type="button" class="secondary" id="drSaveBtn">💾 Saqlab, keyinroq davom ettirish</button>');
+  }
+  const sb = document.getElementById('drSaveBtn');
+  if(sb) sb.onclick = async ()=>{
+    sb.disabled = true; drSay('saving'); clearTimeout(drT);
+    while(drBusy) await new Promise(r=> setTimeout(r, 300));
+    await drSave(); sb.disabled = false;
+    if(!drCur){ uView = 'list'; renderUserApp(); return; }
+    uView = uDraft && uDraft.id ? 'view' : 'list'; uCurrentId = uDraft && uDraft.id || null;
+    renderUserApp(); window.scrollTo(0, 0);
+  };
+  const cb = document.getElementById('arCancel');
+  if(cb) cb.onclick = async ()=>{
+    try{ uCollectData(); }catch(e){}
+    const sn = drSnap();
+    if(drCur || (drDirty && !drEmpty(sn))){
+      if(!confirm('Kiritilgan ma’lumotlar o‘chirilsinmi?\n\nKeyinroq davom ettirmoqchi bo‘lsangiz — «Bekor» ni bosing va «💾 Saqlab, keyinroq davom ettirish» tugmasidan foydalaning.')) return;
+      // ariza yuborilgan fayllar (tuzatish rejimidagi eski fayllar) o'chirilmaydi — faqat qoralamaniki
+      await drDrop(true);
+    }else await drDrop(false);
+    uView = uDraft && uDraft.id ? 'view' : 'list'; uCurrentId = uDraft && uDraft.id || null; uDraft = null;
+    renderUserApp();
+  };
+}
+bindUForm = (function(orig){ return function(){ orig.apply(this, arguments); try{ drBindForm(); }catch(e){ console.warn(e); } }; })(bindUForm);
+renderUserApp = (function(orig){ return function(){
+  const r = orig.apply(this, arguments);
+  try{
+    if(uView !== 'form'){
+      if(drLoaded) drPaintCard();
+      else drLoad().then(()=> drPaintCard()).catch(()=>{});
+    }
+  }catch(e){}
+  return r;
+}; })(renderUserApp);
+uSubmit = (function(orig){ return async function(){
+  clearTimeout(drT);
+  while(drBusy) await new Promise(r=> setTimeout(r, 300));   // fonda yuklanayotgan rasm tugasin
+  await orig.apply(this, arguments);
+  if(!uDraft){ await drDrop(false); drPaintCard(); }          // muvaffaqiyatli yuborildi — qoralama keraksiz
+}; })(uSubmit);
+// sahifa yopilayotganda / ilova fonga o'tganda — darhol telefonda saqlab qo'yamiz
+function drFlushLocal(){
+  try{
+    if(uView !== 'form' || !uDraft || !drDirty) return; const key = drKey(); if(!key) return;
+    try{ uCollectData(); }catch(e){}
+    const sn = drSnap(); if(drEmpty(sn)) return;
+    drLocal('put', key, drWithBlobs(sn)); drCur = drWithBlobs(sn);
+  }catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'hidden') drFlushLocal(); });
+window.addEventListener('pagehide', drFlushLocal);
+// boshqa foydalanuvchi kirsa — eski qoralama xotirada qolmasin
+window.addEventListener('storage', ()=>{ drLoaded = false; });
 
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){

@@ -2656,15 +2656,7 @@ let cloudPulledOnce = false;
 // firebaseConfig kiritish shart emas — sayt ochilishi bilan avtomatik
 // shu loyihaga ulanadi. Agar kimdir Profil bo'limidan boshqa (masalan test)
 // konfiguratsiyani qo'lda joylashtirsa, o'sha ustunlik qiladi.
-const DEFAULT_CLOUD_CONFIG = {
-  apiKey: "AIzaSyDel7Qc1DG2sxKNlL1iEYtzq_3vJ_BUn3A",
-  authDomain: "shartnoma-web.firebaseapp.com",
-  projectId: "shartnoma-web",
-  storageBucket: "shartnoma-web.firebasestorage.app",
-  messagingSenderId: "535357750557",
-  appId: "1:535357750557:web:f73dd50cb80180c281f5f4",
-  measurementId: "G-0VFQL9QWYD"
-};
+const DEFAULT_CLOUD_CONFIG = { apiKey:'server', projectId:'server' }; // v30: Firebase endi ishlatilmaydi
 
 function getCloudConfig(){
   try{

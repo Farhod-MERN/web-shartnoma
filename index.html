@@ -1414,6 +1414,22 @@ body.ro-mode [data-reply], body.ro-mode #chatFile{display:none !important;}
 .dr-card-s{font-size:12px;color:var(--muted);margin:2px 0 10px}
 .dr-card-a{display:flex;gap:8px;flex-wrap:wrap}
 .dr-card-a button{flex:1;min-width:130px;margin:0}
+
+/* v34 */
+.v34-tt{margin:4px 0 10px}
+.v34-tt > label{display:block;font-size:12.5px;font-weight:600;margin-bottom:6px}
+.v34-tt .tt-seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.v34-tt .tt-rates{font-size:12px;margin-top:6px;color:var(--muted)}
+.v34-tt.need .tt-opt{border-color:color-mix(in srgb, var(--danger, #d9534f) 55%, var(--line))}
+.v34-tt.shake{animation:v34shake .5s}
+@keyframes v34shake{0%,100%{transform:none}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.v34-sum{border:1px solid var(--line);border-radius:12px;padding:6px 12px;margin-bottom:14px;background:color-mix(in srgb, var(--accent, #7cb518) 5%, transparent)}
+.v34-row{display:flex;gap:12px;align-items:baseline;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13px;flex-wrap:wrap}
+.v34-row:last-child{border-bottom:0}
+.v34-l{flex:0 0 170px;color:var(--muted);font-size:12px;font-weight:600}
+.v34-v{flex:1;min-width:200px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.v34-v .mon-note{flex-basis:100%;margin:0}
+@media (max-width:600px){ .v34-l{flex-basis:100%} }
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -13291,6 +13307,136 @@ document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState 
 window.addEventListener('pagehide', drFlushLocal);
 // boshqa foydalanuvchi kirsa — eski qoralama xotirada qolmasin
 window.addEventListener('storage', ()=>{ drLoaded = false; });
+
+/* ======================================================================================
+   v34: 1) Shartnoma raqami: Bosh shartnomalardagi eng katta raqam + 1, oxiriga joriy yil (BN-1259/26)
+        2) Tasdiqlash oynasida shartnoma turini tanlash (Oddiy / Yuqori ustamali) — majburiy
+        3) Hamkor kartasida: bosh shartnoma, turi, holati, monitoring, qayerdan qo'shilgani
+   ====================================================================================== */
+const BN_RE = /^\s*BN\s*[-–—]?\s*(\d+)\s*\/\s*(\d{2})\s*$/i;
+function bnYY(iso){ const d = iso ? new Date(iso + (String(iso).length === 10 ? 'T00:00:00' : '')) : new Date(); return String((isNaN(d) ? new Date() : d).getFullYear()).slice(-2); }
+const _nextBoshRaqam0 = nextBoshRaqam;
+nextBoshRaqam = function(dateIso){
+  const used = new Set(), nums = [];
+  const take = (s, ok)=>{ s = String(s || '').trim(); if(!s) return; used.add(s.toLowerCase()); const m = s.match(BN_RE); if(m && ok !== false) nums.push(Number(m[1])); };
+  (DB.bosh || []).forEach(r=> take((r.data || {}).shartnoma_raqami));
+  (BUX_CACHE || []).forEach(b=> take(b.raqam, b.status !== 'bekor'));   // buxgalterga yuborilgan, hali bazaga tushmaganlar
+  if(!nums.length) return _nextBoshRaqam0();
+  nums.sort((a, b)=> a - b);
+  // test uchun kiritilgan juda katta raqamlar (masalan BN-964444) ketma-ketlikni buzmasin
+  let max = 0; for(const n of nums){ if(max && n - max > 1000) break; max = n; }
+  const yy = bnYY(dateIso);
+  let k = max + 1, cand = `BN-${k}/${yy}`;
+  while(used.has(cand.toLowerCase())){ k++; cand = `BN-${k}/${yy}`; }
+  return cand;
+};
+
+/* ---------- 2. Tasdiqlash oynasi: shartnoma turi ---------- */
+let v34ApvD = null;
+boshDataFromAriza = (function(orig){ return function(){ const r = orig.apply(this, arguments); v34ApvD = r; return r; }; })(boshDataFromAriza);
+openApproveModal = (function(orig){ return function(a, alreadyAccepted, modeArg){
+  const mode = modeArg || (alreadyAccepted ? 'bux' : 'approve');
+  const r = orig.apply(this, arguments);
+  if(mode !== 'edit') try{ v34ApvTarif(a, v34ApvD); }catch(e){ console.warn(e); }
+  return r;
+}; })(openApproveModal);
+function v34ApvTarif(a, d){
+  const ov = document.getElementById('apvModal'); const no = document.getElementById('apvNo');
+  if(!ov || !no || !d) return;
+  // shu hamkor bilan avval tuzilgan shartnoma bo'lsa — o'sha tur taklif qilinadi
+  const st = String((a.data || {}).stir || '').trim();
+  const prev = (DB.bosh || []).filter(r=> st && String((r.data || {}).stir || '').trim() === st && (r.data || {}).tarif_turi).slice(-1)[0];
+  d.tarif_turi = prev ? tarifType(prev.data.tarif_turi) : '';
+  const grid = no.closest('.apv-grid');
+  const opt = (v, t, s)=> `<button type="button" class="tt-opt" data-att="${v}"><b>${esc(t)}</b><span>${esc(s)}</span></button>`;
+  grid.insertAdjacentHTML('beforebegin', `<div class="v34-tt" id="apvTT">
+    <label>Shartnoma turi <span style="color:var(--danger)">*</span></label>
+    <div class="tt-seg">${opt('oddiy', 'Oddiy shartnoma', 'Standart foizlar')}${opt('yuqori', 'Yuqori ustamali shartnoma', 'Oshirilgan foizlar')}</div>
+    <div class="tt-rates" id="apvTTr"></div></div>`);
+  const box = document.getElementById('apvTT');
+  const sync = ()=>{
+    box.querySelectorAll('[data-att]').forEach(b=> b.classList.toggle('on', b.dataset.att === d.tarif_turi));
+    box.classList.toggle('need', !d.tarif_turi);
+    document.getElementById('apvTTr').innerHTML = d.tarif_turi
+      ? `<span>3.1-band foizlari:</span> <span data-noi18n>${tarifRows(d.tarif_turi).map(([m, p])=> `${esc(m)} oy — <b>${esc(p)}%</b>`).join(' · ')}</span>${prev ? ' <span class="hk-sub">(avvalgi shartnomadagi tur)</span>' : ''}`
+      : '<span style="color:var(--danger)">Shartnoma turini tanlang — oddiy yoki yuqori ustamali.</span>';
+  };
+  box.querySelectorAll('[data-att]').forEach(b=> b.onclick = ()=>{ d.tarif_turi = b.dataset.att; d.tarif_snap = ''; sync(); });
+  sync();
+  // tur tanlanmaguncha yuborilmaydi
+  ov.addEventListener('click', e=>{
+    const t = e.target.closest && e.target.closest('#apvGo, #apvForm');
+    if(!t || d.tarif_turi) return;
+    e.stopPropagation(); e.preventDefault();
+    box.scrollIntoView({behavior: 'smooth', block: 'center'}); box.classList.add('shake'); setTimeout(()=> box.classList.remove('shake'), 600);
+  }, true);
+  // sana boshqa yilga o'zgartirilsa — raqam oxiridagi yil ham o'zgaradi
+  const dt = document.getElementById('apvDate');
+  if(dt) dt.addEventListener('change', ()=>{ const m = no.value.match(BN_RE); if(m && dt.value) no.value = `BN-${m[1]}/${bnYY(dt.value)}`; });
+  try{ i18nApply(box); }catch(e){}
+}
+
+/* ---------- 3. Hamkor kartasi: qo'shimcha ma'lumotlar ---------- */
+function v34BoshFor(stir){
+  const s = String(stir || '').trim(); if(!s) return null;
+  const L = (DB.bosh || []).filter(r=> String((r.data || {}).stir || '').trim() === s);
+  if(!L.length) return null;
+  return L.slice().sort((a, b)=> String((a.data || {}).shartnoma_sanasi || '').localeCompare(String((b.data || {}).shartnoma_sanasi || '')) || String(a.createdAt || '').localeCompare(String(b.createdAt || ''))).pop();
+}
+function v34Row(label, html){ return `<div class="v34-row"><span class="v34-l">${esc(label)}</span><div class="v34-v">${html}</div></div>`; }
+renderHamkorDetail = (function(orig){ return function(){
+  const r = orig.apply(this, arguments);
+  try{ v34HamkorSummary(); }catch(e){ console.warn(e); }
+  return r;
+}; })(renderHamkorDetail);
+function v34HamkorSummary(){
+  const host = document.getElementById('hkDetail'); const body = host && host.querySelector('.hk-detail-body');
+  const rec = hamkorEditingId ? DB.hamkor.find(r=> r.id === hamkorEditingId) : null;
+  if(!body || !rec) return;
+  const d = rec.data || {};
+  const b = v34BoshFor(d.stir);
+  const bd = b ? b.data || {} : {};
+  const y = b && tarifType(bd.tarif_turi) === 'yuqori';
+  const boshHtml = b
+    ? `<b data-noi18n>№ ${esc(bd.shartnoma_raqami || '—')}</b> <span class="hk-sub" data-noi18n>· ${esc(bd.shartnoma_sanasi ? fmtPlainDate(bd.shartnoma_sanasi) : '—')}</span>
+       <span class="badge ${y ? 'cancel' : 'bonus'}">${y ? 'Yuqori ustamali' : 'Oddiy'}</span> ${boshHolatCell(b)}
+       <button type="button" class="link-btn" id="v34OpenBosh" style="margin:0 0 0 4px;">Ochish →</button>`
+    : '<span class="muted">Bosh shartnoma tuzilmagan</span>';
+  const added = rec.createdAt ? `<span data-noi18n>${esc(arFmtDT(rec.createdAt))}</span>` : '—';
+  body.insertAdjacentHTML('afterbegin', `<div class="v34-sum" id="v34Sum">
+    ${v34Row('Bosh shartnoma', boshHtml)}
+    ${v34Row('Do‘konlar monitoringi', '<span class="hk-sub" id="v34Mon">⏳ yuklanmoqda…</span>')}
+    ${rec.fromAriza ? v34Row('Arizadan qo‘shilgan', added + ` <span class="hk-sub" id="v34Src"></span>`) : ''}
+  </div>`);
+  const ob = document.getElementById('v34OpenBosh');
+  if(ob) ob.onclick = ()=> openLinkedContract({key: 'bosh', rec: b, label: 'Bosh shartnoma'});
+  try{ i18nApply(document.getElementById('v34Sum')); }catch(e){}
+  const id = rec.id;
+  // monitoring (Do'konlar monitoringi fayli yuklangan bo'lsa)
+  (typeof monLoad === 'function' ? monLoad() : Promise.resolve(null)).then(M=>{
+    const el = document.getElementById('v34Mon'); if(!el || hamkorEditingId !== id) return;
+    if(!M || !M.stores){ el.textContent = 'monitoring ma’lumoti yuklanmagan'; return; }
+    const s = String(d.stir || '').replace(/\D/g, '');
+    const i = M.stores.findIndex(x=> x[0] === s);
+    const note = (typeof MONN !== 'undefined' && MONN[s] && MONN[s].t) ? `<div class="mon-note">📝 ${esc(MONN[s].t)}</div>` : '';
+    if(i < 0){ el.innerHTML = `<span class="badge cancel">Nofaol</span> <span class="hk-sub">— ${esc(boshPlainDate(M.from))} — ${esc(boshPlainDate(M.to))} davrida shartnoma tuzmagan</span>${note}`; return; }
+    let c = 0, sm = 0, last = '', first = '';
+    Object.keys(M.days).forEach(day=> M.days[day].forEach(([j, cc, ss])=>{ if(j !== i) return; c += cc; sm += ss; if(!last || day > last) last = day; if(!first || day < first) first = day; }));
+    const idle = monDiffDays(last, M.to), stop = idle > (MV.stop || 30);
+    el.innerHTML = `${stop ? `<span class="badge cancel mon-stop">To‘xtagan · ${idle} kun</span>` : '<span class="badge bonus">Faol</span>'}
+      <span data-noi18n> <b>${c}</b> ta shartnoma · <b>${monMoney(sm)}</b> so‘m</span>
+      <span class="hk-sub" data-noi18n>· oxirgisi ${esc(boshPlainDate(last))}</span>${note}`;
+    try{ i18nApply(el); }catch(e){}
+  }).catch(()=>{ const el = document.getElementById('v34Mon'); if(el) el.textContent = '—'; });
+  // qaysi hodim yuborgan ariza
+  if(rec.fromAriza){
+    const a0 = (typeof AR_CACHE !== 'undefined' && AR_CACHE || []).find(x=> x.id === rec.fromAriza);
+    (a0 ? Promise.resolve(a0) : ST.get(AR_COL, rec.fromAriza).catch(()=> null)).then(a=>{
+      const el = document.getElementById('v34Src'); if(!el || !a) return;
+      el.textContent = `· yuborgan: ${a.userIsm || a.userLogin || '—'}${a.data && a.data.filial ? ' (' + a.data.filial + ')' : ''}`;
+    });
+  }
+}
 
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){

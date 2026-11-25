@@ -1449,6 +1449,11 @@ body.ro-mode [data-reply], body.ro-mode #chatFile{display:none !important;}
 .v36-ok input{width:18px;height:18px}
 .flow-frow th{padding:6px 6px 8px;background:var(--panel-2, transparent);vertical-align:top}
 .flow-frow select,.flow-frow input{width:100%;min-width:90px;font-size:12px;padding:5px 7px;height:auto;margin:0}
+
+/* v37 */
+.v37-hint{display:block;margin-top:4px;font-size:12px;color:var(--muted)}
+.v37-sup{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.v37-sup h3{margin:0 0 8px;font-size:14px}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -5683,7 +5688,7 @@ async function renderUserProfile(host){
     ${tgCardMarkup()}
     <div class="card ua-help">
       <h2>Yordam kerakmi?</h2>
-      <p class="sub" style="margin:0;">Savollar bo‘yicha «Xabarlar» bo‘limida yozing yoki bog‘laning: <a href="https://t.me/${ADMIN_CONTACT.telegram.slice(1)}" target="_blank" rel="noopener">Telegram: ${ADMIN_CONTACT.telegram}</a> · <a href="tel:${ADMIN_CONTACT.phoneRaw}">${ADMIN_CONTACT.phone}</a></p>
+      <p class="sub" style="margin:0;">Savollar bo‘yicha «Xabarlar» bo‘limida yozing yoki bog‘laning: <a id="uaHelpTg" href="https://t.me/${ADMIN_CONTACT.telegram.slice(1)}" target="_blank" rel="noopener">Telegram: ${ADMIN_CONTACT.telegram}</a> · <a href="tel:${ADMIN_CONTACT.phoneRaw}">${ADMIN_CONTACT.phone}</a></p>
     </div>
   </div>`;
   bindTgCard();
@@ -13619,6 +13624,48 @@ async function v36DeleteAriza(a, say){
   try{ renderApp(); }catch(e){}
   try{ renderTabs(); }catch(e){}
 }
+
+/* ======================================================================================
+   v37: «Yordam kerakmi?» — admin o'rniga bot havolasi (murojaatlar guruhi ulangan bo'lsa).
+   Admin Telegram kartasida — murojaatlar guruhi holati va ulash tartibi.
+   ====================================================================================== */
+async function v37HelpLink(){
+  const a = document.getElementById('uaHelpTg'); if(!a) return;
+  const info = await tgInfo();
+  if(!info || !info.enabled || !info.support || !info.username || !a.isConnected) return;
+  a.href = 'https://t.me/' + encodeURIComponent(info.username);
+  a.textContent = 'Telegram bot: @' + info.username;
+  a.setAttribute('data-noi18n', '');
+  const p = a.closest('p');
+  if(p && !p.querySelector('.v37-hint')) p.insertAdjacentHTML('beforeend', '<span class="v37-hint">Botga yozing — savolingiz adminga yetadi va javob shu botga keladi.</span>');
+  try{ i18nApply(p); }catch(e){}
+}
+async function v37SupportStatus(){
+  const host = document.getElementById('tgBody'); if(!host || getUserSession()) return;   // faqat admin kartasida
+  if(typeof v28RO === 'function' && v28RO()) return;
+  const info = await tgInfo(); if(!info || !info.enabled || !host.isConnected) return;
+  const old = document.getElementById('v37Sup'); if(old) old.remove();
+  host.insertAdjacentHTML('afterend', `<div class="v37-sup" id="v37Sup">
+    <h3>📩 Murojaatlar guruhi</h3>
+    ${info.support
+      ? `<div class="status ok" style="margin:0;">✅ Ulangan: <b data-noi18n>${esc(info.supportTitle || 'guruh')}</b>${info.supportForum === false ? ' — <span style="color:var(--warn,#b45309)">«Topics» yoqilmagan (javob — Reply orqali)</span>' : ' · har bir murojaatchi alohida mavzuda'}</div>
+         <p class="sub" style="margin:8px 0 0;">Hodim yoki hamkor <b data-noi18n>@${esc(info.username)}</b> botiga yozsa — xabar guruhga keladi. Mavzuda yozgan javobingiz o‘sha odamga boradi. Masala hal bo‘lsa — mavzuda <code>/hal</code> deb yozing. Uzish: guruhda <code>/uzish</code>.</p>`
+      : `<div class="status" style="margin:0;">Hali ulanmagan.</div>
+         <ol class="tg-steps" style="margin-top:8px;">
+           <li>Telegram'da yopiq guruh oching va sozlamalarda <b>«Темы / Topics»</b> ni yoqing.</li>
+           <li><b data-noi18n>@${esc(info.username)}</b> botini guruhga qo‘shing va <b>admin</b> qiling — «Manage topics», «Pin messages», «Delete messages» huquqlari bilan.</li>
+           <li>Shu sahifada yuqorida Telegram’ingiz ulangan bo‘lsin (admin sifatida).</li>
+           <li>Guruhga <code>/ulash</code> deb yozing — bot «✅ ulandi» deb javob beradi.</li>
+         </ol>`}
+  </div>`);
+  try{ i18nApply(document.getElementById('v37Sup')); }catch(e){}
+}
+bindTgCard = (function(orig){ return async function(){
+  const r = await orig.apply(this, arguments);
+  try{ await v37HelpLink(); }catch(e){}
+  try{ await v37SupportStatus(); }catch(e){}
+  return r;
+}; })(bindTgCard);
 
 async function exportHamkorExcel(){
   if(typeof XLSX === 'undefined'){

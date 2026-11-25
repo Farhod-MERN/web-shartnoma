@@ -1437,6 +1437,18 @@ body.ro-mode [data-reply], body.ro-mode #chatFile{display:none !important;}
 .v34-v{flex:1;min-width:200px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .v34-v .mon-note{flex-basis:100%;margin:0}
 @media (max-width:600px){ .v34-l{flex-basis:100%} }
+
+/* v36 */
+.dr-cards-h{font-size:13px;font-weight:600;margin:12px 0 -4px}
+.v36-upd{margin-top:3px;font-size:12px;color:var(--muted)}
+.v36-del{border-top:1px dashed var(--line);padding-top:12px}
+.v36-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.v36-tbl td{padding:5px 8px;border-bottom:1px solid var(--line-2, var(--line))}
+.v36-tbl td:first-child{color:var(--muted);width:110px}
+.v36-ok{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;margin:12px 0 4px;cursor:pointer}
+.v36-ok input{width:18px;height:18px}
+.flow-frow th{padding:6px 6px 8px;background:var(--panel-2, transparent);vertical-align:top}
+.flow-frow select,.flow-frow input{width:100%;min-width:90px;font-size:12px;padding:5px 7px;height:auto;margin:0}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -7468,6 +7480,7 @@ const FLOW_STAGES = [
   {k:'bekor',     t:'Bekor / rad',       who:'—',         sla:0, side:'bad'},
 ];
 let flowSel = 'all', flowQuery = '', flowLoading = false, flowTPage = 1, flowTPer = 20, flowSort = 'late';
+let flowCF = {k:'', name:'', stir:'', user:'', sh:''};   // v36: jadval ustunlari bo'yicha filtr
 let flowView = (()=>{ try{ return localStorage.getItem(STORAGE_PREFIX+'flow_view') || 'board'; }catch(e){ return 'board'; } })();
 const VS_GRID = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.2"/></svg>';
 const VS_LIST = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';
@@ -7581,7 +7594,21 @@ function flowSetView(v){
 /* Jadval ko'rinishi: ko'p arizalar uchun — saralash va sahifalash bilan */
 function renderFlowTable(board, items, by){
   board.classList.remove('single'); board.classList.add('as-table');
-  let list = flowSel==='all' ? items.slice() : by[flowSel].slice();
+  let list0 = flowSel==='all' ? items.slice() : by[flowSel].slice();
+  // v36: ustun filtrlari
+  const low = v=> String(v||'').toLowerCase();
+  const users = [...new Set(list0.map(it=> it.a.userIsm||'—'))].sort((p,q)=> p.localeCompare(q));
+  if(flowCF.k && flowSel!=='all' && flowCF.k!==flowSel) flowCF.k = '';
+  let list = list0.filter(({a, s:st})=>{ const d = a.data||{};
+    if(flowCF.k && st.k !== flowCF.k) return false;
+    if(flowCF.name && !(low(d.tashkilot_nomi).includes(low(flowCF.name)) || low(d.brend).includes(low(flowCF.name)))) return false;
+    if(flowCF.stir && !String(d.stir||'').includes(flowCF.stir.trim())) return false;
+    if(flowCF.user && (a.userIsm||'—') !== flowCF.user) return false;
+    if(flowCF.sh){ const r = st.bx && st.bx.raqam ? String(st.bx.raqam) : '';
+      if(flowCF.sh === '__bor'){ if(!r) return false; } else if(flowCF.sh === '__yoq'){ if(r) return false; }
+      else if(!low(r).includes(low(flowCF.sh))) return false; }
+    return true; });
+  const cfOn = Object.values(flowCF).some(Boolean);
   const since = it=> String(it.s.since||'');
   const sorters = {
     late: (p,q)=> (q.s.late - p.s.late) || (q.s.hours - p.s.hours),
@@ -7609,7 +7636,16 @@ function renderFlowTable(board, items, by){
         <option value="oldest" ${flowSort==='oldest'?'selected':''}>Eski kelganlar avval</option>
         <option value="name" ${flowSort==='name'?'selected':''}>Nomi bo‘yicha (A–Z)</option></select></label></div>
     <div class="hk-table-wrap"><table class="hk-table flow-table">
-      <thead><tr><th>Bosqich</th><th>Tashkilot</th><th>STIR</th><th>Yuboruvchi</th><th>Shartnoma</th><th>Bosqichda</th><th>Kelgan</th></tr></thead>
+      <thead><tr><th>Bosqich</th><th>Tashkilot</th><th>STIR</th><th>Yuboruvchi</th><th>Shartnoma</th><th>Bosqichda</th><th>Kelgan</th></tr>
+        <tr class="flow-frow">
+          <th><select data-fcf="k"><option value="">Hammasi</option>${FLOW_STAGES.filter(g=> flowSel==='all' || g.k===flowSel).map(g=>`<option value="${g.k}" ${flowCF.k===g.k?'selected':''}>${esc(g.t)}</option>`).join('')}</select></th>
+          <th><input type="search" data-fcf="name" placeholder="Nomi / brend" value="${esc(flowCF.name)}"></th>
+          <th><input type="search" data-fcf="stir" inputmode="numeric" placeholder="STIR" value="${esc(flowCF.stir)}"></th>
+          <th><select data-fcf="user"><option value="">Hammasi</option>${users.map(x=>`<option value="${esc(x)}" ${flowCF.user===x?'selected':''} data-noi18n>${esc(x)}</option>`).join('')}</select></th>
+          <th><select data-fcf="shsel"><option value="">Hammasi</option><option value="__bor" ${flowCF.sh==='__bor'?'selected':''}>Shartnoma bor</option><option value="__yoq" ${flowCF.sh==='__yoq'?'selected':''}>Shartnoma yo‘q</option><option value="__txt" ${flowCF.sh && !flowCF.sh.startsWith('__')?'selected':''}>Raqam bo‘yicha…</option></select>
+            ${flowCF.sh && !flowCF.sh.startsWith('__') || flowCF._shTxt ? `<input type="search" data-fcf="sh" placeholder="BN-…" value="${esc(flowCF.sh.startsWith('__')?'':flowCF.sh)}" style="margin-top:4px;">` : ''}</th>
+          <th colspan="2" style="text-align:right;">${cfOn ? `<button type="button" class="link-btn" id="flowCfClear" style="margin:0;">✕ Filtrlarni tozalash</button>` : ''}</th>
+        </tr></thead>
       <tbody>${rows.map(({a, s:st})=>{ const g = stg(st.k); const d = a.data||{};
         return `<tr data-fid="${a.id}" class="${st.late?'late':''}">
           <td><span class="flow-badge ${g.side||''} ${st.late?'late':''}">${esc(g.t)}</span>${st.note?`<div class="flow-note">${esc(st.note)}</div>`:''}</td>
@@ -7623,6 +7659,20 @@ function renderFlowTable(board, items, by){
     <div class="hk-pager"><div class="hk-pages" data-noi18n>${btns.join('')}<span style="font-size:11.5px;color:var(--muted);margin-left:6px;">${list.length ? (st0+1)+'–'+Math.min(st0+flowTPer,list.length)+' / '+list.length : '0'}</span></div>
       <div class="hk-size"><span>Sahifadagi elementlar</span><select id="flowPer">${[20,50,100].map(n=>`<option ${n===flowTPer?'selected':''}>${n}</option>`).join('')}</select></div></div>
   </div>`;
+  // v36: filtr maydonlari — yozayotganda fokus yo'qolmasin
+  board.querySelectorAll('[data-fcf]').forEach(el=>{
+    const k = el.dataset.fcf;
+    const apply = ()=>{
+      if(k === 'shsel'){ flowCF._shTxt = el.value === '__txt'; flowCF.sh = el.value === '__txt' ? '' : el.value; }
+      else flowCF[k] = el.value;
+      flowTPage = 1; renderFlowPanel();
+      const nx = document.querySelector(`[data-fcf="${k === 'shsel' && flowCF._shTxt ? 'sh' : k}"]`);
+      if(nx && (el.tagName === 'INPUT' || k === 'shsel')){ nx.focus(); if(nx.setSelectionRange && nx.type !== 'search' || nx.value) try{ nx.setSelectionRange(nx.value.length, nx.value.length); }catch(e){} }
+    };
+    if(el.tagName === 'SELECT') el.onchange = apply;
+    else { let t = null; el.oninput = ()=>{ clearTimeout(t); t = setTimeout(apply, 250); }; }
+  });
+  const cfc = document.getElementById('flowCfClear'); if(cfc) cfc.onclick = ()=>{ flowCF = {k:'', name:'', stir:'', user:'', sh:''}; flowTPage = 1; renderFlowPanel(); };
   board.querySelectorAll('[data-ftpg]').forEach(b=> b.onclick = ()=>{ flowTPage = Number(b.dataset.ftpg); renderFlowPanel(); });
   document.getElementById('flowPer').onchange = e=>{ flowTPer = Number(e.target.value)||20; flowTPage = 1; renderFlowPanel(); };
   document.getElementById('flowSort').onchange = e=>{ flowSort = e.target.value; flowTPage = 1; renderFlowPanel(); };
@@ -7647,7 +7697,7 @@ const LOG_ACT = {
   'ariza.yuborildi':'Ariza yubordi', 'ariza.qayta':'Arizani tuzatib qayta yubordi',
   'ariza.qabul':'Arizani qabul qildi', 'ariza.qaytarildi':'Arizani tuzatishga qaytardi', 'ariza.rad':'Arizani rad etdi',
   'ariza.didox':'«Didoxdan yuborildi» deb belgiladi', 'ariza.login':'«Login berildi» deb belgiladi',
-  'ariza.tahrir':'Ariza ma’lumotlarini tahrirladi', 'ariza.hujjat':'Hujjatni tekshirdi',
+  'ariza.tahrir':'Ariza ma’lumotlarini tahrirladi', 'ariza.ochirildi':'Arizani butunlay o‘chirdi', 'ariza.hujjat':'Hujjatni tekshirdi',
   'shartnoma.yaratildi':'Shartnoma yaratdi', 'shartnoma.ochirildi':'Shartnomani o‘chirdi', 'shartnoma.bux':'Shartnomani buxgalterga yubordi',
   'bux.didox':'Shartnomani Didoxdan yubordi', 'bux.tasdiq':'Shartnoma tasdiqlandi deb belgiladi', 'bux.bekor':'Shartnomani bekor qildi',
   'hamkor.qoshildi':'Hamkor qo‘shdi', 'hamkor.tahrir':'Hamkor ma’lumotlarini o‘zgartirdi', 'hamkor.ochirildi':'Hamkorni o‘chirdi',
@@ -11483,7 +11533,7 @@ async function renderMonitor(host, admin){
   if(!host.isConnected) return;
   const head = `<div class="card rp-top"><div class="rp-head mon-head">
       <div><h2 style="margin:0;">Hamkor do‘konlar monitoringi</h2>
-        <div class="hint">${MON ? `Ma’lumot: <b data-noi18n>${esc(MON.fileName||'')}</b>${MON.files && MON.files.length > 1 ? ` <span data-noi18n>(+${MON.files.length-1})</span>` : ''} · <span data-noi18n>${boshPlainDate(MON.from)} — ${boshPlainDate(MON.to)}</span> · yuklangan: <span data-noi18n>${esc(arFmtDT(MON.uploadedAt))}</span>` : 'Ma’lumot hali yuklanmagan.'}${!admin && u.filial ? ` · 🏢 <b data-noi18n>${esc(u.filial)}</b>` : ''}</div></div>
+        <div class="hint">${!admin && MON ? `Davr: <span data-noi18n>${boshPlainDate(MON.from)} — ${boshPlainDate(MON.to)}</span> · Oxirgi yangilanish: <b data-noi18n>${esc(arFmtDT(MON.uploadedAt))}</b>${u.filial ? ` · 🏢 <b data-noi18n>${esc(u.filial)}</b>` : ''}<div class="v36-upd">ℹ️ Ma’lumotlarni yangilash uchun adminga murojaat qiling.</div>` : MON ? `Ma’lumot: <b data-noi18n>${esc(MON.fileName||'')}</b>${MON.files && MON.files.length > 1 ? ` <span data-noi18n>(+${MON.files.length-1})</span>` : ''} · <span data-noi18n>${boshPlainDate(MON.from)} — ${boshPlainDate(MON.to)}</span> · yuklangan: <span data-noi18n>${esc(arFmtDT(MON.uploadedAt))}</span>` : 'Ma’lumot hali yuklanmagan.'}${!admin && !MON && u.filial ? ` · 🏢 <b data-noi18n>${esc(u.filial)}</b>` : ''}</div></div>
       <div class="hk-tools">${admin ? `<button type="button" class="hk-tool" id="monUp">📥 Excel yuklash</button><input type="file" id="monFile" accept=".xlsx,.xls" style="display:none;">` : ''}<button type="button" class="hk-tool" id="monReload">↻ Yangilash</button></div>
     </div><div class="status" id="monStatus"></div></div>`;
   if(!MON){
@@ -11991,7 +12041,8 @@ async function renderPortfel(host, admin){
   if(!host.isConnected) return;
   const head = `${pfTabsMarkup()}<div class="card rp-top"><div class="rp-head mon-head">
       <div><h2 style="margin:0;">BirZum portfeli tahlili</h2>
-        <div class="hint">${PF ? `<b data-noi18n>${boshPlainDate(PF.asOf)}</b> holatiga · fayl: <span data-noi18n>${esc(PF.fileName||'')}</span> · yuklangan: <span data-noi18n>${esc(arFmtDT(PF.uploadedAt))}</span>` : 'Portfel ma’lumoti hali yuklanmagan.'}${!admin && u.filial ? ` · 🏢 <b data-noi18n>${esc(u.filial)}</b>` : ''}</div></div>
+        <div class="hint">${!admin ? (PF ? `Oxirgi yangilanish: <b data-noi18n>${esc(arFmtDT(PF.uploadedAt))}</b>${u.filial ? ` · 🏢 <b data-noi18n>${esc(u.filial)}</b>` : ''}<div class="v36-upd">ℹ️ Ma’lumotlarni yangilash uchun adminga murojaat qiling.</div>` : 'Portfel ma’lumoti hali yuklanmagan.')
+          : (PF ? `<b data-noi18n>${boshPlainDate(PF.asOf)}</b> holatiga · fayl: <span data-noi18n>${esc(PF.fileName||'')}</span> · yuklangan: <span data-noi18n>${esc(arFmtDT(PF.uploadedAt))}</span>` : 'Portfel ma’lumoti hali yuklanmagan.')}</div></div>
       <div class="hk-tools">${admin ? `<button type="button" class="hk-tool" id="pfUp">📥 «Активные кредиты» yuklash</button><input type="file" id="pfFile" accept=".xlsx,.xls" style="display:none;">` : ''}<button type="button" class="hk-tool" id="pfReload">↻ Yangilash</button></div>
     </div><div class="status" id="monStatus"></div></div>`;
   if(!PF){
@@ -13087,21 +13138,26 @@ const _v28BxAuto = bxAutoHamkor;
 bxAutoHamkor = function(){ return v28RO() ? Promise.resolve(0) : _v28BxAuto.apply(this, arguments); };
 
 /* ======================================================================================
-   v33: ARIZA QORALAMASI — kiritilgan ma'lumot va rasmlar yo'qolmaydi
+   v33/v36: ARIZA QORALAMALARI — kiritilgan ma'lumot va rasmlar yo'qolmaydi
    1) Har o'zgarishda telefonning o'zida (IndexedDB) saqlanadi — internet yo'q bo'lsa ham.
    2) Internet bo'lsa — serverga ham (rasmlar fonda yuklanadi), boshqa qurilmadan ham davom ettirsa bo'ladi.
-   3) Ariza yuborilgach qoralama o'chadi. Rasmlar oldindan yuklangani uchun yuborish tez bo'ladi.
+   3) Ariza yuborilgach o'sha qoralama o'chadi.
+   v36: bir nechta qoralama bo'lishi mumkin — har bir tugallanmagan ariza alohida qoralama.
    ====================================================================================== */
 const DR_COL = 'birzum_ariza_draft';
-let drCur = null;          // joriy qoralama (yoki null)
+const DR_MAX = 20;
+let drList = [];           // barcha qoralamalar (yangisi birinchi)
+let drCurId = null;        // ochiq formaning qoralama id si
 let drLoaded = false;
 let drT = null, drBusy = false, drAgain = false;
 let drSessObj = null, drSig = '';
-let drUps = new Map();     // serverga yuklangan qoralama fayllari: id -> chunks
+let drUps = new Map();     // joriy qoralamaning serverga yuklangan fayllari: id -> chunks
 let drLastKind = '', drLastAt = '';
 let drDirty = false;
 
-function drKey(){ const u = getUserSession(); return u && u.id ? 'd_' + u.id : null; }
+function drPref(){ const u = getUserSession(); return u && u.id ? 'd_' + u.id : null; }
+function drMine(k){ const p = drPref(); return !!p && (k === p || String(k).startsWith(p + '_')); }
+function drNewId(){ const p = drPref(); if(!p) return null; return uDraft && uDraft.id ? `${p}_e${uDraft.id}` : `${p}_${uid()}`; }
 function drIdb(){
   return new Promise((res, rej)=>{
     const r = indexedDB.open('birzum_draft_v1', 1);
@@ -13113,11 +13169,16 @@ async function drLocal(op, key, val){
   try{
     const db = await drIdb();
     return await new Promise((res, rej)=>{
-      const tx = db.transaction('d', op === 'get' ? 'readonly' : 'readwrite'); const st = tx.objectStore('d');
+      const tx = db.transaction('d', op === 'get' || op === 'all' ? 'readonly' : 'readwrite'); const st = tx.objectStore('d');
+      if(op === 'all'){
+        const out = []; const rq = st.openCursor();
+        rq.onsuccess = ()=>{ const c = rq.result; if(c){ if(drMine(c.key)) out.push(Object.assign({}, c.value, {_id: c.key})); c.continue(); } else res(out); };
+        rq.onerror = ()=> rej(rq.error); return;
+      }
       const rq = op === 'get' ? st.get(key) : op === 'put' ? st.put(val, key) : st.delete(key);
       rq.onsuccess = ()=> res(rq.result); rq.onerror = ()=> rej(rq.error);
     });
-  }catch(e){ return null; }
+  }catch(e){ return op === 'all' ? [] : null; }
 }
 function drFileSig(){ return uDraft ? uDraft.files.map(f=> f.docType + ':' + f.name + ':' + f.size).join('|') + '#' + (uDraft.removed || []).length : ''; }
 function drSnap(){
@@ -13133,6 +13194,7 @@ function drSnap(){
 function drEmpty(sn){ return !sn.editOf && !Object.values(sn.data || {}).some(v=> String(v || '').trim() && v !== (getUserSession() || {}).filial) && !(sn.files || []).length; }
 function drWithBlobs(sn){ return Object.assign({}, sn, {files: sn.files.map((m, i)=> Object.assign({}, m, {blob: (uDraft.files[i] && uDraft.files[i].blob) || null}))}); }
 function drTime(iso){ try{ const d = new Date(iso); return `${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`; }catch(e){ return ''; } }
+function drPut(id, d){ drList = drList.filter(x=> x._id !== id); if(d){ d._id = id; drList.unshift(d); } }
 function drSay(kind){
   drLastKind = kind; drLastAt = new Date().toISOString();
   const el = document.getElementById('drStatus'); if(!el) return;
@@ -13147,13 +13209,15 @@ async function drSave(){
   if(uView !== 'form' || !uDraft) return;
   if(typeof v28RO === 'function' && v28RO()) return;
   if(drBusy){ drAgain = true; return; }
-  const key = drKey(); if(!key) return;
+  if(!drPref()) return;
   drBusy = true;
   try{
     try{ uCollectData(); }catch(e){}
     const sn = drSnap();
-    if(drEmpty(sn)){ await drLocal('del', key); drCur = null; return; }
-    await drLocal('put', key, drWithBlobs(sn)); drCur = drWithBlobs(sn); drSay('local');
+    if(drEmpty(sn)){ if(drCurId){ await drLocal('del', drCurId); drPut(drCurId, null); } return; }
+    if(!drCurId) drCurId = drNewId();
+    const id = drCurId;
+    await drLocal('put', id, drWithBlobs(sn)); drPut(id, drWithBlobs(sn)); drSay('local');
     // yangi rasmlarni fonda serverga yuklaymiz (yuborishda qayta yuklanmaydi)
     for(const f of uDraft.files.slice()){
       if(f.isNew && !f._up && f.blob){
@@ -13163,46 +13227,60 @@ async function drSave(){
     }
     // olib tashlangan qoralama rasmlarini serverdan ham o'chiramiz
     const now = new Map(); uDraft.files.forEach(f=>{ if(f._up) now.set(f._up.id, f._up.chunks); });
-    for(const [id, ch] of drUps) if(!now.has(id)) arDeleteFile({id, chunks: ch}).catch(()=>{});
+    for(const [fid, ch] of drUps) if(!now.has(fid)) arDeleteFile({id: fid, chunks: ch}).catch(()=>{});
     drUps = now;
+    if(drCurId !== id) return;   // shu orada boshqa qoralamaga o'tildi
     const sn2 = drSnap();
-    await ST.set(DR_COL, key, Object.assign({userId: (getUserSession() || {}).id}, sn2));
-    await drLocal('put', key, drWithBlobs(sn2)); drCur = drWithBlobs(sn2);
+    await ST.set(DR_COL, id, Object.assign({userId: (getUserSession() || {}).id}, sn2));
+    await drLocal('put', id, drWithBlobs(sn2)); drPut(id, drWithBlobs(sn2));
     drSay('server');
-  }catch(e){ console.warn('qoralama:', e); if(drCur) drSay('local'); }
+  }catch(e){ console.warn('qoralama:', e); if(drCurId) drSay('local'); }
   finally{ drBusy = false; if(drAgain){ drAgain = false; drSoon(2500); } }
 }
 async function drLoad(force){
-  if(drLoaded && !force) return drCur;
-  const key = drKey(); if(!key) return null;
-  const loc = await drLocal('get', key);
-  let srv = null;
-  try{ srv = await ST.get(DR_COL, key); }catch(e){}
-  let d = loc || null;
-  if(srv && (!d || String(srv.savedAt || '') > String(d.savedAt || ''))){
-    // serverdagi yangiroq — mahalliy rasmlarni nomi/hajmi bo'yicha ulaymiz
-    const lf = (loc && loc.files) || [];
-    d = Object.assign({}, srv, {files: (srv.files || []).map(m=>{ const x = lf.find(z=> z.name === m.name && z.size === m.size && z.docType === m.docType); return Object.assign({}, m, {blob: x && x.blob || null}); })});
+  if(drLoaded && !force) return drList;
+  const p = drPref(); if(!p) return [];
+  const loc = await drLocal('all');
+  let srv = [];
+  try{ srv = (await ST.where(DR_COL, 'userId', (getUserSession() || {}).id)) || []; }catch(e){}
+  const map = new Map();
+  loc.forEach(d=> map.set(d._id, d));
+  srv.forEach(s=>{
+    if(!drMine(s.id)) return;
+    const l = map.get(s.id);
+    if(!l || String(s.savedAt || '') > String(l.savedAt || '')){
+      const lf = (l && l.files) || [];
+      map.set(s.id, Object.assign({}, s, {_id: s.id, files: (s.files || []).map(m=>{ const x = lf.find(z=> z.name === m.name && z.size === m.size && z.docType === m.docType); return Object.assign({}, m, {blob: x && x.blob || null}); })}));
+    }
+  });
+  let list = [...map.values()];
+  // tuzatilayotgan ariza endi ko'rib chiqilgan (yoki o'chirilgan) bo'lsa — qoralama keraksiz
+  if(uArizalar.length || arLoadedOnce()){
+    for(const d of list.filter(x=> x.editOf)){
+      const a = uArizalar.find(x=> x.id === d.editOf);
+      if(!a || a.status !== 'qaytarildi'){ await drDropId(d._id, false, d); list = list.filter(x=> x !== d); }
+    }
   }
-  // tuzatilayotgan ariza endi ko'rib chiqilgan bo'lsa — qoralama keraksiz
-  if(d && d.editOf){
-    const a = uArizalar.find(x=> x.id === d.editOf);
-    if(uArizalar.length && (!a || a.status !== 'qaytarildi')){ await drDrop(false); d = null; }
-  }
-  drCur = d; drLoaded = true;
-  return d;
+  list.sort((a, b)=> String(b.savedAt || '').localeCompare(String(a.savedAt || '')));
+  drList = list; drLoaded = true;
+  return list;
+}
+function arLoadedOnce(){ try{ return typeof uLoaded !== 'undefined' && !!uLoaded; }catch(e){ return false; } }
+async function drDropId(id, delFiles, d0){
+  if(!id) return;
+  const d = d0 || drList.find(x=> x._id === id);
+  drPut(id, null);
+  await drLocal('del', id); try{ await ST.del(DR_COL, id); }catch(e){}
+  if(delFiles && d) (d.files || []).forEach(m=>{ if(m.up) arDeleteFile({id: m.up.id, chunks: m.up.chunks}).catch(()=>{}); });
 }
 async function drDrop(delFiles){
-  const key = drKey(); clearTimeout(drT);
-  const d = drCur; drCur = null;
-  if(key){ await drLocal('del', key); try{ await ST.del(DR_COL, key); }catch(e){} }
-  if(delFiles && d) (d.files || []).forEach(m=>{ if(m.up) arDeleteFile({id: m.up.id, chunks: m.up.chunks}).catch(()=>{}); });
-  drUps = new Map();
+  clearTimeout(drT);
+  const id = drCurId; drCurId = null; drUps = new Map();
+  if(id) await drDropId(id, delFiles);
 }
-async function drResume(){
-  const d = drCur; if(!d) return;
-  const host = document.getElementById('uaContent');
-  const msg = document.getElementById('drCardMsg'); if(msg) msg.textContent = '⏳ Qoralama ochilmoqda…';
+async function drResume(id){
+  const d = drList.find(x=> x._id === id); if(!d) return;
+  const msg = document.querySelector(`[data-drmsg="${CSS.escape(id)}"]`); if(msg) msg.textContent = '⏳ Qoralama ochilmoqda…';
   const files = [];
   for(const m of (d.files || [])){
     const f = {docType: m.docType, name: m.name, type: m.type, size: m.size};
@@ -13218,6 +13296,7 @@ async function drResume(){
   drUps = new Map(); files.forEach(f=>{ if(f._up) drUps.set(f._up.id, f._up.chunks); });
   uDraft = {data: Object.assign({}, d.data || {}), files, removed: (d.removed || []).slice()};
   if(d.editOf && uArizalar.some(a=> a.id === d.editOf)) uDraft.id = d.editOf;
+  drCurId = id;
   drSessObj = uDraft; drSig = drFileSig(); drDirty = true;
   uView = 'form'; uCurrentId = null; renderUserApp(); window.scrollTo(0, 0);
   drSay(drLastKind || 'server');
@@ -13225,32 +13304,43 @@ async function drResume(){
 function drCardMarkup(d){
   const nm = (d.data && (d.data.tashkilot_nomi || d.data.brend)) || (d.editOf ? 'Tuzatilayotgan ariza' : 'Nomi kiritilmagan');
   const nf = (d.files || []).length;
-  return `<div class="dr-card" id="drCard">
-    <div class="dr-card-h">📝 Tugallanmagan ariza (qoralama)</div>
+  const id = esc(d._id);
+  return `<div class="dr-card">
+    <div class="dr-card-h">📝 ${d.editOf ? 'Tuzatilayotgan ariza (qoralama)' : 'Tugallanmagan ariza (qoralama)'}</div>
     <div class="dr-card-n" data-noi18n>«${esc(nm)}»${d.data && d.data.stir ? ' · STIR ' + esc(d.data.stir) : ''}</div>
     <div class="dr-card-s"><span data-noi18n>${nf}</span> ta fayl · saqlangan: <span data-noi18n>${esc(drTime(d.savedAt))}</span></div>
-    <div class="dr-card-a"><button type="button" class="primary" id="drGo">✏️ Davom ettirish</button><button type="button" class="secondary" id="drDel">🗑 O‘chirish</button></div>
-    <div class="hint" id="drCardMsg"></div>
+    <div class="dr-card-a"><button type="button" class="primary" data-drgo="${id}">✏️ Davom ettirish</button><button type="button" class="secondary" data-drdel="${id}">🗑 O‘chirish</button></div>
+    <div class="hint" data-drmsg="${id}"></div>
   </div>`;
 }
 function drPaintCard(){
-  const old = document.getElementById('drCard'); if(old) old.remove();
-  if(uTab !== 'home' || uView === 'form' || !drCur) return;
+  const old = document.getElementById('drCards'); if(old) old.remove();
+  ['uNewBtn', 'uNewBtn2'].forEach(i=>{ const b = document.getElementById(i); if(b) b.style.display = ''; });
+  if(uTab !== 'home' || uView === 'form' || !drList.length) return;
   const nb = document.getElementById('uNewBtn') || document.getElementById('uNewBtn2'); if(!nb) return;
-  nb.insertAdjacentHTML('beforebegin', drCardMarkup(drCur));
-  ['uNewBtn', 'uNewBtn2'].forEach(id=>{ const b = document.getElementById(id); if(b) b.style.display = 'none'; });
-  document.getElementById('drGo').onclick = drResume;
-  document.getElementById('drDel').onclick = async ()=>{
+  const n = drList.length;
+  nb.insertAdjacentHTML('beforebegin', `<div id="drCards">${n > 1 ? `<div class="dr-cards-h">📝 Tugallanmagan arizalar: <b data-noi18n>${n}</b> ta</div>` : ''}${drList.map(drCardMarkup).join('')}</div>`);
+  const host = document.getElementById('drCards');
+  host.querySelectorAll('[data-drgo]').forEach(b=> b.onclick = ()=> drResume(b.dataset.drgo));
+  host.querySelectorAll('[data-drdel]').forEach(b=> b.onclick = async ()=>{
     if(!confirm('Qoralama butunlay o‘chirilsinmi? Kiritilgan ma’lumotlar va rasmlar qayta tiklanmaydi.')) return;
-    await drDrop(true); renderUserApp();
-  };
+    await drDropId(b.dataset.drdel, true); renderUserApp();
+  });
+  // yangi ariza — har doim mumkin (yangi qoralama ochiladi)
+  ['uNewBtn', 'uNewBtn2'].forEach(i=>{ const b = document.getElementById(i); if(b && !b._dr){ b._dr = true; const o = b.onclick; b.onclick = function(e){ drCurId = null; drUps = new Map(); if(drList.length >= DR_MAX){ alert(`Tugallanmagan arizalar ${DR_MAX} tadan oshdi. Avval ulardan birini yuboring yoki o‘chiring.`); return; } return o && o.call(this, e); }; } });
   // tuzatish tugmasi: shu ariza uchun qoralama bo'lsa — qoralamadan davom etadi
-  const fx = document.getElementById('uFixBtn'); if(fx && drCur.editOf && drCur.editOf === uCurrentId) fx.onclick = drResume;
-  try{ i18nApply(document.getElementById('drCard')); }catch(e){}
+  const fx = document.getElementById('uFixBtn'); const ed = drList.find(x=> x.editOf && x.editOf === uCurrentId);
+  if(fx && ed) fx.onclick = ()=> drResume(ed._id);
+  try{ i18nApply(host); }catch(e){}
 }
 function drBindForm(){
   if(!uDraft) return;
-  if(drSessObj !== uDraft){ drSessObj = uDraft; drSig = drFileSig(); drLastKind = ''; drDirty = false; }
+  if(drSessObj !== uDraft){
+    drSessObj = uDraft; drSig = drFileSig(); drLastKind = ''; drDirty = false;
+    // tuzatish rejimi: shu arizaning qoralamasi bo'lsa — o'shanga yoziladi
+    drCurId = uDraft.id ? (drList.find(x=> x.editOf === uDraft.id) || {})._id || null : null;
+    drUps = new Map();
+  }
   else if(drFileSig() !== drSig){ drSig = drFileSig(); drSoon(400); }
   const form = document.getElementById('arForm'); if(!form) return;
   if(!document.getElementById('drStatus')){
@@ -13271,18 +13361,17 @@ function drBindForm(){
   if(sb) sb.onclick = async ()=>{
     sb.disabled = true; drSay('saving'); clearTimeout(drT);
     while(drBusy) await new Promise(r=> setTimeout(r, 300));
-    await drSave(); sb.disabled = false;
-    if(!drCur){ uView = 'list'; renderUserApp(); return; }
-    uView = uDraft && uDraft.id ? 'view' : 'list'; uCurrentId = uDraft && uDraft.id || null;
+    drDirty = true; await drSave(); sb.disabled = false;
+    const back = uDraft && uDraft.id;
+    uView = back ? 'view' : 'list'; uCurrentId = back || null; uDraft = null; drCurId = null; drUps = new Map();
     renderUserApp(); window.scrollTo(0, 0);
   };
   const cb = document.getElementById('arCancel');
   if(cb) cb.onclick = async ()=>{
     try{ uCollectData(); }catch(e){}
     const sn = drSnap();
-    if(drCur || (drDirty && !drEmpty(sn))){
+    if(drCurId || (drDirty && !drEmpty(sn))){
       if(!confirm('Kiritilgan ma’lumotlar o‘chirilsinmi?\n\nKeyinroq davom ettirmoqchi bo‘lsangiz — «Bekor» ni bosing va «💾 Saqlab, keyinroq davom ettirish» tugmasidan foydalaning.')) return;
-      // ariza yuborilgan fayllar (tuzatish rejimidagi eski fayllar) o'chirilmaydi — faqat qoralamaniki
       await drDrop(true);
     }else await drDrop(false);
     uView = uDraft && uDraft.id ? 'view' : 'list'; uCurrentId = uDraft && uDraft.id || null; uDraft = null;
@@ -13304,21 +13393,20 @@ uSubmit = (function(orig){ return async function(){
   clearTimeout(drT);
   while(drBusy) await new Promise(r=> setTimeout(r, 300));   // fonda yuklanayotgan rasm tugasin
   await orig.apply(this, arguments);
-  if(!uDraft){ await drDrop(false); drPaintCard(); }          // muvaffaqiyatli yuborildi — qoralama keraksiz
+  if(!uDraft){ await drDrop(false); drPaintCard(); }          // muvaffaqiyatli yuborildi — shu qoralama keraksiz
 }; })(uSubmit);
 // sahifa yopilayotganda / ilova fonga o'tganda — darhol telefonda saqlab qo'yamiz
 function drFlushLocal(){
   try{
-    if(uView !== 'form' || !uDraft || !drDirty) return; const key = drKey(); if(!key) return;
+    if(uView !== 'form' || !uDraft || !drDirty || !drPref()) return;
     try{ uCollectData(); }catch(e){}
     const sn = drSnap(); if(drEmpty(sn)) return;
-    drLocal('put', key, drWithBlobs(sn)); drCur = drWithBlobs(sn);
+    if(!drCurId) drCurId = drNewId();
+    drLocal('put', drCurId, drWithBlobs(sn)); drPut(drCurId, drWithBlobs(sn));
   }catch(e){}
 }
 document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'hidden') drFlushLocal(); });
 window.addEventListener('pagehide', drFlushLocal);
-// boshqa foydalanuvchi kirsa — eski qoralama xotirada qolmasin
-window.addEventListener('storage', ()=>{ drLoaded = false; });
 
 /* ======================================================================================
    v34: 1) Shartnoma raqami: Bosh shartnomalardagi eng katta raqam + 1, oxiriga joriy yil (BN-1259/26)
@@ -13448,6 +13536,88 @@ function v34HamkorSummary(){
       el.textContent = `· yuborgan: ${a.userIsm || a.userLogin || '—'}${a.data && a.data.filial ? ' (' + a.data.filial + ')' : ''}`;
     });
   }
+}
+
+/* ======================================================================================
+   v36: Arizani butunlay o'chirish (faqat admin) — fayllari, xabarlari va qoralamalari bilan.
+   O'chirish server jurnalida ("Harakatlar jurnali") saqlanadi.
+   ====================================================================================== */
+function v36CanDel(){ return isAuthed() && !(typeof v28RO === 'function' && v28RO()); }
+renderArDetail = (function(orig){ return function(){
+  const r = orig.apply(this, arguments);
+  try{ v36DelSection(); }catch(e){ console.warn(e); }
+  return r;
+}; })(renderArDetail);
+function v36DelSection(){
+  if(!v36CanDel()) return;
+  const a = AR_CACHE.find(x=> x.id === arSelId); if(!a) return;
+  const st = document.getElementById('arDecideStatus'); const sec = st && st.closest('.hk-section'); if(!sec) return;
+  if(document.getElementById('v36Del')) return;
+  sec.insertAdjacentHTML('afterend', `<div class="hk-section v36-del"><h3>Arizani o‘chirish</h3>
+    <p class="sub">Ariza saytdan butunlay o‘chiriladi: admin ro‘yxatida ham, yuboruvchining sahifasida ham ko‘rinmaydi. Bu amal «Harakatlar jurnali»da qayd etiladi.</p>
+    <button type="button" class="danger-btn" id="v36Del">🗑 Arizani butunlay o‘chirish</button></div>`);
+  document.getElementById('v36Del').onclick = ()=> v36DelModal(a);
+  try{ i18nApply(sec.nextElementSibling); }catch(e){}
+}
+function v36DelModal(a){
+  const d = a.data || {};
+  const bx = (BUX_CACHE || []).find(x=> x.arizaId === a.id);
+  const hk = a.hamkorId ? (DB.hamkor || []).find(x=> x.id === a.hamkorId) : null;
+  const ov = document.createElement('div'); ov.className = 'modal-back'; ov.id = 'v36Modal';
+  ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true" style="max-width:520px;">
+    <div class="modal-head"><h3>⚠️ Arizani butunlay o‘chirish</h3><button type="button" class="modal-x" data-x>✕</button></div>
+    <div class="modal-body">
+      <div class="ar-note warn" style="margin-top:0;"><b>Diqqat! Bu amalni ortga qaytarib bo‘lmaydi.</b></div>
+      <table class="v36-tbl" data-noi18n>
+        <tr><td>Tashkilot</td><td><b>${esc(d.tashkilot_nomi || '—')}</b>${d.brend ? ' · ' + esc(d.brend) : ''}</td></tr>
+        <tr><td>STIR</td><td>${esc(d.stir || '—')}</td></tr>
+        <tr><td>Yuboruvchi</td><td>${esc(a.userIsm || a.userLogin || '—')}${d.filial ? ' · ' + esc(d.filial) : ''}</td></tr>
+        <tr><td>Holati</td><td>${esc((AR_STATUS[a.status] || {}).admin || a.status || '—')}</td></tr>
+        <tr><td>Kelgan</td><td>${esc(arFmtDT(a.createdAt))}</td></tr>
+        <tr><td>Fayllar</td><td>${(a.files || []).length} ta</td></tr>
+      </table>
+      <p class="sub" style="margin:10px 0 6px;">O‘chiriladi: ariza, uning barcha rasm va hujjatlari, shu ariza bo‘yicha yuboruvchiga borgan tizim xabarlari va uning qoralamalari.</p>
+      ${hk || bx ? `<p class="sub" style="margin:0 0 6px;">O‘chirilmaydi: ${hk ? '«Hamkorlar» ro‘yxatidagi hamkor' : ''}${hk && bx ? ' va ' : ''}${bx ? `buxgalteriyadagi shartnoma (№ <span data-noi18n>${esc(bx.raqam || '')}</span>)` : ''} — ular alohida yozuvlar, kerak bo‘lsa o‘z bo‘limidan o‘chiriladi.</p>` : ''}
+      <label class="v36-ok"><input type="checkbox" id="v36Chk"> Ha, men bu arizani butunlay o‘chirmoqchiman</label>
+      <div class="status" id="v36St"></div>
+    </div>
+    <div class="modal-foot"><button type="button" class="danger-btn" id="v36Go" disabled>🗑 Butunlay o‘chirish</button><button type="button" class="secondary" data-x>Bekor</button></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const close = ()=> ov.remove();
+  ov.querySelectorAll('[data-x]').forEach(b=> b.onclick = close);
+  ov.addEventListener('click', e=>{ if(e.target === ov) close(); });
+  const chk = ov.querySelector('#v36Chk'), go = ov.querySelector('#v36Go'), st = ov.querySelector('#v36St');
+  chk.onchange = ()=> go.disabled = !chk.checked;
+  go.onclick = async ()=>{
+    go.disabled = true; chk.disabled = true; st.className = 'status'; st.textContent = '⏳ O‘chirilmoqda…';
+    try{
+      await v36DeleteAriza(a, t=> st.textContent = t);
+      close();
+      showToast({icon:'🗑', title:'Ariza o‘chirildi', body:`«${d.tashkilot_nomi || '—'}»`});
+    }catch(e){ st.className = 'status err'; st.textContent = 'Xatolik: ' + (e && e.message || e); go.disabled = false; chk.disabled = false; }
+  };
+  try{ i18nApply(ov); }catch(e){}
+}
+async function v36DeleteAriza(a, say){
+  say = say || (()=>{});
+  // 1) ariza (server shu yerda jurnalga yozadi)
+  say('⏳ Ariza o‘chirilmoqda…');
+  await ST.del(AR_COL, a.id);
+  // 2) fayllar
+  const files = (a.files || []).concat(a.removedFiles || []);
+  for(let i = 0; i < files.length; i++){ say(`⏳ Fayllar o‘chirilmoqda… ${i + 1}/${files.length}`); await arDeleteFile(files[i]).catch(()=>{}); }
+  // 3) shu ariza bo'yicha tizim xabarlari
+  say('⏳ Xabarlar tozalanmoqda…');
+  try{ const ms = await ST.where('birzum_messages', 'arizaId', a.id); for(const m of ms || []) await ST.del('birzum_messages', m.id).catch(()=>{}); }catch(e){}
+  // 4) shu arizani tuzatish qoralamalari
+  try{ const ds = await ST.where('birzum_ariza_draft', 'editOf', a.id); for(const x of ds || []){ for(const f of (x.files || [])) if(f.up) await arDeleteFile({id: f.up.id, chunks: f.up.chunks}).catch(()=>{}); await ST.del('birzum_ariza_draft', x.id).catch(()=>{}); } }catch(e){}
+  // 5) ro'yxat va statistika
+  AR_CACHE = AR_CACHE.filter(x=> x.id !== a.id);
+  if(arSelId === a.id) arSelId = null;
+  try{ if(arSeenPending) [...arSeenPending].forEach(k=>{ if(k.startsWith(a.id + '@')) arSeenPending.delete(k); }); }catch(e){}
+  try{ renderApp(); }catch(e){}
+  try{ renderTabs(); }catch(e){}
 }
 
 async function exportHamkorExcel(){

@@ -1480,6 +1480,52 @@ body.ro-mode [data-reply], body.ro-mode #chatFile{display:none !important;}
 .pf-cmp-table td,.pf-cmp-table th{white-space:nowrap}
 .pf-cmp-table td:first-child{color:var(--muted);font-size:12.5px}
 .pf-cmp-t{background:color-mix(in srgb, var(--accent, #7cb518) 6%, transparent)}
+
+/* v38.2: yosh tahlili diagrammalari */
+.pf-age-tile{position:relative;overflow:hidden}
+.pf-age-tile>i{position:absolute;right:10px;top:8px;font-style:normal;font-size:22px;opacity:.35}
+.pf-age-box{border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
+.pf-age-box .pf-h4{margin-top:0}
+.pf-pyr-h{display:grid;grid-template-columns:1fr 64px 1fr;font-size:12.5px;margin-bottom:6px}
+.pf-pyr-h span:first-child{text-align:right}
+.pf-pyr-h i,.pf-curve-leg i,.pf-sx-hd i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.pf-pyr-r{display:grid;grid-template-columns:1fr 64px 1fr;align-items:center;gap:0;margin:5px 0}
+.pf-pyr-l,.pf-pyr-rt{display:flex;align-items:center;gap:6px;min-width:0}
+.pf-pyr-l{justify-content:flex-end}
+.pf-pyr-l .pf-pyr-bar{display:flex;justify-content:flex-end}
+.pf-pyr-bar{flex:1;height:16px;min-width:0}
+.pf-pyr-bar i{display:block;height:100%;width:var(--w);animation:pfGrow 1s cubic-bezier(.2,.8,.2,1) both}
+.pf-pyr-l .pf-pyr-bar i{border-radius:5px 0 0 5px}
+.pf-pyr-rt .pf-pyr-bar i{border-radius:0 5px 5px 0}
+.pf-pyr-l em,.pf-pyr-rt em{font-style:normal;font-size:11.5px;color:var(--muted);min-width:42px}
+.pf-pyr-l em{text-align:right}
+.pf-pyr-a{text-align:center;font-size:12px}
+.pf-sx{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.pf-sx-dn{flex:0 0 auto;margin:0 auto}
+.pf-sx-t{flex:1;min-width:220px}
+.pf-sx-r{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px;font-size:13px;padding:5px 0;border-bottom:1px dashed var(--line);align-items:center}
+.pf-sx-r>span{color:var(--muted)}
+.pf-sx-r>b{text-align:right}
+.pf-sx-hd>b{font-size:12.5px}
+.pf-grps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:8px}
+.pf-grp{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:linear-gradient(180deg,color-mix(in srgb, var(--accent,#7cb518) 5%, transparent),transparent 60%)}
+.pf-grp-h{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.pf-grp-ic{font-size:24px}
+.pf-grp-h b{display:block;font-size:14px}
+.pf-grp-h small{color:var(--muted);font-size:12px}
+.pf-grp-b{display:flex;gap:12px;align-items:center}
+.pf-grp-b .pf-donut{flex:0 0 auto}
+.pf-grp-kv{flex:1;min-width:0}
+.pf-grp-kv>div{display:flex;justify-content:space-between;gap:6px;font-size:12.5px;padding:3px 0;border-bottom:1px dashed var(--line)}
+.pf-grp-kv span{color:var(--muted)}
+.pf-grp-kv small{font-weight:400;color:var(--muted)}
+.pf-curve-leg{display:flex;gap:16px;font-size:12.5px;margin-bottom:4px}
+.pf-curve{width:100%;height:auto}
+@media (max-width:600px){ .pf-pyr-h,.pf-pyr-r{grid-template-columns:1fr 46px 1fr} .pf-pyr-l em,.pf-pyr-rt em{min-width:34px;font-size:10.5px} .pf-grp-b{flex-direction:column} .pf-grp-kv{width:100%} }
+@media (prefers-reduced-motion: reduce){ .pf-pyr-bar i{animation:none} }
+.pf-curve .pf-ax{font-size:13px}
+.pf-curve .pf-lbl{font-size:13px;font-weight:600}
+.pf-grp-kv b,.pf-sx-r>b{white-space:nowrap}
 .wl-doc p.wj span.wsp{word-spacing:0}
 </style>
 </head>
@@ -13720,6 +13766,7 @@ const pfIsWork = c=>{ const k = Math.floor(c / 3); return k >= 1 && k <= 7 && !p
 const PF_SEX = ['Erkak', 'Ayol', 'Noma’lum'];
 const PA = {n:0, sum:1, od:2, over:3, od30:4, od90:5, late:6, cl:7, good:8, cl30:9, ageSum:10, ageN:11, LEN:12};
 Object.assign(PV, {ageBy: PV.ageBy || 'par'});
+PF_FMT.a1 = v=> (+v || 0).toFixed(1).replace('.', ',');
 
 function pfPinflInfo(p, sexCell){
   p = String(p || '').replace(/\D/g, '');
@@ -13792,9 +13839,10 @@ function pfAgeCompute(R){
   });
   const sumOf = pred=>{ const t0 = new Array(PA.LEN).fill(0); Object.entries(cells).forEach(([c, A])=>{ if(pred(+c)) A.forEach((v, i)=> t0[i] += v); }); return pfAgeDerive(t0); };
   const ages = PF_AGE.map(b=> Object.assign({b}, sumOf(c=> Math.floor(c / 3) === b.k)));
-  const sexes = [0, 1, 2].map(g=> Object.assign({g}, sumOf(c=> c % 3 === g)));
+  const inMain = c=> Math.floor(c / 3) < PF_K_MINOR;   // 18 yoshdan kichik va aniqlanmaganlar jadvalga kirmaydi
+  const sexes = [0, 1, 2].map(g=> Object.assign({g}, sumOf(c=> inMain(c) && c % 3 === g)));
   const grid = PF_AGE.map(b=> [0, 1].map(g=> sumOf(c=> c === b.k * 3 + g)));
-  const tot = sumOf(()=> true);
+  const tot = sumOf(inMain);
   const special = {young: sumOf(pfIsYoung), work: sumOf(pfIsWork), pension: sumOf(pfIsPension),
     youngS: [0, 1].map(g=> sumOf(c=> pfIsYoung(c) && c % 3 === g)), workS: [0, 1].map(g=> sumOf(c=> pfIsWork(c) && c % 3 === g)), pensionS: [0, 1].map(g=> sumOf(c=> pfIsPension(c) && c % 3 === g))};
   return {ages, sexes, grid, tot, special, minors: (AG.minors || []).filter(x=> !fk || fKey(x[7]) === fk), minorsN: AG.minorsN || 0, asOf: AG.asOf};
@@ -13816,17 +13864,69 @@ function pfAgeStack(x){
 /* ---- kartochka ---- */
 function pfAgeCard(R, admin){
   if(!PF) return '';
-  const head = `<div class="pf-ch-head"><div><h3>👥 Mijozlar yoshi va jinsi bo‘yicha</h3><p class="sub">Yosh — JShShIR (ПИНФЛ) dagi tug‘ilgan sanadan, portfel sanasi holatiga · jins — «Пол» ustunidan · filial va mahsulot filtri shu yerga ham ta’sir qiladi</p></div>`;
   const X = pfAgeCompute(R);
+  const head = `<div class="pf-ch-head"><div><h3>👥 Mijozlar yoshi va jinsi bo‘yicha</h3></div>`;
   if(!X) return `<div class="card rp-card" id="pfAgeCard">${head}</div><div class="hk-empty" style="padding:16px;"><b>Yosh tahlili hali yo‘q</b><span>${admin ? 'Bu tahlil uchun «Активные кредиты» faylini bir marta qayta yuklang — shundan keyin har safar avtomatik hisoblanadi.' : 'Admin portfel faylini keyingi safar yuklagach, bu yerda yosh tahlili paydo bo‘ladi.'}</span></div></div>`;
-  const T = X.tot;
+  const T = X.tot, S = X.special;
   const main = X.ages.filter(x=> !x.b.warn && !x.b.na);
-  const rows = X.ages.filter(x=> x.n || (!x.b.warn && !x.b.na));
   const big = main.filter(x=> x.cl >= 30);
   const share = x=> T.cl ? x.cl / T.cl * 100 : 0;
   const most = main.slice().sort((a, b)=> b.cl - a.cl)[0];
   const risky = big.slice().sort((a, b)=> b.par30 - a.par30)[0];
   const best = big.slice().sort((a, b)=> b.good - a.good)[0];
+  const lab = b=> b.k === 7 ? '65+' : b.l;
+  // --- ko'rsatkich plitkalari (sonlar animatsiya bilan)
+  const tile = (ic, l, v, s)=> `<div class="pf-age-tile"><i aria-hidden="true">${ic}</i><span>${esc(t(l))}</span><b data-noi18n>${v}</b>${s ? `<small>${s}</small>` : ''}</div>`;
+  const tiles = `<div class="pf-age-tiles">
+    ${tile('🎂', 'O‘rtacha yosh', T.avgAge ? `<span data-cnt="${T.avgAge.toFixed(1)}" data-f="a1">${T.avgAge.toFixed(1).replace('.', ',')}</span>` : '—', `<span data-noi18n>👨 ${X.sexes[0].avgAge ? X.sexes[0].avgAge.toFixed(0) : '—'} · 👩 ${X.sexes[1].avgAge ? X.sexes[1].avgAge.toFixed(0) : '—'}</span>`)}
+    ${most ? tile('👥', 'Eng ko‘p mijoz', esc(lab(most.b)), `${pfCnt(share(most), 'p')} ${esc(t('mijozlar'))}`) : ''}
+    ${risky ? tile('⚠️', 'Eng yuqori xavf', esc(lab(risky.b)), `PAR 30: <b class="${pfParCls(risky.par30)}">${pfCnt(risky.par30, 'p')}</b>`) : ''}
+    ${best ? tile('✅', 'Eng intizomli', esc(lab(best.b)), `<b class="pf-okc">${pfCnt(best.good, 'p')}</b> ${esc(t('o‘z vaqtida'))}`) : ''}
+  </div>`;
+  const minors = X.minors.length ? `<div class="ar-note warn pf-age-min">⚠️ <b data-noi18n>${pfN(R.fil ? X.minors.length : X.minorsN)}</b> ${esc(t('ta shartnoma bo‘yicha mijoz shartnoma sanasida 18 yoshga to‘lmagan bo‘lishi mumkin (JShShIR bo‘yicha). JShShIR noto‘g‘ri kiritilgan bo‘lishi ham mumkin — tekshirib chiqing.'))} <button type="button" class="link-btn" id="pfAgeMin" style="margin:0 0 0 6px;">⬇ ${esc(t('Ro‘yxat (Excel)'))}</button></div>` : '';
+  // --- yosh piramidasi (erkak chapda, ayol o'ngda)
+  const PY_M = '#2a78d6', PY_F = '#c2549a';
+  const pmax = Math.max(1, ...main.map(x=> Math.max(X.grid[x.b.k][0].cl, X.grid[x.b.k][1].cl)));
+  const pyr = `<div class="pf-pyr" role="img" aria-label="${esc(t('Yosh piramidasi'))}">
+    <div class="pf-pyr-h"><span><i style="background:${PY_M}"></i>👨 ${esc(t('Erkak'))} <b data-noi18n>${pfN(X.sexes[0].cl)}</b></span><span></span><span><i style="background:${PY_F}"></i>👩 ${esc(t('Ayol'))} <b data-noi18n>${pfN(X.sexes[1].cl)}</b></span></div>
+    ${main.slice().reverse().map(x=>{ const [m, f] = X.grid[x.b.k]; const pen = k=> k.g === 0 ? x.b.k >= 6 : x.b.k >= 5;
+      return `<div class="pf-pyr-r"><div class="pf-pyr-l"><em data-noi18n>${pfN(m.cl)}</em><span class="pf-pyr-bar"><i style="--w:${(m.cl / pmax * 100).toFixed(1)}%;background:${PY_M}${pen({g:0}) ? ';opacity:.72' : ''}" title="${esc(t('Erkak'))} ${esc(lab(x.b))}: ${pfN(m.cl)} · PAR 30 ${pfP(m.par30)}"></i></span></div>
+        <b class="pf-pyr-a" data-noi18n>${esc(lab(x.b))}</b>
+        <div class="pf-pyr-rt"><span class="pf-pyr-bar"><i style="--w:${(f.cl / pmax * 100).toFixed(1)}%;background:${PY_F}${pen({g:1}) ? ';opacity:.72' : ''}" title="${esc(t('Ayol'))} ${esc(lab(x.b))}: ${pfN(f.cl)} · PAR 30 ${pfP(f.par30)}"></i></span><em data-noi18n>${pfN(f.cl)}</em></div></div>`; }).join('')}
+    <p class="hint" style="margin:6px 0 0;text-align:center;">${esc(t('Ochroq rang — pensiya yoshidagilar (erkak 60+, ayol 55+)'))}</p></div>`;
+  // --- jins: halqa diagramma
+  const sx = X.sexes.filter(x=> x.n && x.g < 2);
+  const sexDn = pfDonut(sx.map(x=> ({l: PF_SEX[x.g], v: x.cl, c: x.g === 0 ? PY_M : PY_F})), pfP(share(X.sexes[1]), 0), t('ayollar'), 150);
+  const sexKv = (l, f, cls)=> `<div class="pf-sx-r"><span>${esc(t(l))}</span>${sx.map(x=> `<b data-noi18n class="${cls ? cls(x) : ''}">${f(x)}</b>`).join('')}</div>`;
+  const sexCard = `<div class="pf-sx"><div class="pf-sx-dn">${sexDn}</div><div class="pf-sx-t">
+      <div class="pf-sx-r pf-sx-hd"><span></span>${sx.map(x=> `<b><i style="background:${x.g === 0 ? PY_M : PY_F}"></i>${x.g === 0 ? '👨' : '👩'} ${esc(t(PF_SEX[x.g]))}</b>`).join('')}</div>
+      ${sexKv('Mijozlar', x=> pfN(x.cl))}${sexKv('Portfel', x=> monShort(x.od))}${sexKv('O‘rtacha summa', x=> monShort(x.avgSum))}${sexKv('O‘rtacha yosh', x=> x.avgAge ? x.avgAge.toFixed(1).replace('.', ',') : '—')}
+      ${sexKv('O‘z vaqtida', x=> pfP(x.good), ()=> 'pf-okc')}${sexKv('PAR 30', x=> pfP(x.par30), x=> pfParCls(x.par30))}</div></div>`;
+  // --- alohida guruhlar: 3 ta kartochka halqa bilan
+  const grpCard = (ic, l, sub, x, xs)=> {
+    const parts = [{l: 'O‘z vaqtida', v: x.A[PA.good], c: PF_BC[0]}, {l: '1–30 kun', v: x.mid, c: PF_BC[1]}, {l: '30+ kun', v: x.A[PA.cl30], c: PF_BC[3]}];
+    return `<div class="pf-grp"><div class="pf-grp-h"><span class="pf-grp-ic">${ic}</span><div><b>${esc(t(l))}</b><small>${esc(t(sub))}</small></div></div>
+      <div class="pf-grp-b">${pfDonut(parts, pfP(x.good, 0), t('o‘z vaqtida'), 118)}
+        <div class="pf-grp-kv">
+          <div><span>${esc(t('Mijozlar'))}</span><b data-noi18n>${pfCnt(x.cl, 'n')} <small>${pfP(share(x))}</small></b></div>
+          <div><span>👨 / 👩</span><b data-noi18n>${pfN(xs[0].cl)} / ${pfN(xs[1].cl)}</b></div>
+          <div><span>${esc(t('Portfel'))}</span><b data-noi18n>${monShort(x.od)}</b></div>
+          <div><span>${esc(t('O‘rtacha summa'))}</span><b data-noi18n>${monShort(x.avgSum)}</b></div>
+          <div><span>PAR 30</span><b data-noi18n class="${pfParCls(x.par30)}">${pfCnt(x.par30, 'p')}</b></div>
+          <div><span>PAR 90</span><b data-noi18n>${pfP(x.par90)}</b></div>
+        </div></div></div>`; };
+  const cmpCols = [['🎓 18–20 yoshlilar', S.young], ['💼 21 yoshdan pensiyagacha', S.work], ['👴 Pensiya yoshidagilar', S.pension], ['Jami', T]];
+  const cr = (l, f, cls)=> `<tr><td>${esc(t(l))}</td>${cmpCols.map(([, x], i)=> `<td style="text-align:right" data-noi18n class="${cls ? cls(x) : ''}${i === 3 ? ' pf-cmp-t' : ''}">${x.n ? f(x) : '—'}</td>`).join('')}</tr>`;
+  const cmp = `<div class="pf-age-cmp"><h4 class="pf-h4">${esc(t('Alohida guruhlar: yoshlar va pensionerlar'))}</h4>
+    <div class="pf-grps">${grpCard('🎓', '18–20 yoshlilar', 'yosh mijozlar', S.young, S.youngS)}${grpCard('💼', '21 yoshdan pensiyagacha', 'qolgan mijozlar', S.work, S.workS)}${grpCard('👴', 'Pensiya yoshidagilar', 'erkak 60+, ayol 55+', S.pension, S.pensionS)}</div>
+    <details class="pf-det"><summary class="hint">${esc(t('Batafsil taqqoslash jadvali'))}</summary><div class="hk-table-wrap"><table class="srv-table pf-cmp-table"><thead><tr><th></th>${cmpCols.map(([l], i)=> `<th style="text-align:right"${i === 3 ? ' class="pf-cmp-t"' : ''}>${esc(t(l))}</th>`).join('')}</tr></thead><tbody>
+      ${cr('Mijozlar', x=> `<b>${pfN(x.cl)}</b> <small class="hk-sub">${pfP(share(x))}</small>`)}
+      ${cr('Shundan erkak / ayol', x=>{ const sp = x === S.young ? S.youngS : x === S.pension ? S.pensionS : x === S.work ? S.workS : X.sexes; return `${pfN(sp[0].cl)} / ${pfN(sp[1].cl)}`; })}
+      ${cr('Shartnomalar', x=> pfN(x.n))}${cr('Portfel', x=> monShort(x.od))}${cr('O‘rtacha shartnoma summasi', x=> monShort(x.avgSum))}
+      ${cr('O‘z vaqtida to‘layotganlar', x=> pfP(x.good), ()=> 'pf-okc')}${cr('30+ kun kechikkan mijozlar', x=> pfP(x.bad))}${cr('Kechikkan shartnomalar', x=> pfP(x.late))}
+      ${cr('PAR 30', x=> `<b>${pfP(x.par30)}</b>`, x=> pfParCls(x.par30))}${cr('PAR 90', x=> pfP(x.par90))}
+    </tbody></table></div></details></div>`;
+  // --- tanlangan ko'rsatkich bo'yicha ustunlar
   const M = {
     par: ['PAR 30', x=> x.par30, v=> pfP(v), x=> PF_BC[x.par30 >= 15 ? 4 : x.par30 >= 5 ? 2 : 0]],
     good: ['O‘z vaqtida to‘layotganlar', x=> x.good, v=> pfP(v), ()=> PF_BC[0]],
@@ -13836,61 +13936,49 @@ function pfAgeCard(R, admin){
     avg: ['O‘rtacha shartnoma summasi', x=> x.avgSum, v=> monShort(v), ()=> PF_ACC]};
   const mk = M[PV.ageBy] ? PV.ageBy : 'par', md = M[mk];
   const mx = Math.max(1e-9, ...main.map(md[1]));
-  const bars = `<div class="pf-cb pf-age-bars">${main.map(x=>`<div class="pf-cb-r"><span>${esc(t(x.b.l))}<small data-noi18n>${pfN(x.cl)} ${esc(t('mijoz'))}</small></span><div class="pf-cb-bar"><i style="--w:${Math.max(md[1](x) ? 1.5 : 0, md[1](x) / mx * 100).toFixed(1)}%;background:${md[3](x)}"></i></div><b data-noi18n>${md[2](md[1](x))}</b><em></em></div>`).join('')}</div>`;
-  const tile = (l, v, s)=> `<div class="pf-age-tile"><span>${esc(t(l))}</span><b data-noi18n>${v}</b>${s ? `<small>${s}</small>` : ''}</div>`;
-  const tiles = `<div class="pf-age-tiles">
-    ${tile('O‘rtacha yosh', T.avgAge ? T.avgAge.toFixed(1).replace('.', ',') : '—', `<span data-noi18n>${esc(t('erkak'))} ${X.sexes[0].avgAge ? X.sexes[0].avgAge.toFixed(0) : '—'} · ${esc(t('ayol'))} ${X.sexes[1].avgAge ? X.sexes[1].avgAge.toFixed(0) : '—'}</span>`)}
-    ${most ? tile('Eng ko‘p mijoz', esc(t(most.b.l)), `<span data-noi18n>${pfP(share(most))}</span> ${esc(t('mijozlar'))}`) : ''}
-    ${risky ? tile('Eng yuqori xavf', esc(t(risky.b.l)), `PAR 30: <b class="${pfParCls(risky.par30)}" data-noi18n>${pfP(risky.par30)}</b>`) : ''}
-    ${best ? tile('Eng intizomli', esc(t(best.b.l)), `<b class="pf-okc" data-noi18n>${pfP(best.good)}</b> ${esc(t('o‘z vaqtida'))}`) : ''}
-  </div>`;
+  const bars = `<div class="pf-cb pf-age-bars">${main.map(x=>`<div class="pf-cb-r"><span>${esc(t(lab(x.b)))}<small data-noi18n>${pfN(x.cl)} ${esc(t('mijoz'))}</small></span><div class="pf-cb-bar"><i style="--w:${Math.max(md[1](x) ? 1.5 : 0, md[1](x) / mx * 100).toFixed(1)}%;background:${md[3](x)}"></i></div><b data-noi18n>${md[2](md[1](x))}</b><em></em></div>`).join('')}</div>`;
+  const chips = `<div class="ar-chips">${Object.entries(M).map(([k, d])=>`<button type="button" class="ar-chip ${k === mk ? 'on' : ''}" data-pageby="${k}">${esc(t(d[0]))}</button>`).join('')}</div>`;
+  // --- PAR 30: erkak va ayol, yosh bo'yicha (chiziqli)
+  const curve = pfAgeCurve(main.map(x=> ({l: lab(x.b), m: X.grid[x.b.k][0], f: X.grid[x.b.k][1]})), PY_M, PY_F);
+  // --- jadval
   const th = (l, r)=> `<th${r ? ' style="text-align:right"' : ''}>${esc(t(l))}</th>`;
-  const tr = (x, lab, cls)=> `<tr class="${cls || ''}"><td><b>${lab}</b></td><td style="text-align:right" data-noi18n>${pfN(x.cl)}</td><td style="text-align:right" data-noi18n>${pfP(share(x))}</td><td style="text-align:right" data-noi18n>${pfN(x.n)}</td><td style="text-align:right" data-noi18n>${monShort(x.od)}</td><td style="text-align:right" data-noi18n>${monShort(x.avgSum)}</td>
+  const tr = (x, l, cls)=> `<tr class="${cls || ''}"><td><b>${l}</b></td><td style="text-align:right" data-noi18n>${pfN(x.cl)}</td><td style="text-align:right" data-noi18n>${pfP(share(x))}</td><td style="text-align:right" data-noi18n>${pfN(x.n)}</td><td style="text-align:right" data-noi18n>${monShort(x.od)}</td><td style="text-align:right" data-noi18n>${monShort(x.avgSum)}</td>
       <td style="text-align:right" data-noi18n>${pfP(x.good)}</td><td style="text-align:right" data-noi18n>${pfP(x.bad)}</td><td style="text-align:right" data-noi18n>${pfP(x.late)}</td><td style="text-align:right" data-noi18n class="${pfParCls(x.par30)}"><b>${pfP(x.par30)}</b></td><td style="text-align:right" data-noi18n>${pfP(x.par90)}</td><td style="min-width:110px">${pfAgeStack(x)}</td></tr>`;
   const table = `<div class="hk-table-wrap"><table class="srv-table pf-age-table"><thead><tr>${th('Yosh')}${th('Mijoz', 1)}${th('Ulushi', 1)}${th('Shartnoma', 1)}${th('Portfel', 1)}${th('O‘rtacha summa', 1)}${th('O‘z vaqtida', 1)}${th('30+ kun (mijoz)', 1)}${th('Kechikkan shartnoma', 1)}${th('PAR 30', 1)}${th('PAR 90', 1)}${th('Intizom')}</tr></thead>
-    <tbody>${rows.map(x=> tr(x, esc(t(x.b.l)) + (x.b.warn ? ' ⚠️' : ''), x.b.warn ? 'pf-age-warn' : x.b.na ? 'hk-sub' : '')).join('')}</tbody>
-    <tfoot>${tr(T, esc(t('Jami')), 'rp-total')}</tfoot></table></div>`;
-  // jins bo'yicha
-  const sx = X.sexes.filter(x=> x.n);
-  const sexCols = `<div class="pf-age-sex">${sx.map(x=>`<div class="pf-age-sx"><h4>${x.g === 0 ? '👨' : x.g === 1 ? '👩' : '❔'} ${esc(t(PF_SEX[x.g]))}</h4>
-      <div class="pf-age-kv"><span>${esc(t('Mijozlar'))}</span><b data-noi18n>${pfN(x.cl)} <small>(${pfP(share(x))})</small></b></div>
-      <div class="pf-age-kv"><span>${esc(t('Portfel'))}</span><b data-noi18n>${monShort(x.od)}</b></div>
-      <div class="pf-age-kv"><span>${esc(t('O‘rtacha summa'))}</span><b data-noi18n>${monShort(x.avgSum)}</b></div>
-      <div class="pf-age-kv"><span>${esc(t('O‘rtacha yosh'))}</span><b data-noi18n>${x.avgAge ? x.avgAge.toFixed(1).replace('.', ',') : '—'}</b></div>
-      <div class="pf-age-kv"><span>${esc(t('O‘z vaqtida'))}</span><b data-noi18n class="pf-okc">${pfP(x.good)}</b></div>
-      <div class="pf-age-kv"><span>PAR 30</span><b data-noi18n class="${pfParCls(x.par30)}">${pfP(x.par30)}</b></div>
-      ${pfAgeStack(x)}</div>`).join('')}</div>`;
-  const gridRows = PF_AGE.filter(b=> !b.na && (!b.warn || X.grid[b.k][0].n + X.grid[b.k][1].n)).map(b=>{ const [mm, ff] = X.grid[b.k];
-    const c = (x, f)=> x.n ? `<td style="text-align:right" class="${f === 'par' ? pfParCls(x.par30) : ''}" data-noi18n>${f === 'par' ? `<b>${pfP(x.par30)}</b>` : pfP(x.good)}<small class="hk-sub"> · ${pfN(x.cl)}</small></td>` : '<td style="text-align:right" class="hk-sub">—</td>';
-    return `<tr><td><b>${esc(t(b.l))}</b></td>${c(mm, 'par')}${c(ff, 'par')}${c(mm, 'good')}${c(ff, 'good')}</tr>`; }).join('');
-  const grid = `<details class="pf-det" open><summary class="hint">${esc(t('Yosh × jins: PAR 30 va o‘z vaqtida to‘layotganlar ulushi'))}</summary><div class="hk-table-wrap"><table class="srv-table pf-age-grid"><thead><tr><th rowspan="2">${esc(t('Yosh'))}</th><th colspan="2" style="text-align:center">PAR 30</th><th colspan="2" style="text-align:center">${esc(t('O‘z vaqtida'))}</th></tr><tr><th style="text-align:right">👨 ${esc(t('Erkak'))}</th><th style="text-align:right">👩 ${esc(t('Ayol'))}</th><th style="text-align:right">👨 ${esc(t('Erkak'))}</th><th style="text-align:right">👩 ${esc(t('Ayol'))}</th></tr></thead><tbody>${gridRows}</tbody></table></div><p class="hint" style="margin:4px 0 0;">${esc(t('Har katakda: foiz · mijozlar soni. Mijozi kam (30 tadan kam) guruhlarda foiz tasodifiy bo‘lishi mumkin.'))}</p></details>`;
-  const S = X.special;
-  const cmpCols = [['🎓 18–20 yoshlilar', S.young], ['💼 21 yoshdan pensiyagacha', S.work], ['👴 Pensiya yoshidagilar', S.pension], ['Jami', T]];
-  const cr = (l, f, cls)=> `<tr><td>${esc(t(l))}</td>${cmpCols.map(([, x], i)=> `<td style="text-align:right" data-noi18n class="${cls ? cls(x) : ''}${i === 3 ? ' pf-cmp-t' : ''}">${x.n ? f(x) : '—'}</td>`).join('')}</tr>`;
-  const cmp = `<div class="pf-age-cmp"><h4 class="pf-h4">${esc(t('Alohida guruhlar: yoshlar va pensionerlar'))}</h4>
-    <p class="sub" style="margin:0 0 8px;">${esc(t('Pensiya yoshi: erkaklar — 60, ayollar — 55 yosh («Fuqarolarning davlat pensiya ta’minoti to‘g‘risida»gi Qonun, 7-modda). «21 yoshdan pensiyagacha» — qolgan barcha mijozlar.'))}</p>
-    <div class="hk-table-wrap"><table class="srv-table pf-cmp-table"><thead><tr><th></th>${cmpCols.map(([l], i)=> `<th style="text-align:right"${i === 3 ? ' class="pf-cmp-t"' : ''}>${esc(t(l))}</th>`).join('')}</tr></thead><tbody>
-      ${cr('Mijozlar', x=> `<b>${pfN(x.cl)}</b> <small class="hk-sub">${pfP(share(x))}</small>`)}
-      ${cr('Shundan erkak / ayol', x=>{ const sp = x === S.young ? S.youngS : x === S.pension ? S.pensionS : x === S.work ? S.workS : X.sexes; return `${pfN(sp[0].cl)} / ${pfN(sp[1].cl)}`; })}
-      ${cr('Shartnomalar', x=> pfN(x.n))}
-      ${cr('Portfel', x=> monShort(x.od))}
-      ${cr('O‘rtacha shartnoma summasi', x=> monShort(x.avgSum))}
-      ${cr('O‘z vaqtida to‘layotganlar', x=> pfP(x.good), x=> 'pf-okc')}
-      ${cr('30+ kun kechikkan mijozlar', x=> pfP(x.bad))}
-      ${cr('Kechikkan shartnomalar', x=> pfP(x.late))}
-      ${cr('PAR 30', x=> `<b>${pfP(x.par30)}</b>`, x=> pfParCls(x.par30))}
-      ${cr('PAR 90', x=> pfP(x.par90))}
-      ${cr('Intizom', x=> `<div style="min-width:90px">${pfAgeStack(x)}</div>`)}
-    </tbody></table></div></div>`;
-  const minors = X.minors.length ? `<div class="ar-note warn pf-age-min">⚠️ <b data-noi18n>${pfN(R.fil ? X.minors.length : X.minorsN)}</b> ${esc(t('ta shartnoma bo‘yicha mijoz shartnoma sanasida 18 yoshga to‘lmagan bo‘lishi mumkin (JShShIR bo‘yicha). JShShIR noto‘g‘ri kiritilgan bo‘lishi ham mumkin — tekshirib chiqing.'))} <button type="button" class="link-btn" id="pfAgeMin" style="margin:0 0 0 6px;">⬇ ${esc(t('Ro‘yxat (Excel)'))}</button></div>` : '';
-  return `<div class="card rp-card" id="pfAgeCard">${head}
-      <div class="ar-chips">${Object.entries(M).map(([k, d])=>`<button type="button" class="ar-chip ${k === mk ? 'on' : ''}" data-pageby="${k}">${esc(t(d[0]))}</button>`).join('')}</div></div>
+    <tbody>${main.map(x=> tr(x, esc(t(x.b.l)))).join('')}</tbody><tfoot>${tr(T, esc(t('Jami')), 'rp-total')}</tfoot></table></div>`;
+  const gridRows = main.map(x=>{ const [mm, ff] = X.grid[x.b.k];
+    const c = (y, f)=> y.n ? `<td style="text-align:right" class="${f === 'par' ? pfParCls(y.par30) : ''}" data-noi18n>${f === 'par' ? `<b>${pfP(y.par30)}</b>` : pfP(y.good)}<small class="hk-sub"> · ${pfN(y.cl)}</small></td>` : '<td style="text-align:right" class="hk-sub">—</td>';
+    return `<tr><td><b>${esc(t(x.b.l))}</b></td>${c(mm, 'par')}${c(ff, 'par')}${c(mm, 'good')}${c(ff, 'good')}</tr>`; }).join('');
+  const grid = `<details class="pf-det"><summary class="hint">${esc(t('Yosh × jins: PAR 30 va o‘z vaqtida to‘layotganlar ulushi (jadval)'))}</summary><div class="hk-table-wrap"><table class="srv-table pf-age-grid"><thead><tr><th rowspan="2">${esc(t('Yosh'))}</th><th colspan="2" style="text-align:center">PAR 30</th><th colspan="2" style="text-align:center">${esc(t('O‘z vaqtida'))}</th></tr><tr><th style="text-align:right">👨 ${esc(t('Erkak'))}</th><th style="text-align:right">👩 ${esc(t('Ayol'))}</th><th style="text-align:right">👨 ${esc(t('Erkak'))}</th><th style="text-align:right">👩 ${esc(t('Ayol'))}</th></tr></thead><tbody>${gridRows}</tbody></table></div><p class="hint" style="margin:4px 0 0;">${esc(t('Har katakda: foiz · mijozlar soni. Mijozi kam (30 tadan kam) guruhlarda foiz tasodifiy bo‘lishi mumkin.'))}</p></details>`;
+  return `<div class="card rp-card" id="pfAgeCard">${head}</div>
     ${tiles}${minors}
+    <div class="rp-cols pf-age-cols"><div class="pf-age-box"><h4 class="pf-h4">${esc(t('Yosh piramidasi — mijozlar soni'))}</h4>${pyr}</div><div class="pf-age-box"><h4 class="pf-h4">${esc(t('Jins bo‘yicha'))}</h4>${sexCard}</div></div>
     ${cmp}
-    <div class="rp-cols pf-age-cols"><div><h4 class="pf-h4">${esc(t(md[0]))} — ${esc(t('yosh guruhlari bo‘yicha'))}</h4>${bars}</div><div><h4 class="pf-h4">${esc(t('Jins bo‘yicha'))}</h4>${sexCols}</div></div>
+    <div class="rp-cols pf-age-cols"><div class="pf-age-box"><div class="pf-ch-head"><h4 class="pf-h4" style="margin:0;">${esc(t(md[0]))} — ${esc(t('yosh bo‘yicha'))}</h4></div>${chips}${bars}</div>
+      <div class="pf-age-box"><h4 class="pf-h4">${esc(t('PAR 30: erkak va ayol, yosh bo‘yicha'))}</h4>${curve}</div></div>
     <h4 class="pf-h4">${esc(t('Yosh guruhlari jadvali'))} <button type="button" class="hk-tool" id="pfAgeXlsx" style="margin-left:8px;">⬇ Excel</button></h4>${table}
     <p class="hint" style="margin:4px 0 8px;">${esc(t('«O‘z vaqtida» va «30+ kun» — mijozlar ulushi (har bir mijoz eng ko‘p kechiktirgan shartnomasi bo‘yicha) · «Kechikkan shartnoma» — 1 kundan ortiq kechikkan shartnomalar ulushi · PAR 30 / PAR 90 — 30+ / 90+ kun kechikkan qoldiq qarz ulushi.'))}</p>
     ${grid}</div>`;
+}
+/* ---- ikki chiziqli grafik: PAR 30 erkak / ayol (bitta o'q, %) ---- */
+function pfAgeCurve(pts, cM, cF){
+  if(pts.length < 2) return '';
+  const W = 560, H = 250, L = 44, Rr = 16, T = 18, B = 32;
+  const vals = pts.flatMap(p=> [p.m.n ? p.m.par30 : null, p.f.n ? p.f.par30 : null]).filter(v=> v !== null);
+  const top = Math.max(5, Math.ceil(Math.max(...vals) / 5) * 5 + 5);
+  const x = i=> L + (W - L - Rr) * i / (pts.length - 1), y = v=> T + (H - T - B) * (1 - v / top);
+  const grid = [0, 0.25, 0.5, 0.75, 1].map(k=>{ const v = top * k; return `<line x1="${L}" x2="${W - Rr}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" class="${k ? 'pf-grid' : 'pf-base'}"/><text x="${L - 6}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" class="pf-ax">${Math.round(v)}%</text>`; }).join('');
+  const ser = (key, c)=>{
+    const P = pts.map((p, i)=> p[key].n ? [x(i), y(p[key].par30), p] : null).filter(Boolean);
+    const d = P.map((q, i)=> `${i ? 'L' : 'M'}${q[0].toFixed(1)},${q[1].toFixed(1)}`).join(' ');
+    return `<path d="${d}" fill="none" stroke="${c}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" class="pf-path" pathLength="1"/>
+      ${P.map(q=> `<g class="pf-hit"><circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="5" fill="${c}" stroke="var(--paper)" stroke-width="2"/><title>${esc(t(key === 'm' ? 'Erkak' : 'Ayol'))} ${esc(q[2].l)}: PAR 30 ${pfP(q[2][key].par30)} · ${pfN(q[2][key].cl)} ${esc(t('mijoz'))}</title></g>`).join('')}`;
+  };
+  const last = (key)=>{ const i = pts.map((p, j)=> p[key].n ? j : -1).filter(j=> j >= 0)[0]; return i === undefined ? '' : `<text x="${(x(i) + 8).toFixed(1)}" y="${(y(pts[i][key].par30) + (key === 'm' ? -8 : 16)).toFixed(1)}" class="pf-lbl">${pfP(pts[i][key].par30)}</text>`; };
+  const xl = pts.map((p, i)=> `<text x="${x(i).toFixed(1)}" y="${H - 9}" text-anchor="middle" class="pf-ax">${esc(p.l)}</text>`).join('');
+  return `<div class="pf-curve-leg"><span><i style="background:${cM}"></i>👨 ${esc(t('Erkak'))}</span><span><i style="background:${cF}"></i>👩 ${esc(t('Ayol'))}</span></div>
+    <svg class="pf-line pf-curve" viewBox="0 0 ${W} ${H}" role="img" aria-label="PAR 30">${grid}${ser('m', cM)}${ser('f', cF)}${last('m')}${last('f')}${xl}</svg>
+    <p class="hint" style="margin:2px 0 0;">${esc(t('Chiziq pastga tushsa — shu yoshda to‘lov intizomi yaxshiroq.'))}</p>`;
 }
 function pfAgeBind(host, R, admin){
   const card = host.querySelector('#pfAgeCard'); if(!card) return;
@@ -13903,10 +13991,10 @@ function pfAgeBind(host, R, admin){
     const head = ['Yosh guruhi', 'Mijozlar', 'Ulushi, %', 'Shartnomalar', 'Portfel (asosiy qarz), so‘m', 'Berilgan summa, so‘m', 'O‘rtacha shartnoma summasi, so‘m', 'Muddati o‘tgan qarz, so‘m', 'O‘z vaqtida, %', '30+ kun kechikkan mijozlar, %', 'Kechikkan shartnomalar, %', 'PAR 30, %', 'PAR 90, %', 'O‘rtacha yosh'];
     const row = (l, x)=> [l, x.cl, sh(x), x.n, x.od, x.sum, Math.round(x.avgSum), x.over, p1(x.good), p1(x.bad), p1(x.late), p1(x.par30), p1(x.par90), x.avgAge ? +x.avgAge.toFixed(1) : ''];
     const aoa = [[`Mijozlar yoshi va jinsi bo‘yicha tahlil — ${fil}${PV.prod ? ' · ' + PV.prod : ''}`], [`${dt} holatiga`], [], head]
-      .concat(X.ages.filter(x=> x.n).map(x=> row(x.b.l, x)), [row('Jami', T)], [[]], [['Jins bo‘yicha']], [head.map((h, i)=> i ? h : 'Jins')], X.sexes.filter(x=> x.n).map(x=> row(PF_SEX[x.g], x)),
+      .concat(X.ages.filter(x=> x.n && !x.b.warn && !x.b.na).map(x=> row(x.b.l, x)), [row('Jami', T)], [[]], [['Jins bo‘yicha']], [head.map((h, i)=> i ? h : 'Jins')], X.sexes.filter(x=> x.n).map(x=> row(PF_SEX[x.g], x)),
         [[]], [['Alohida guruhlar (pensiya yoshi: erkak 60, ayol 55)']], [head.map((h, i)=> i ? h : 'Guruh')], [row('18–20 yoshlilar', X.special.young), row('21 yoshdan pensiyagacha', X.special.work), row('Pensiya yoshidagilar', X.special.pension)],
         [[]], [['Yosh × jins']], [['Yosh guruhi', 'Erkak: mijoz', 'Erkak: PAR 30, %', 'Erkak: o‘z vaqtida, %', 'Ayol: mijoz', 'Ayol: PAR 30, %', 'Ayol: o‘z vaqtida, %']],
-        PF_AGE.filter(b=> !b.na).map(b=>{ const [m, f] = X.grid[b.k]; return [b.l, m.cl, p1(m.par30), p1(m.good), f.cl, p1(f.par30), p1(f.good)]; }));
+        PF_AGE.filter(b=> !b.na && !b.warn).map(b=>{ const [m, f] = X.grid[b.k]; return [b.l, m.cl, p1(m.par30), p1(m.good), f.cl, p1(f.par30), p1(f.good)]; }));
     pfXlsx(`Portfel_yosh_${fn}_${PF.asOf}.xlsx`, aoa, [22, 11, 10, 13, 20, 20, 18, 18, 12, 14, 14, 11, 11, 11]);
     logAct('export', {type:'export', name:'Portfel — yosh tahlili'}, `${fil}, ${dt}`);
   };
